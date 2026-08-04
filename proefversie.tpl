@@ -226,6 +226,11 @@
   .rlBolletjes i { width: 7px; height: 7px; border-radius: 50%; display: block;
                    background: rgba(255,255,255,.2); transition: background .2s, width .2s; }
   .rlBolletjes i.nu { background: #ffc740; width: 20px; border-radius: 99px; }
+  .rlKnoppen { display: flex; gap: 12px; }
+  .rlKnoppen .grotKnop { margin-top: 26px; min-width: 0; flex: 1.6; }
+  #rlTerug { display: none; flex: 1; background: rgba(255,255,255,.1); color: rgba(255,255,255,.85);
+             font-size: 15px; letter-spacing: 1px; }
+  #rlTerug.aan { display: block; }
 
   #tip { position: fixed; left: 12px; right: 12px; bottom: 14px; z-index: 15;
          background: rgba(20,20,22,.97); border: 1px solid rgba(255,199,64,.35);
@@ -967,7 +972,10 @@
   </div>
   <div class="rlVoet">
     <div class="rlBolletjes" id="rlBolletjes"></div>
-    <button class="grotKnop" id="rlVolgende"></button>
+    <div class="rlKnoppen">
+      <button class="grotKnop" id="rlTerug"></button>
+      <button class="grotKnop" id="rlVolgende"></button>
+    </div>
   </div>
 </div>
 
@@ -2422,6 +2430,8 @@ function tekenRondleiding() {
   $('rlTekst').textContent = t('tour' + rlStap + '_tekst');
   $('rlBeeld').innerHTML = rlBeeld(rlStap);
   $('rlVolgende').textContent = rlStap < RONDLEIDING_STAPPEN ? t('tour_next') : t('tour_start');
+  $('rlTerug').textContent = t('tour_back');
+  $('rlTerug').classList.toggle('aan', rlStap > 1);
   $('rlBolletjes').innerHTML = Array.from({length: RONDLEIDING_STAPPEN},
     (_, i) => `<i class="${i + 1 === rlStap ? 'nu' : ''}"></i>`).join('');
 }
@@ -2435,6 +2445,11 @@ $('rlVolgende').addEventListener('click', e => {
   e.stopPropagation();
   if (rlStap < RONDLEIDING_STAPPEN) { rlStap++; tekenRondleiding(); }
   else sluitRondleiding();
+});
+
+$('rlTerug').addEventListener('click', e => {
+  e.stopPropagation();
+  if (rlStap > 1) { rlStap--; tekenRondleiding(); }
 });
 
 $('rlOver').addEventListener('click', e => { e.stopPropagation(); sluitRondleiding(); });

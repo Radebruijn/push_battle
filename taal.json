@@ -771,6 +771,11 @@
       "Next",
       "Suivant"
     ],
+    "tour_back": [
+      "Vorige",
+      "Back",
+      "Précédent"
+    ],
     "tour_start": [
       "Beginnen",
       "Start playing",

@@ -178,6 +178,7 @@ enum Tk: String {
     case tip_combo
     case tour_skip
     case tour_next
+    case tour_back
     case tour_start
     case tour_step
     case tour1_kop
@@ -469,6 +470,7 @@ enum Strings {
         "tip_combo": ["Tien herhalingen achter elkaar en je slaat dubbel zo hard. Blijf doorgaan.", "Ten reps in a row and you hit twice as hard. Keep going.", "Dix répétitions d'affilée et tu frappes deux fois plus fort. Continue."],
         "tour_skip": ["Overslaan", "Skip", "Passer"],
         "tour_next": ["Volgende", "Next", "Suivant"],
+        "tour_back": ["Vorige", "Back", "Précédent"],
         "tour_start": ["Beginnen", "Start playing", "Commencer"],
         "tour_step": ["{0} van {1}", "{0} of {1}", "{0} sur {1}"],
         "tour1_kop": ["Welkom", "Welcome", "Bienvenue"],
