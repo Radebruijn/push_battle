@@ -264,28 +264,29 @@ Elke arena is een eigen wereld met een eigen ras, kleur en boss. Versla je de bo
 
 | Arena | Wereld | Vijanden | Minion HP | Boss HP |
 |---|---|---|---|---|
-| 1 | De Orkvelden | Orks | 5 | 25 |
-| 2 | De Rottende Weiden | Zombies | 6 | 30 |
-| 3 | Het Wevernest | Spinnen | 8 | 40 |
-| 4 | De Knekelkrocht | Skeletten | 9 | 45 |
-| 5 | De Bloedmoerassen | Trollen | 11 | 55 |
-| 6 | Het Schimmenrijk | Geesten | 12 | 60 |
-| 7 | De Duistere Kathedraal | Vampiers | 14 | 70 |
-| 8 | Het Weerwoud | Weerwolven | 15 | 75 |
-| 9 | De Steengroeve | Golems | 17 | 85 |
-| 10 | De Aspoort | Demonen | 18 | 90 |
-| 11 | De Vriesburcht | IJsreuzen | 20 | 100 |
-| 12 | De Verzwolgen Diepte | Zeeduivels | 21 | 105 |
-| 13 | De Stormtoren | Bliksemgeesten | 23 | 115 |
-| 14 | De Verzonken Tempel | Slangenvolk | 24 | 120 |
-| 15 | De Drakenkuil | Draken | 26 | 130 |
-| 16 | Het Titanenkerkhof | Titanen | 27 | 135 |
-| 17 | De Zwarte Zon | Verdoemden | 29 | 145 |
-| 18 | Het Sterrenhof | Gevallen Engelen | 30 | 150 |
-| 19 | De Kosmische Smidse | Sterrensmeden | 32 | 160 |
-| 20 | De Leegte | Het Naamloze | 33 | 165 |
+| 1 | Het Orkenrijk | Orks | 5 | 25 |
+| 2 | De Oorlogshorde | Oorlogsorks | 6 | 30 |
+| 3 | De Spinnenkuil | Spinnen | 8 | 40 |
+| 4 | De Bottenburcht | Skeletten | 9 | 45 |
+| 5 | Het Trollenmoeras | Trollen | 11 | 55 |
+| 6 | Pluizige Pussy | Katjes | 12 | 60 |
+| 7 | De Zielenmist | Geesten | 14 | 70 |
+| 8 | De Bloedkathedraal | Vampiers | 15 | 75 |
+| 9 | Het Grote Wolvenwoud | Weerwolven | 17 | 85 |
+| 10 | De Golemgroeve | Golems | 18 | 90 |
+| 11 | De Demonenpoort | Demonen | 20 | 100 |
+| 12 | De IJsreuzenburcht | IJsreuzen | 21 | 105 |
+| 13 | Het Duivelsdiep | Zeeduivels | 23 | 115 |
+| 14 | De Bliksemtoren | Bliksemgeesten | 24 | 120 |
+| 15 | De Slangentempel | Slangenvolk | 26 | 130 |
+| 16 | Het Drakennest | Draken | 27 | 135 |
+| 17 | Het Titanengraf | Titanen | 29 | 145 |
+| 18 | Het Rijk der Verdoemden | Verdoemden | 30 | 150 |
+| 19 | De Val der Engelen | Gevallen Engelen | 32 | 160 |
+| 20 | De Sterrensmidse | Sterrensmeden | 33 | 165 |
+| 21 | Het Naamloze Diep | Het Naamloze | 35 | 175 |
 
-Daarna begint de reeks opnieuw, maar zwaarder: arena 21 is De Orkvelden II met minions van 35 HP, daarna De Orkvelden III, enzovoort. Het houdt dus nooit op.
+Daarna begint de reeks opnieuw, maar zwaarder: arena 22 is Het Orkenrijk II met minions van 36 HP, daarna Het Orkenrijk III, enzovoort. Het houdt dus nooit op.
 
 De hele interface kleurt mee met de arena waarin je zit, en bij het betreden van een nieuwe arena krijg je een korte intro in beeld.
 

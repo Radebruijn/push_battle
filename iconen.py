@@ -81,17 +81,35 @@ def raw(d: str) -> str:
 
 
 def spider_legs() -> str:
-    """Vier poten per kant, van het lijf naar buiten en dan omlaag."""
+    """Acht poten met de knie hoog boven het lijf — zo staat een spin echt."""
     d = ""
-    for i, (hy, ky, ex, ey) in enumerate(
-        [(40, 22, 8, 40), (48, 30, 4, 54), (56, 44, 6, 70), (62, 58, 14, 84)]
-    ):
+    for hy, kx, ky, ex, ey in [
+        (42, 34, 12, 4, 38),
+        (48, 42, 24, 0, 60),
+        (54, 44, 44, 4, 82),
+        (58, 40, 60, 14, 96),
+    ]:
         for sign in (-1, 1):
-            hx = 50 + sign * 12
-            kx = 50 + sign * 30
-            d += bar(hx, hy, kx, ky, 5)
-            d += bar(kx, ky, 50 + sign * (50 - ex), ey, 4)
+            heup_x = 50 + sign * 10
+            knie_x = 50 + sign * kx
+            voet_x = 50 + sign * (50 - ex)
+            d += bar(heup_x, hy, knie_x, ky, 5)
+            d += bar(knie_x, ky, voet_x, ey, 4)
     return d
+
+
+def schaal(d: str, factor: float, cx: float = 50, cy: float = 50) -> str:
+    """Vergroot een pad om het midden. Alle getallen in zo'n pad zijn
+    coördinaten die om en om x en y zijn, dus dat kan in één keer."""
+    beurt = [0]
+
+    def om(m):
+        waarde = float(m.group())
+        as_ = cx if beurt[0] % 2 == 0 else cy
+        beurt[0] += 1
+        return _f(as_ + (waarde - as_) * factor)
+
+    return re.sub(r"-?\d+(?:\.\d+)?", om, d)
 
 
 ICONEN: dict[str, str] = {
@@ -109,24 +127,35 @@ ICONEN: dict[str, str] = {
         + poly([(35, 79), (39, 67), (43, 79)])
         + poly([(57, 79), (61, 67), (65, 79)])
     ),
-    # 2 Zombies — hap uit de schedel, scheve ogen, gerafelde mond
-    "Zombies": (
+    # 2 Oorlogsorks — dezelfde kop, maar met helm, hoorns en zwaardere tanden
+    "Oorlogsorks": (
         raw(
-            "M50 8C68 8 82 20 85 36L69 31L76 47C80 67 68 91 50 91"
-            "C30 91 13 70 13 46C13 24 30 8 50 8Z"
+            "M50 22C70 22 84 36 84 54L84 62C84 78 69 92 50 92"
+            "C31 92 16 78 16 62L16 54C16 36 30 22 50 22Z"
         )
-        + circle(36, 46, 9, hole=True)
-        + circle(63, 49, 4, hole=True)
-        + poly([(29, 65), (38, 72), (46, 65), (54, 72), (62, 65), (70, 72),
-                (66, 81), (33, 81)], hole=True)
+        + poly([(14, 40), (86, 40), (86, 26), (14, 26)])
+        + poly([(14, 32), (0, 8), (24, 24)])
+        + poly([(86, 32), (100, 8), (76, 24)])
+        + poly([(45, 40), (55, 40), (55, 60), (45, 60)])
+        + poly([(24, 48), (41, 55), (24, 62)], hole=True)
+        + poly([(76, 48), (59, 55), (76, 62)], hole=True)
+        + poly([(28, 70), (72, 70), (72, 85), (28, 85)], hole=True)
+        + poly([(33, 85), (38, 66), (43, 85)])
+        + poly([(57, 85), (62, 66), (67, 85)])
     ),
-    # 3 Spinnen — lijf, kop en acht poten
+    # 3 Spinnen — zwaar achterlijf, kopborststuk met acht ogen en tasters
     "Spinnen": (
         spider_legs()
-        + ellipse(50, 58, 18, 16)
-        + ellipse(50, 34, 12, 10)
-        + circle(45, 32, 3, hole=True)
-        + circle(55, 32, 3, hole=True)
+        + bar(45, 46, 22, 66, 6)
+        + bar(55, 46, 78, 66, 6)
+        + ellipse(50, 66, 21, 22)
+        + ellipse(50, 40, 13, 12)
+        + circle(44, 36, 3.2, hole=True)
+        + circle(56, 36, 3.2, hole=True)
+        + circle(38, 41, 2, hole=True)
+        + circle(62, 41, 2, hole=True)
+        + circle(46, 31, 1.8, hole=True)
+        + circle(54, 31, 1.8, hole=True)
     ),
     # 4 Skeletten — schedel met kaak en tanden
     "Skeletten": (
@@ -157,6 +186,27 @@ ICONEN: dict[str, str] = {
         + poly([(43, 41), (45, 32), (47, 41)])
         + poly([(53, 41), (55, 32), (57, 41)])
     ),
+    # 6 Katjes — pluizige kop met puntoren, snorharen en plukjes
+    "Katjes": (
+        "".join(
+            poly([(50 + 30 * math.cos(math.radians(h - 9)), 56 + 30 * math.sin(math.radians(h - 9))),
+                  (50 + 39 * math.cos(math.radians(h)), 56 + 39 * math.sin(math.radians(h))),
+                  (50 + 30 * math.cos(math.radians(h + 9)), 56 + 30 * math.sin(math.radians(h + 9)))])
+            for h in range(24, 337, 18)
+        )
+        + circle(50, 56, 30)
+        + poly([(25, 40), (16, 6), (47, 27)])
+        + poly([(75, 40), (84, 6), (53, 27)])
+        + poly([(30, 35), (25, 17), (41, 30)], hole=True)
+        + poly([(70, 35), (75, 17), (59, 30)], hole=True)
+        + circle(39, 52, 5.5, hole=True)
+        + circle(61, 52, 5.5, hole=True)
+        + poly([(44, 63), (56, 63), (50, 71)], hole=True)
+        + bar(24, 62, 2, 56, 3)
+        + bar(24, 70, 2, 76, 3)
+        + bar(76, 62, 98, 56, 3)
+        + bar(76, 70, 98, 76, 3)
+    ),
     # 6 Geesten — golvende onderkant
     "Geesten": (
         raw(
@@ -179,17 +229,26 @@ ICONEN: dict[str, str] = {
         + poly([(42, 50), (48, 50), (45, 62)])
         + poly([(52, 50), (58, 50), (55, 62)])
     ),
-    # 8 Weerwolven — huilende wolvenkop van opzij
+    # 8 Weerwolven — kop van voren met een zware manenkraag eromheen
     "Weerwolven": (
-        raw(
-            "M16 30L26 10L38 28C44 24 52 23 58 25L70 6L76 26"
-            "C84 34 86 46 82 56L96 62L78 69C74 81 60 88 46 86"
-            "C30 84 18 70 16 52Z"
+        "".join(
+            poly([
+                (50 + 31 * math.cos(math.radians(h - 11)), 54 + 30 * math.sin(math.radians(h - 11))),
+                (50 + 48 * math.cos(math.radians(h)), 54 + 45 * math.sin(math.radians(h))),
+                (50 + 31 * math.cos(math.radians(h + 11)), 54 + 30 * math.sin(math.radians(h + 11))),
+            ])
+            for h in range(22, 339, 22)
         )
-        + poly([(46, 41), (59, 46), (46, 50)], hole=True)
-        + poly([(64, 59), (93, 62), (88, 71), (66, 71)], hole=True)
-        + poly([(69, 71), (71, 62), (74, 71)])
-        + poly([(80, 70), (82, 62), (85, 70)])
+        + poly([(24, 36), (13, 2), (45, 26)])
+        + poly([(76, 36), (87, 2), (55, 26)])
+        + poly([(20, 42), (30, 24), (44, 32), (56, 32), (70, 24), (80, 42),
+                (74, 64), (58, 78), (50, 88), (42, 78), (26, 64)])
+        + poly([(30, 44), (46, 52), (30, 58)], hole=True)
+        + poly([(70, 44), (54, 52), (70, 58)], hole=True)
+        + poly([(43, 62), (57, 62), (50, 70)], hole=True)
+        + poly([(38, 74), (62, 74), (50, 84)], hole=True)
+        + poly([(41, 76), (44, 82), (46, 76)])
+        + poly([(54, 76), (56, 82), (59, 76)])
     ),
     # 9 Golems — blokkige rotsgestalte met scheur
     "Golems": (
