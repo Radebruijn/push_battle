@@ -35,6 +35,8 @@ enum Tk: String {
     case stat_pushups
     case stat_kills
     case stat_arenas
+    case trofee_titel
+    case trofee_leeg
     case arena_n
     case arena_n_race
     case boss
@@ -327,6 +329,8 @@ enum Strings {
         "stat_pushups": ["push-ups", "push-ups", "pompes"],
         "stat_kills": ["kills", "kills", "victimes"],
         "stat_arenas": ["arena's uit", "arenas cleared", "arènes finies"],
+        "trofee_titel": ["Trofeeënkast", "Trophy cabinet", "Vitrine à trophées"],
+        "trofee_leeg": ["Versla je eerste boss en zijn kop hangt hier.", "Defeat your first boss and its head will hang here.", "Bats ton premier boss et sa tête sera accrochée ici."],
         "arena_n": ["ARENA {0}", "ARENA {0}", "ARÈNE {0}"],
         "arena_n_race": ["ARENA {0} · {1}", "ARENA {0} · {1}", "ARÈNE {0} · {1}"],
         "boss": ["BOSS", "BOSS", "BOSS"],

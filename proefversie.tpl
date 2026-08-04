@@ -188,6 +188,9 @@
                display: flex; align-items: center; justify-content: center; padding: 0 4px; }
   .mSlotRas { font-size: 9px; color: rgba(255,255,255,.45); }
   .mSlotSlot { font-size: 9px; color: rgba(255,255,255,.35); margin-top: 4px; }
+  .mSlot.mHier { outline: 1px solid rgba(255,199,64,.7); background: rgba(255,199,64,.08); }
+  .mSlot.mVoorhoede { outline: 1px solid rgba(255,255,255,.25); }
+  .mSlot.mVoorhoede .mSlotSlot { color: #ffc740; }
 
 
   #vechten { display: block; width: calc(100% - 48px); margin: 14px auto 0; padding: 15px 0;
@@ -330,6 +333,16 @@
   .accCijfer { background: rgba(255,255,255,.05); border-radius: 14px; padding: 12px 6px; text-align: center; }
   .accCijfer b { display: block; font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; }
   .accCijfer span { font-size: 10px; color: rgba(255,255,255,.5); }
+  .trofeeKop { margin: 16px 2px 8px; font-size: 11px; font-weight: 800;
+               letter-spacing: 2px; color: rgba(255,255,255,.5); }
+  .trofeeKast { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+                gap: 8px; max-height: 180px; overflow-y: auto; }
+  .trofee { background: rgba(255,255,255,.05); border-radius: 12px;
+            padding: 8px 4px 6px; text-align: center; }
+  .trofee svg { width: 38px; height: 38px; display: block; margin: 0 auto; }
+  .trofee span { font-size: 9px; color: rgba(255,255,255,.55); display: block;
+                 margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trofeeLeeg { grid-column: 1 / -1; font-size: 12px; color: rgba(255,255,255,.4); }
   #accNaam { margin-bottom: 22px; }
   #accNaam .instelLabel { text-align: left; margin-bottom: 8px; }
   .naamRij { display: flex; gap: 8px; }
@@ -744,6 +757,8 @@
   </div>
 
   <div class="accCijfers" id="accCijfers"></div>
+  <div class="trofeeKop" id="trofeeKop"></div>
+  <div class="trofeeKast" id="trofeeKast"></div>
 
   <div id="accFormulier">
     <input type="email" id="accEmail" autocomplete="email" inputmode="email">
@@ -1024,7 +1039,7 @@ function t(sleutel, ...args) {
 const tt = veld => (typeof veld === 'string' ? veld : (veld[TAAL] ?? veld.en));
 /// Vijanden heten naar wat ze zijn: een Ork, een Zombie, een Skelet.
 const vijandNaam = () => {
-  const a = arenaAt(P.arenaIndex);
+  const a = arenaAt(idxNu());
   return tt(enemy.boss ? a.boss : a.minion);
 };
 
@@ -1086,6 +1101,12 @@ const DEFAULTS = { totalReps:0, totalKills:0, bossKills:0, totalXP:0, arenaIndex
                    duelsWon:0, duelBest:{}, duelLevel:50, naam:'', onlineWon:0 };
 let P = { ...DEFAULTS, ...JSON.parse(localStorage.getItem('orbslayer.proto') || '{}') };
 let enemy, combo = 0, lastRep = 0, sessionReps = 0;
+/// Terugbezoek aan een al veroverde arena: je vecht daar echt (XP en kills
+/// tellen), maar je voorste voortgang blijft staan en de trofee kreeg je al.
+/// Bewust niet opgeslagen: de pagina verversen zet je terug bij de voorhoede.
+let bezoek = null, bezoekKills = 0, bezoekHP = null, mRijStand = '';
+const idxNu = () => bezoek ?? P.arenaIndex;
+const killsNu = () => bezoek !== null ? bezoekKills : P.killsThisArena;
 
 const $ = id => document.getElementById(id);
 const rgbCss = (c, a=1) => `rgba(${Math.round(c[0]*255)},${Math.round(c[1]*255)},${Math.round(c[2]*255)},${a})`;
@@ -1096,20 +1117,20 @@ const orbCss = (c, f, a=1) => {
 };
 
 function spawn() {
-  const arena = arenaAt(P.arenaIndex);
-  if (P.killsThisArena >= 9) {
-    const hp = bossHP(P.arenaIndex);
+  if (killsNu() >= 9) {
+    const hp = bossHP(idxNu());
     enemy = { max: hp, hp, boss: true };
   } else {
-    const max = minionHP(P.arenaIndex);
+    const max = minionHP(idxNu());
     // Boss-voortgang wordt nooit bewaard; minions wel.
-    const hp = Math.min(P.savedMinionHP ?? max, max);
+    const hp = Math.min((bezoek !== null ? bezoekHP : P.savedMinionHP) ?? max, max);
     enemy = { max, hp: Math.max(1, hp), boss: false };
   }
 }
 
 function save() {
-  P.savedMinionHP = (!enemy.boss && enemy.hp < enemy.max) ? enemy.hp : null;
+  if (bezoek === null) P.savedMinionHP = (!enemy.boss && enemy.hp < enemy.max) ? enemy.hp : null;
+  else bezoekHP = (!enemy.boss && enemy.hp < enemy.max) ? enemy.hp : null;
   localStorage.setItem('orbslayer.proto', JSON.stringify(P));
   if (typeof duwVoortgang === 'function') duwVoortgang();
 }
@@ -1137,7 +1158,7 @@ function streakMult() { const s = effStreak();
   return s >= 30 ? 1.5 : s >= 14 ? 1.35 : s >= 7 ? 1.25 : s >= 3 ? 1.1 : 1; }
 
 function render() {
-  const arena = arenaAt(P.arenaIndex), c = arena.rgb, f = enemy.hp / enemy.max;
+  const arena = arenaAt(idxNu()), c = arena.rgb, f = enemy.hp / enemy.max;
 
   $('aura').style.background = enemy.boss
     ? 'radial-gradient(circle at 50% 45%, rgba(242,38,58,.22), transparent 62%)'
@@ -1145,7 +1166,7 @@ function render() {
 
   $('arenaName').textContent = tt(arena.name).toUpperCase();
   $('arenaName').style.color = rgbCss(c);
-  $('arenaNum').textContent = t('arena_n', P.arenaIndex);
+  $('arenaNum').textContent = t('arena_n', idxNu());
   $('streak').textContent = effStreak();
   $('reps').textContent = t('reps_n', sessionReps);
 
@@ -1155,7 +1176,7 @@ function render() {
     p.className = 'pip';
     p.style.background = i === 9
       ? (enemy.boss ? '#f2263a' : 'rgba(242,38,58,.35)')
-      : (i < P.killsThisArena ? rgbCss(c) : 'rgba(255,255,255,.12)');
+      : (i < killsNu() ? rgbCss(c) : 'rgba(255,255,255,.12)');
     $('pips').appendChild(p);
   }
 
@@ -1285,16 +1306,25 @@ function rep() {
 
     tikStreak();
 
-    const gained = Math.floor((wasBoss ? bossXP(P.arenaIndex) : minionXP(P.arenaIndex))
+    const gained = Math.floor((wasBoss ? bossXP(idxNu()) : minionXP(idxNu()))
                               * streakMult() * xpMaal());
     P.totalXP += gained; P.totalKills++;
 
     let entered = null;
     if (wasBoss) {
-      P.bossKills++; P.arenaIndex++; P.killsThisArena = 0;
-      entered = arenaAt(P.arenaIndex);
-    } else P.killsThisArena++;
-    P.savedMinionHP = null;
+      if (bezoek !== null) {
+        // Herbezoek: de trofee en de arenavoortgang kreeg je de eerste keer
+        // al. Je schuift gewoon door naar de volgende oude bekende, en bij
+        // de voorhoede aangekomen vecht je weer echt vooruit.
+        bezoekKills = 0; bezoekHP = null;
+        bezoek = bezoek + 1 >= P.arenaIndex ? null : bezoek + 1;
+      } else {
+        P.bossKills++; P.arenaIndex++; P.killsThisArena = 0;
+      }
+      entered = arenaAt(idxNu());
+    } else if (bezoek !== null) bezoekKills++;
+    else P.killsThisArena++;
+    if (bezoek === null) P.savedMinionHP = null; else bezoekHP = null;
     spawn();
 
     $('flash').style.opacity = .25;
@@ -1306,7 +1336,7 @@ function rep() {
     if (enemy.boss) text += '\n' + t('boss_incoming');
     showBanner(text);
 
-    if (entered) setTimeout(() => showIntro(entered, P.arenaIndex), 1700);
+    if (entered) setTimeout(() => showIntro(entered, idxNu()), 1700);
   }
 
   save();
@@ -1438,7 +1468,7 @@ function melding(tekst, duur = 1900) {
 }
 
 function renderMenu() {
-  const arena = arenaAt(P.arenaIndex), c = arena.rgb, f = enemy.hp / enemy.max;
+  const arena = arenaAt(idxNu()), c = arena.rgb, f = enemy.hp / enemy.max;
   $('menuAura').style.background =
     `radial-gradient(circle at 50% 0%, ${rgbCss(c, .18)}, transparent 60%)`;
   document.querySelector('.mTitel').style.textShadow = `0 0 22px ${rgbCss(c, .8)}`;
@@ -1449,7 +1479,7 @@ function renderMenu() {
   $('mXpVul').style.background = `linear-gradient(to right, ${rgbCss(c)}, #ffc740)`;
   $('mXpTekst').textContent = t('xp_of', cur, need);
 
-  $('mArenaLabel').textContent = t('arena_n_race', P.arenaIndex, tt(arena.race).toUpperCase());
+  $('mArenaLabel').textContent = t('arena_n_race', idxNu(), tt(arena.race).toUpperCase());
   $('mArenaNaam').textContent = tt(arena.name);
   $('mArenaNaam').style.color = rgbCss(c);
   $('mIcoonPad').setAttribute('d', arena.icon);
@@ -1462,12 +1492,42 @@ function renderMenu() {
   $('mPips').innerHTML = '';
   for (let i = 0; i < 10; i++) {
     const el = document.createElement('i');
-    el.style.background = i < P.killsThisArena ? rgbCss(c)
+    el.style.background = i < killsNu() ? rgbCss(c)
       : (i === 9 ? 'rgba(242,38,58,.5)' : 'rgba(255,255,255,.15)');
     $('mPips').appendChild(el);
   }
 
   $('mRij').innerHTML = '';
+  // Alles wat je al veroverd hebt blijft in de strook staan: scroll terug en
+  // tik erop om die arena opnieuw te bevechten. De trofee kreeg je al.
+  let scrollDoel = null;
+  for (let i = 1; i < P.arenaIndex; i++) {
+    const a = arenaAt(i);
+    const knop = document.createElement('button');
+    knop.className = 'mSlot' + (bezoek === i ? ' mHier' : '');
+    knop.innerHTML =
+      `<div class="mVak"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb, .85)}"/></svg></div>` +
+      `<div class="mSlotNaam" style="color:rgba(255,255,255,.75)">${tt(a.name)}</div>` +
+      `<div class="mSlotRas">${tt(a.race)}</div>` +
+      `<div class="mSlotSlot">✓</div>`;
+    knop.onclick = e => { e.stopPropagation(); startBezoek(i); };
+    if (bezoek === i) scrollDoel = knop;
+    $('mRij').appendChild(knop);
+  }
+  // Tijdens een terugbezoek staat de voorhoede zelf ook in de strook, zodat je
+  // er met één tik weer naartoe kunt.
+  if (bezoek !== null) {
+    const a = arenaAt(P.arenaIndex);
+    const knop = document.createElement('button');
+    knop.className = 'mSlot mVoorhoede';
+    knop.innerHTML =
+      `<div class="mVak"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb, .85)}"/></svg></div>` +
+      `<div class="mSlotNaam" style="color:rgba(255,255,255,.9)">${tt(a.name)}</div>` +
+      `<div class="mSlotRas">${tt(a.race)}</div>` +
+      `<div class="mSlotSlot">▶</div>`;
+    knop.onclick = e => { e.stopPropagation(); terugVoorhoede(); };
+    $('mRij').appendChild(knop);
+  }
   for (let n = 1; n <= VOORUIT + RAADSELS; n++) {
     const index = P.arenaIndex + n;
     const zichtbaar = n <= VOORUIT;
@@ -1490,6 +1550,30 @@ function renderMenu() {
     $('mRij').appendChild(knop);
   }
 
+  // Zet de strook op de goede plek: bij de arena waar je nu bent. Alleen als
+  // de situatie veranderd is, zodat zelf scrollen niet steeds terugspringt.
+  const stand = P.arenaIndex + ':' + bezoek;
+  if (stand !== mRijStand) {
+    mRijStand = stand;
+    const doel = scrollDoel || $('mRij').children[Math.max(0, P.arenaIndex - 1)];
+    if (doel) requestAnimationFrame(() =>
+      $('mRij').scrollLeft = Math.max(0, doel.offsetLeft - $('mRij').offsetLeft - 12));
+  }
+}
+
+/// Terug naar een oude arena: gewoon vechten, maar zonder nieuwe trofee.
+function startBezoek(i) {
+  if (i === bezoek) return;
+  bezoek = i; bezoekKills = 0; bezoekHP = null;
+  spawn();
+  renderMenu();
+  showIntro(arenaAt(i), i);
+}
+
+function terugVoorhoede() {
+  bezoek = null; bezoekHP = null;
+  spawn();
+  renderMenu();
 }
 
 function spelerTitel() {
@@ -2235,6 +2319,19 @@ function renderAccount() {
     [effStreak(), t('stat_streak')],
     [playerLevel(), t('stat_level')],
   ].map(([w, l]) => `<div class="accCijfer"><b>${w}</b><span>${l}</span></div>`).join('');
+
+  // De trofeeënkast: de kop van elke boss die je ooit hebt neergehaald.
+  // Arena i is veroverd zodra je voorbij i bent; herbezoeken tellen niet dubbel.
+  $('trofeeKop').textContent = t('trofee_titel').toUpperCase();
+  const koppen = [];
+  for (let i = 1; i < P.arenaIndex; i++) {
+    const a = arenaAt(i);
+    koppen.push(
+      `<div class="trofee"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>` +
+      `<span>${ontsmet(tt(a.boss))}</span></div>`);
+  }
+  $('trofeeKast').innerHTML = koppen.length ? koppen.join('')
+    : `<div class="trofeeLeeg">${ontsmet(t('trofee_leeg'))}</div>`;
 
   $('naamLabel').textContent = t('name_label').toUpperCase();
   $('naamVeld').placeholder = t('name_hint');

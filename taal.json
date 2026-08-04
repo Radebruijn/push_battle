@@ -56,6 +56,16 @@
       "arenas cleared",
       "arènes finies"
     ],
+    "trofee_titel": [
+      "Trofeeënkast",
+      "Trophy cabinet",
+      "Vitrine à trophées"
+    ],
+    "trofee_leeg": [
+      "Versla je eerste boss en zijn kop hangt hier.",
+      "Defeat your first boss and its head will hang here.",
+      "Bats ton premier boss et sa tête sera accrochée ici."
+    ],
     "arena_n": [
       "ARENA {0}",
       "ARENA {0}",
