@@ -1,6 +1,6 @@
 {
-  "name": "Orbslayer",
-  "short_name": "Orbslayer",
+  "name": "Push Battle",
+  "short_name": "Push Battle",
   "description": "Push-ups tellen als gevecht: de camera telt, jij slaat.",
   "start_url": "./",
   "display": "standalone",

@@ -264,7 +264,7 @@ struct HomeView: View {
 
     private var header: some View {
         VStack(spacing: 6) {
-            Text("ORBSLAYER")
+            Text("PUSH BATTLE")
                 .font(.system(size: 38, weight: .black, design: .rounded))
                 .tracking(6)
                 .foregroundStyle(.white)

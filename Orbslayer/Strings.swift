@@ -466,7 +466,7 @@ enum Strings {
         "tour_start": ["Beginnen", "Start playing", "Commencer"],
         "tour_step": ["{0} van {1}", "{0} of {1}", "{0} sur {1}"],
         "tour1_kop": ["Welkom", "Welcome", "Bienvenue"],
-        "tour1_tekst": ["Orbslayer maakt van push-ups een gevecht. Elke herhaling die je doet is een klap tegen het monster voor je.", "Orbslayer turns push-ups into a fight. Every rep you do is a hit against the monster in front of you.", "Orbslayer transforme les pompes en combat. Chaque répétition frappe le monstre devant toi."],
+        "tour1_tekst": ["Push Battle maakt van push-ups een gevecht. Elke herhaling die je doet is een klap tegen het monster voor je.", "Push Battle turns push-ups into a fight. Every rep you do is a hit against the monster in front of you.", "Push Battle transforme les pompes en combat. Chaque répétition frappe le monstre devant toi."],
         "tour2_kop": ["Zet je telefoon neer", "Put your phone down", "Pose ton téléphone"],
         "tour2_tekst": ["Rechtop naast je op de grond, zodat de camera je van opzij ziet. Tijdens het trainen hoef je niets aan te raken.", "Upright next to you on the floor, so the camera sees you from the side. You never have to touch it while training.", "Debout à côté de toi au sol, pour que la caméra te voie de profil. Tu n'as rien à toucher pendant l'entraînement."],
         "tour3_kop": ["Zo wordt geteld", "How counting works", "Comment ça compte"],

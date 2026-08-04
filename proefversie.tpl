@@ -1,11 +1,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Orbslayer — push-up spel dat je herhalingen telt</title>
+<title>Push Battle — push-up spel dat je herhalingen telt</title>
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Orbslayer">
+<meta name="apple-mobile-web-app-title" content="Push Battle">
 <link rel="manifest" href="manifest.json">
 <!-- Het icoon staat er als data-URI in, zodat de pagina één bestand blijft. -->
 <link rel="apple-touch-icon" href="__ICOON180__">
@@ -14,18 +14,18 @@
 <!-- Voor zoekmachines en voor het voorbeeldkaartje als je de link deelt. -->
 <meta name="description" content="Gratis push-up spel dat je herhalingen telt met de camera. Vecht je door twintig arena's, of neem het zestig seconden op tegen een tegenstander — offline of live tegen een echte speler. Werkt in elke browser, op je telefoon en je laptop.">
 <meta name="keywords" content="push-up spel, pushup game, push up teller, push-ups tellen, workout game, fitness spel, thuis trainen, camera teller, krachttraining">
-<meta name="author" content="Orbslayer">
+<meta name="author" content="Push Battle">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="./">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Orbslayer">
-<meta property="og:title" content="Orbslayer — push-ups tellen als gevecht">
+<meta property="og:site_name" content="Push Battle">
+<meta property="og:title" content="Push Battle — push-ups tellen als gevecht">
 <meta property="og:description" content="Zet je telefoon naast je neer en push. De camera telt je herhalingen en elke push-up is een klap tegen het monster voor je.">
 <meta property="og:image" content="icon-512.png">
 <meta property="og:locale" content="nl_NL">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Orbslayer — push-ups tellen als gevecht">
+<meta name="twitter:title" content="Push Battle — push-ups tellen als gevecht">
 <meta name="twitter:description" content="Zet je telefoon naast je neer en push. De camera telt je herhalingen en elke push-up is een klap tegen het monster voor je.">
 <meta name="twitter:image" content="icon-512.png">
 
@@ -33,7 +33,7 @@
 {
   "@context": "https://schema.org",
   "@type": "VideoGame",
-  "name": "Orbslayer",
+  "name": "Push Battle",
   "alternateName": "Push-up spel",
   "description": "Push-up spel dat je herhalingen telt met de camera. Vecht je door twintig arena's, of neem het zestig seconden op tegen een tegenstander — alleen of online tegen een echte speler.",
   "genre": ["Fitness", "Casual"],
@@ -581,7 +581,7 @@
       <button id="klassementKnop" aria-label="klassement">🏆</button>
       <button id="accountKnop" aria-label="account">👤</button>
     </div>
-    <h1 class="mTitel">ORBSLAYER</h1>
+    <h1 class="mTitel">PUSH BATTLE</h1>
     <div class="mRang" id="mRang"></div>
     <div class="mXp">
       <div class="mXpBar"><div class="mXpVul" id="mXpVul"></div></div>
@@ -944,7 +944,7 @@
 <div class="zoekbaar">
   <h2>Push-up spel met camera-teller</h2>
   <p>
-    Orbslayer telt je push-ups met de camera van je telefoon of laptop. Je zet
+    Push Battle telt je push-ups met de camera van je telefoon of laptop. Je zet
     je toestel rechtop naast je neer, en elke volledige herhaling is een aanval
     op het monster voor je. Er zijn twintig arena's met steeds sterkere
     vijanden, een duel van zestig seconden waarin je het tegen een tegenstander

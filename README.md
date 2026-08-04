@@ -1,4 +1,4 @@
-# Orbslayer
+# Push Battle
 
 Push-up game voor iOS. De camera volgt de hoogte van je hoofd; elke push-up is een aanval op het monster voor je.
 
@@ -230,7 +230,7 @@ python3 appicoon.py
 
 Dat maakt in één keer het app-icoon van 1024 pixels én de webiconen van 512, 192 en 180. Draai daarna `python3 bouw-proefversie.py`, want het icoon van 180 wordt als data-URI in `index.html` gebakken.
 
-**Op je startscherm.** Open de site op je telefoon en kies *Zet op beginscherm*. Je krijgt dan dit logo als tegel, met de naam Orbslayer eronder, en hij opent zonder adresbalk — als een gewone app. Op Android regelt `manifest.json` hetzelfde.
+**Op je startscherm.** Open de site op je telefoon en kies *Zet op beginscherm*. Je krijgt dan dit logo als tegel, met de naam Push Battle eronder, en hij opent zonder adresbalk — als een gewone app. Op Android regelt `manifest.json` hetzelfde.
 
 ## Openen
 

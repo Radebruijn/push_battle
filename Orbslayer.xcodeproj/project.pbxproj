@@ -190,7 +190,8 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Orbslayer volgt de hoogte van je hoofd om je push-ups te tellen. Het beeld wordt alleen op dit toestel bekeken en nergens opgeslagen of verstuurd.";
+				INFOPLIST_KEY_CFBundleDisplayName = "Push Battle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Push Battle volgt de hoogte van je hoofd om je push-ups te tellen. Het beeld wordt alleen op dit toestel bekeken en nergens opgeslagen of verstuurd.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -218,7 +219,8 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Orbslayer volgt de hoogte van je hoofd om je push-ups te tellen. Het beeld wordt alleen op dit toestel bekeken en nergens opgeslagen of verstuurd.";
+				INFOPLIST_KEY_CFBundleDisplayName = "Push Battle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Push Battle volgt de hoogte van je hoofd om je push-ups te tellen. Het beeld wordt alleen op dit toestel bekeken en nergens opgeslagen of verstuurd.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;

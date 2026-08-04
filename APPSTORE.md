@@ -1,4 +1,4 @@
-# Orbslayer in de App Store
+# Push Battle in de App Store
 
 Alles wat Apple bij de inzending vraagt, staat hier klaar. Wat jij nog moet doen staat onderaan.
 
@@ -16,7 +16,7 @@ Alles wat Apple bij de inzending vraagt, staat hier klaar. Wat jij nog moet doen
 
 ## Naam en teksten
 
-**Naam:** Orbslayer
+**Naam:** Push Battle
 
 **Ondertitel (max 30 tekens):** Push-ups tellen als gevecht
 
@@ -25,7 +25,7 @@ Zet je telefoon naast je neer en push. De camera telt je herhalingen en elke pus
 
 **Beschrijving:**
 
-Orbslayer maakt van push-ups een gevecht.
+Push Battle maakt van push-ups een gevecht.
 
 Zet je telefoon rechtop naast je op de grond. De camera volgt de hoogte van je hoofd en telt elke volledige push-up. Je hoeft niets aan te raken en niets bij te houden — je zakt, je komt omhoog, en het monster voor je krijgt een klap.
 
