@@ -1391,6 +1391,11 @@
       "Every push-up goes from {0} to {1}.",
       "Chaque pompe passe de {0} à {1}."
     ],
+    "up_tech": [
+      "Betere techniek",
+      "Better technique",
+      "Meilleure technique"
+    ],
     "klik_geeft": [
       "Levert {0} op.",
       "Pays out {0}.",

@@ -302,6 +302,7 @@ enum Tk: String {
     case klik_slot_uit
     case up_helper_uit2
     case up_rep_uit2
+    case up_tech
     case klik_geeft
     case klik_samen
     case klik_nieuw
@@ -587,6 +588,7 @@ enum Strings {
         "klik_slot_uit": ["Je ziet wat dit is zodra je er genoeg voor hebt.", "You will see what this is once you can afford it.", "Tu verras ce que c'est dès que tu pourras te le payer."],
         "up_helper_uit2": ["{0} gaat van {1} naar {2}.", "{0} goes from {1} to {2}.", "{0} passe de {1} à {2}."],
         "up_rep_uit2": ["Elke push-up gaat van {0} naar {1}.", "Every push-up goes from {0} to {1}.", "Chaque pompe passe de {0} à {1}."],
+        "up_tech": ["Betere techniek", "Better technique", "Meilleure technique"],
         "klik_geeft": ["Levert {0} op.", "Pays out {0}.", "Rapporte {0}."],
         "klik_samen": ["samen {0}", "{0} together", "{0} au total"],
         "klik_nieuw": ["De clicker is opnieuw begonnen: de balans is helemaal omgegooid.", "The clicker has started over: the balance has been completely reworked.", "Le clicker repart de zéro : l'équilibrage a été entièrement revu."],

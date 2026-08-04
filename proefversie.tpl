@@ -3004,23 +3004,27 @@ window.addEventListener('pagehide', () => {
 ---------------------------------------------------------------- */
 const KLIK_VERSIE = 2;         // gaat omhoog als de balans omgegooid wordt
 /// Prijzen en opbrengsten. 'uur' is wat één stuk per uur oplevert, en de prijs
-/// is dat maal de terugverdientijd: een dag bij de eerste helper, oplopend tot
-/// bijna een jaar bij de laatste. Daardoor blijft het spel eindeloos trager
-/// worden in plaats van na een week op hol te slaan.
+/// is dat maal de terugverdientijd: een korte dag bij de eerste helper,
+/// oplopend tot een half jaar bij de laatste. Daardoor blijft het spel
+/// eindeloos trager worden in plaats van na een week op hol te slaan.
 const KLIK_HELPERS = [
-  { id: 'arm',       prijs: 25,           uur: 1 },          //  25 uur terugverdienen
-  { id: 'jimbro',    prijs: 300,          uur: 5 },          //  60 uur
-  { id: 'mat',       prijs: 2400,         uur: 20 },         // 120 uur
-  { id: 'bank',      prijs: 19200,        uur: 80 },         // 240 uur
-  { id: 'gym',       prijs: 120000,       uur: 300 },        // 400 uur
-  { id: 'bootcamp',  prijs: 840000,       uur: 1200 },       // 700 uur
-  { id: 'kazerne',   prijs: 5500000,      uur: 5000 },       // 1100 uur
-  { id: 'stadion',   prijs: 34000000,     uur: 20000 },      // 1700 uur
-  { id: 'fabriek',   prijs: 200000000,    uur: 80000 },      // 2500 uur
-  { id: 'ruimte',    prijs: 1080000000,   uur: 300000 },     // 3600 uur
-  { id: 'planeet',   prijs: 6000000000,   uur: 1200000 },    // 5000 uur
-  { id: 'oer',       prijs: 35000000000,  uur: 5000000 },    // 7000 uur
+  { id: 'arm',       prijs: 15,           uur: 1 },          //  15 uur terugverdienen
+  { id: 'jimbro',    prijs: 180,          uur: 5 },          //  36 uur
+  { id: 'mat',       prijs: 1500,         uur: 20 },         //  75 uur
+  { id: 'bank',      prijs: 12000,        uur: 80 },         // 150 uur
+  { id: 'gym',       prijs: 75000,        uur: 300 },        // 250 uur
+  { id: 'bootcamp',  prijs: 530000,       uur: 1200 },       // 440 uur
+  { id: 'kazerne',   prijs: 3500000,      uur: 5000 },       // 700 uur
+  { id: 'stadion',   prijs: 21000000,     uur: 20000 },      // 1050 uur
+  { id: 'fabriek',   prijs: 125000000,    uur: 80000 },      // 1550 uur
+  { id: 'ruimte',    prijs: 675000000,    uur: 300000 },     // 2250 uur
+  { id: 'planeet',   prijs: 3700000000,   uur: 1200000 },    // 3100 uur
+  { id: 'oer',       prijs: 22000000000,  uur: 5000000 },    // 4400 uur
 ];
+/// Techniek: de koopbare reeks die elke echte push-up meer waard maakt, zodat
+/// trainen naast de helpers altijd blijft lonen. Start even duur als de eerste
+/// helper; elke stap maakt je push-up 1% meer waard dan de vorige stap.
+const KLIK_TECHNIEK = { prijs: 15, groei: 1.15, maal: 1.01 };
 /// Elke volgende van dezelfde soort is een vijfde duurder. Stapelen loont dus
 /// maar even; daarna moet je door naar de volgende soort.
 const KLIK_GROEI = 1.2;
@@ -3060,6 +3064,7 @@ function klikStaat() {
   P.klik.upgrades = P.klik.upgrades || [];
   P.klik.gezien = P.klik.gezien || [];
   P.klik.boosts = P.klik.boosts || {};
+  P.klik.techniek = P.klik.techniek || 0;
   return P.klik;
 }
 
@@ -3070,6 +3075,12 @@ function getal(n) {
   try {
     return new Intl.NumberFormat(TAAL, { notation: 'compact', maximumFractionDigits: 1 }).format(n);
   } catch (e) { return n.toLocaleString(TAAL); }
+}
+/// Kleine bedragen met twee decimalen, zodat je ziet dat een techniekstap iets
+/// doet: 1,01 push-up per push-up moet er niet uitzien als 1.
+function getalFijn(n) {
+  if (n >= 100 || Number.isInteger(Math.round(n * 100) / 100)) return getal(n);
+  return (Math.round(n * 100) / 100).toLocaleString(TAAL);
 }
 /// Een tempo in de eenheid die er nog leesbaar uitziet: per uur zolang het
 /// langzaam gaat, per seconde als het hard begint te lopen.
@@ -3109,7 +3120,13 @@ const repTrappen = () => klikStaat().upgrades.filter(u => u.startsWith('rep:')).
 /// Wat één echte push-up oplevert. Begint bij één en verdubbelt met elke trap
 /// die je met je lijf verdiend hebt.
 const repBasis = trappen => KLIK_BASIS_REP * Math.pow(2, trappen === undefined ? repTrappen() : trappen);
-const repWaarde = () => repBasis() * (klikStaat().voer > 0 ? VOER_MAAL : 1) * klikMaal();
+/// De gekochte techniekstappen komen daar als percentage bovenop.
+const techniekNiveau = () => klikStaat().techniek;
+const techniekMaal = niveau =>
+  Math.pow(KLIK_TECHNIEK.maal, niveau === undefined ? techniekNiveau() : niveau);
+const techniekPrijs = () =>
+  Math.ceil(KLIK_TECHNIEK.prijs * Math.pow(KLIK_TECHNIEK.groei, techniekNiveau()));
+const repWaarde = () => repBasis() * techniekMaal() * (klikStaat().voer > 0 ? VOER_MAAL : 1) * klikMaal();
 
 function klikVerdien(n) {
   const k = klikStaat();
@@ -3124,7 +3141,7 @@ function klikRepBonus() {
   if (k.voer > 0) k.voer--;
   klikVerdien(winst);
   if ($('klik').classList.contains('aan')) {
-    pluim('+' + getal(winst));
+    pluim('+' + getalFijn(winst));
     tekenKlik();
   }
   klikBewaar();
@@ -3192,8 +3209,8 @@ function tekenKlik() {
   $('klikSaldo').textContent = getal(k.punten);
   $('klikTempo').textContent = basisPerSec() > 0 ? tempo(perSeconde()) : '';
   $('klikTik').textContent = cameraOn
-    ? t('klik_bezig') + ' · ' + t('klik_per_rep', getal(repWaarde()))
-    : t('klik_per_rep', getal(repWaarde())) + ' · ' + t('klik_train_uitleg');
+    ? t('klik_bezig') + ' · ' + t('klik_per_rep', getalFijn(repWaarde()))
+    : t('klik_per_rep', getalFijn(repWaarde())) + ' · ' + t('klik_train_uitleg');
   $('klikTrainTekst').textContent = cameraOn ? t('klik_train_stop') : t('klik_train');
 
   const strookjes = [];
@@ -3270,6 +3287,14 @@ function klikAanbod() {
                    uitleg: t('up_rep_uit2', getal(repBasis(i)), getal(repBasis(i + 1))),
                    extra: '', koop: () => klikStaat().upgrades.push(id) });
     });
+    // Techniek is er altijd en raakt nooit op: elke stap maakt je push-up 1%
+    // meer waard. Zo blijft zelf trainen lonen naast alle helpers.
+    rijen.push({ id: 'tech', prijs: techniekPrijs(),
+                 titel: t('up_tech') + ' ' + (techniekNiveau() + 1),
+                 uitleg: t('up_rep_uit2',
+                          getalFijn(repBasis() * techniekMaal()),
+                          getalFijn(repBasis() * techniekMaal(techniekNiveau() + 1))),
+                 extra: '', koop: () => { klikStaat().techniek++; } });
     rijen.sort((a, b) => a.prijs - b.prijs);
   } else {
     rijen = KLIK_WINKEL.map(w => ({
