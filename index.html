@@ -2398,10 +2398,11 @@ function rlBeeld(stap) {
     </svg>`;
   }
   if (stap === 5) {
-    return `<svg viewBox="0 0 220 100">
-      <path d="${MODE_ICONEN.arena}" fill="${goud}" transform="translate(8,0) scale(1)"/>
-      <path d="${MODE_ICONEN.duel}" fill="${goud}" transform="translate(112,0) scale(1)" opacity=".75"/>
-    </svg>`;
+    // De vier spelmodi twee-bij-twee, in de volgorde waarin de tekst ze noemt.
+    const modi = ['arena', 'duel', 'online', 'klik'];
+    return `<svg viewBox="0 0 240 240" fill="none">${modi.map((m, i) =>
+      `<path d="${MODE_ICONEN[m]}" fill="${goud}" transform="translate(${10 + (i % 2) * 120},${10 + Math.floor(i / 2) * 120})"/>`
+    ).join('')}</svg>`;
   }
   return `<svg viewBox="0 0 120 120" fill="none">
     <circle cx="60" cy="44" r="19" fill="${goud}"/>
