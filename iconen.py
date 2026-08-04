@@ -320,18 +320,18 @@ ICONEN: dict[str, str] = {
 }
 
 
-# Iconen voor de spelmodi. Gekruiste zwaarden voor de eindeloze arena,
-# een stopwatch voor het duel van zestig seconden, en twee mensen met een
-# bliksem ertussen voor het duel tegen een echte tegenstander.
+# Iconen voor de spelmodi. Een burchtpoort voor de arena met haar twintig
+# werelden, een stopwatch voor het duel van zestig seconden, twee mensen met
+# een bliksem ertussen voor het online duel, en een knop met aanwijzer voor
+# de clicker.
 MODE_ICONEN: dict[str, str] = {
     "arena": (
-        bar(20, 88, 74, 20, 11)
-        + poly([(78, 8), (82, 28), (62, 24)])
-        + poly([(10, 82), (26, 78), (22, 94)])
-        + bar(80, 88, 26, 20, 11)
-        + poly([(22, 8), (38, 24), (18, 28)])
-        + poly([(90, 82), (78, 94), (74, 78)])
-        + bar(34, 44, 66, 44, 7, hole=True)
+        poly([(12, 20), (26, 20), (26, 30), (42, 30), (42, 20), (58, 20),
+              (58, 30), (74, 30), (74, 20), (88, 20), (88, 40), (12, 40)])
+        + poly([(18, 40), (82, 40), (82, 92), (18, 92)])
+        + poly([(40, 92), (40, 66), (50, 54), (60, 66), (60, 92)], hole=True)
+        + poly([(28, 48), (36, 48), (36, 56), (28, 56)], hole=True)
+        + poly([(64, 48), (72, 48), (72, 56), (64, 56)], hole=True)
     ),
     "duel": (
         circle(50, 58, 36)
