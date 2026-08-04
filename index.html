@@ -3082,8 +3082,11 @@ let goudenOp = 0, goudenTot = 0, naVraagTrainen = false;
 
 /// Maakt de opslag aan zodra hij nodig is. Bewust niet in DEFAULTS: die wordt
 /// met de spread gekopieerd en dan zouden alle profielen hetzelfde object delen.
+/// Alleen een LAGER versienummer betekent opnieuw beginnen (oude balans).
+/// Een hoger of gelijk nummer blijft staan: voortgang wissen omdat iemand
+/// toevallig een oudere pagina opent zou spelers onterecht leegtrekken.
 function klikStaat() {
-  if (!P.klik || typeof P.klik !== 'object' || P.klik.versie !== KLIK_VERSIE) {
+  if (!P.klik || typeof P.klik !== 'object' || (P.klik.versie || 0) < KLIK_VERSIE) {
     const oud = P.klik && typeof P.klik === 'object';
     P.klik = { versie: KLIK_VERSIE, punten: 0, totaal: 0, helpers: {}, upgrades: [],
                gezien: [], boosts: {}, voer: 0, laatst: Date.now() };
