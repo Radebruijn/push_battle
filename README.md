@@ -156,18 +156,18 @@ Daarna tellen je helpers vanzelf door, maar traag. Ze staan in **per uur**, niet
 
 | Helper | Prijs | Levert op | Verdient zichzelf terug in |
 |---|---|---|---|
-| Extra Arm | 25 | 1 per uur | een dag |
-| Jimbro | 300 | 5 per uur | 2,5 dag |
-| Yogamatje | 2.400 | 20 per uur | 5 dagen |
-| Halterbank | 19.200 | 80 per uur | 10 dagen |
-| Sportschool | 120.000 | 300 per uur | 17 dagen |
-| Bootcamp | 840.000 | 1.200 per uur | 29 dagen |
-| Kazerne | 5,5 mln | 5.000 per uur | 46 dagen |
-| Stadion | 34 mln | 20.000 per uur | 71 dagen |
-| Push-upfabriek | 200 mln | 80.000 per uur | 104 dagen |
-| Ruimtestation | 1,08 mld | 300.000 per uur | 150 dagen |
-| Planeet Plank | 6 mld | 1,2 mln per uur | 208 dagen |
-| De Oerpush-up | 35 mld | 5 mln per uur | 292 dagen |
+| Trainingsmaatje | 15 | 1 per uur | 15 uur |
+| Trainingsgroep | 180 | 5 per uur | 36 uur |
+| Sportzaal | 1.500 | 20 per uur | 3 dagen |
+| Sportschool | 12.000 | 80 per uur | 6 dagen |
+| Sportvereniging | 75.000 | 300 per uur | 10 dagen |
+| Stadion | 530.000 | 1.200 per uur | 18 dagen |
+| De hele buurt | 3,5 mln | 5.000 per uur | 29 dagen |
+| De hele stad | 21 mln | 20.000 per uur | 44 dagen |
+| De hele provincie | 125 mln | 80.000 per uur | 65 dagen |
+| Het hele land | 675 mln | 300.000 per uur | 94 dagen |
+| Het hele werelddeel | 3,7 mld | 1,2 mln per uur | 128 dagen |
+| De hele wereld | 22 mld | 5 mln per uur | 183 dagen |
 
 Elke volgende van dezelfde soort is een vijfde duurder. Stapelen loont dus maar even; daarna moet je door naar de volgende soort. Met veertig push-ups per dag zit je na een week rond de tien per uur, na een maand rond de tweehonderd, na een jaar rond de negenduizend — en dan heb je nog niet eens de helft van de soorten gezien. Het spel is met opzet niet uit te spelen.
 

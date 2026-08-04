@@ -255,30 +255,6 @@ enum Tk: String {
     case klik_gouden
     case klik_gouden_woede
     case klik_gouden_buit
-    case helper_arm
-    case helper_arm_uit
-    case helper_jimbro
-    case helper_jimbro_uit
-    case helper_mat
-    case helper_mat_uit
-    case helper_bank
-    case helper_bank_uit
-    case helper_gym
-    case helper_gym_uit
-    case helper_bootcamp
-    case helper_bootcamp_uit
-    case helper_kazerne
-    case helper_kazerne_uit
-    case helper_stadion
-    case helper_stadion_uit
-    case helper_fabriek
-    case helper_fabriek_uit
-    case helper_ruimte
-    case helper_ruimte_uit
-    case helper_planeet
-    case helper_planeet_uit
-    case helper_oer
-    case helper_oer_uit
     case up_helper
     case up_helper_uit
     case up_rep
@@ -302,10 +278,39 @@ enum Tk: String {
     case klik_slot_uit
     case up_helper_uit2
     case up_rep_uit2
-    case up_tech
+    case tech_warm
+    case tech_adem
+    case tech_houding
+    case tech_ritme
+    case tech_grip
+    case tech_coach
     case klik_geeft
     case klik_samen
     case klik_nieuw
+    case helper_maat
+    case helper_maat_uit
+    case helper_groep
+    case helper_groep_uit
+    case helper_zaal
+    case helper_zaal_uit
+    case helper_school
+    case helper_school_uit
+    case helper_club
+    case helper_club_uit
+    case helper_stadion
+    case helper_stadion_uit
+    case helper_buurt
+    case helper_buurt_uit
+    case helper_stad
+    case helper_stad_uit
+    case helper_provincie
+    case helper_provincie_uit
+    case helper_land
+    case helper_land_uit
+    case helper_werelddeel
+    case helper_werelddeel_uit
+    case helper_wereld
+    case helper_wereld_uit
 }
 
 enum Strings {
@@ -524,7 +529,7 @@ enum Strings {
         "ol_draw": ["GELIJKSPEL", "A DRAW", "ÉGALITÉ"],
         "ol_player_1": ["{0} speler actief", "{0} player active", "{0} joueur actif"],
         "mode_klik": ["Clicker", "Clicker", "Clicker"],
-        "mode_klik_sub": ["Je push-ups bouwen een imperium", "Your push-ups build an empire", "Tes pompes bâtissent un empire"],
+        "mode_klik_sub": ["Je push-ups blijven doortellen", "Your push-ups keep counting", "Tes pompes continuent de compter"],
         "klik_kop": ["push-ups", "push-ups", "pompes"],
         "klik_per_sec": ["{0} per seconde", "{0} per second", "{0} par seconde"],
         "klik_per_rep": ["{0} per push-up", "{0} per push-up", "{0} par pompe"],
@@ -541,41 +546,17 @@ enum Strings {
         "klik_gouden": ["Gouden push-up!", "Golden push-up!", "Pompe en or !"],
         "klik_gouden_woede": ["Woede! Zeven keer zoveel, {0} seconden lang.", "Frenzy! Seven times as much for {0} seconds.", "Fureur ! Sept fois plus pendant {0} secondes."],
         "klik_gouden_buit": ["+{0} push-ups in één klap.", "+{0} push-ups all at once.", "+{0} pompes d'un coup."],
-        "helper_arm": ["Extra Arm", "Extra Arm", "Bras en Plus"],
-        "helper_arm_uit": ["Een arm die uit zichzelf meedrukt.", "An arm that presses along by itself.", "Un bras qui pousse tout seul."],
-        "helper_jimbro": ["Jimbro", "Jimbro", "Jimbro"],
-        "helper_jimbro_uit": ["Je maatje uit de sportschool. Telt hardop mee.", "Your buddy from the gym. Counts out loud.", "Ton pote de la salle. Il compte à voix haute."],
-        "helper_mat": ["Yogamatje", "Yoga Mat", "Tapis de Yoga"],
-        "helper_mat_uit": ["Zacht voor je polsen, streng voor je ego.", "Soft on your wrists, hard on your ego.", "Doux pour les poignets, dur pour l'ego."],
-        "helper_bank": ["Halterbank", "Weight Bench", "Banc de Musculation"],
-        "helper_bank_uit": ["Er ligt altijd iemand op. Meestal jij.", "Someone is always on it. Usually you.", "Il y a toujours quelqu'un dessus. Souvent toi."],
-        "helper_gym": ["Sportschool", "Gym", "Salle de Sport"],
-        "helper_gym_uit": ["Vierentwintig uur open, nooit leeg.", "Open around the clock, never empty.", "Ouverte jour et nuit, jamais vide."],
-        "helper_bootcamp": ["Bootcamp", "Bootcamp", "Bootcamp"],
-        "helper_bootcamp_uit": ["Zestig man in het park, om zes uur 's ochtends.", "Sixty people in the park, at six in the morning.", "Soixante personnes au parc, à six heures du matin."],
-        "helper_kazerne": ["Kazerne", "Barracks", "Caserne"],
-        "helper_kazerne_uit": ["Hier is opdrukken geen keuze.", "Here, push-ups are not optional.", "Ici, les pompes ne sont pas facultatives."],
-        "helper_stadion": ["Stadion", "Stadium", "Stade"],
-        "helper_stadion_uit": ["Uitverkocht. Iedereen ligt op de grond.", "Sold out. Everyone is on the floor.", "Complet. Tout le monde est au sol."],
-        "helper_fabriek": ["Push-upfabriek", "Push-up Factory", "Usine à Pompes"],
-        "helper_fabriek_uit": ["Aan de lopende band, dag en nacht.", "Off the assembly line, day and night.", "À la chaîne, jour et nuit."],
-        "helper_ruimte": ["Ruimtestation", "Space Station", "Station Spatiale"],
-        "helper_ruimte_uit": ["Zonder zwaartekracht telt het dubbel zo vaak.", "Without gravity you just keep going.", "Sans gravité, ça n'arrête jamais."],
-        "helper_planeet": ["Planeet Plank", "Planet Plank", "Planète Planche"],
-        "helper_planeet_uit": ["Een hele wereld in plankhouding.", "An entire world holding a plank.", "Un monde entier en position de planche."],
-        "helper_oer": ["De Oerpush-up", "The First Push-up", "La Pompe Originelle"],
-        "helper_oer_uit": ["De eerste ooit gedaan. Hij duurt nog steeds voort.", "The first one ever done. It is still going.", "La toute première. Elle dure encore."],
-        "up_helper": ["Sterkere {0}", "Stronger {0}", "{0} amélioré"],
+        "up_helper": ["{0} verdubbelen", "Double {0}", "Doubler {0}"],
         "up_helper_uit": ["{0} levert twee keer zoveel op.", "{0} pays out twice as much.", "{0} rapporte deux fois plus."],
-        "up_rep": ["Sterkere armen", "Stronger arms", "Bras plus forts"],
+        "up_rep": ["Meer kracht", "More strength", "Plus de force"],
         "up_rep_uit": ["Elke echte push-up levert twee keer zoveel op.", "Every real push-up pays out twice as much.", "Chaque vraie pompe rapporte deux fois plus."],
         "koop_xp2": ["Dubbele XP", "Double XP", "XP double"],
         "koop_xp2_uit": ["Dertig minuten lang twee keer zoveel XP in de arena, het duel en online.", "For thirty minutes, double XP in the arena, the duel and online.", "Pendant trente minutes, deux fois plus d'XP en arène, en duel et en ligne."],
         "koop_punt2": ["Dubbele push-ups", "Double push-ups", "Pompes doubles"],
         "koop_punt2_uit": ["Tien minuten lang levert alles twee keer zoveel op.", "For ten minutes everything pays out twice as much.", "Pendant dix minutes, tout rapporte deux fois plus."],
-        "koop_woede": ["Woede", "Frenzy", "Fureur"],
+        "koop_woede": ["Sprint", "Sprint", "Sprint"],
         "koop_woede_uit": ["Eén minuut lang telt elke push-up zeven keer. Ga liggen.", "For one minute every push-up counts seven times. Get down.", "Pendant une minute, chaque pompe compte sept fois. Au sol."],
-        "koop_voer": ["Krachtvoer", "Power Food", "Barre d'Énergie"],
+        "koop_voer": ["Eiwitreep", "Protein bar", "Barre protéinée"],
         "koop_voer_uit": ["Je volgende {0} echte push-ups leveren vijf keer zoveel op.", "Your next {0} real push-ups pay out five times as much.", "Tes {0} prochaines vraies pompes rapportent cinq fois plus."],
         "koop_voer_rest": ["nog {0} push-ups", "{0} push-ups left", "encore {0} pompes"],
         "klik_te_duur": ["Nog niet genoeg push-ups.", "Not enough push-ups yet.", "Pas encore assez de pompes."],
@@ -588,10 +569,39 @@ enum Strings {
         "klik_slot_uit": ["Je ziet wat dit is zodra je er genoeg voor hebt.", "You will see what this is once you can afford it.", "Tu verras ce que c'est dès que tu pourras te le payer."],
         "up_helper_uit2": ["{0} gaat van {1} naar {2}.", "{0} goes from {1} to {2}.", "{0} passe de {1} à {2}."],
         "up_rep_uit2": ["Elke push-up gaat van {0} naar {1}.", "Every push-up goes from {0} to {1}.", "Chaque pompe passe de {0} à {1}."],
-        "up_tech": ["Betere techniek", "Better technique", "Meilleure technique"],
+        "tech_warm": ["Warming-up", "Warm-up", "Échauffement"],
+        "tech_adem": ["Ademhaling", "Breathing", "Respiration"],
+        "tech_houding": ["Houding", "Posture", "Posture"],
+        "tech_ritme": ["Vast ritme", "Steady rhythm", "Rythme régulier"],
+        "tech_grip": ["Grip", "Grip", "Prise"],
+        "tech_coach": ["Coach", "Coach", "Coach"],
         "klik_geeft": ["Levert {0} op.", "Pays out {0}.", "Rapporte {0}."],
         "klik_samen": ["samen {0}", "{0} together", "{0} au total"],
         "klik_nieuw": ["De clicker is opnieuw begonnen: de balans is helemaal omgegooid.", "The clicker has started over: the balance has been completely reworked.", "Le clicker repart de zéro : l'équilibrage a été entièrement revu."],
+        "helper_maat": ["Trainingsmaatje", "Training partner", "Partenaire d'entraînement"],
+        "helper_maat_uit": ["Iemand die met je meedoet.", "Someone who joins in.", "Quelqu'un qui s'entraîne avec toi."],
+        "helper_groep": ["Trainingsgroep", "Training group", "Groupe d'entraînement"],
+        "helper_groep_uit": ["Een vaste groep die elke week afspreekt.", "A regular group that meets every week.", "Un groupe qui se retrouve chaque semaine."],
+        "helper_zaal": ["Sportzaal", "Sports hall", "Salle de sport"],
+        "helper_zaal_uit": ["Matten op de vloer en ruimte genoeg.", "Mats on the floor and room to spare.", "Des tapis au sol et de la place."],
+        "helper_school": ["Sportschool", "Gym", "Salle de musculation"],
+        "helper_school_uit": ["Vierentwintig uur open, nooit leeg.", "Open around the clock, never empty.", "Ouverte jour et nuit, jamais vide."],
+        "helper_club": ["Sportvereniging", "Sports club", "Club sportif"],
+        "helper_club_uit": ["Alle leden doen mee.", "Every member joins in.", "Tous les membres s'y mettent."],
+        "helper_stadion": ["Stadion", "Stadium", "Stade"],
+        "helper_stadion_uit": ["Uitverkocht. Iedereen ligt op de grond.", "Sold out. Everyone is on the floor.", "Complet. Tout le monde est au sol."],
+        "helper_buurt": ["De hele buurt", "The whole neighbourhood", "Tout le quartier"],
+        "helper_buurt_uit": ["Van de ene straat tot de andere.", "From one street to the next.", "D'une rue à l'autre."],
+        "helper_stad": ["De hele stad", "The whole city", "Toute la ville"],
+        "helper_stad_uit": ["Overal wordt er hardop geteld.", "All over town people are counting out loud.", "Partout, on compte à voix haute."],
+        "helper_provincie": ["De hele provincie", "The whole region", "Toute la région"],
+        "helper_provincie_uit": ["Elk dorp doet mee.", "Every village joins in.", "Chaque village participe."],
+        "helper_land": ["Het hele land", "The whole country", "Tout le pays"],
+        "helper_land_uit": ["Van de kust tot de grens.", "From the coast to the border.", "De la côte à la frontière."],
+        "helper_werelddeel": ["Het hele werelddeel", "The whole continent", "Tout le continent"],
+        "helper_werelddeel_uit": ["Miljoenen mensen tegelijk.", "Millions of people at once.", "Des millions de personnes à la fois."],
+        "helper_wereld": ["De hele wereld", "The whole world", "Le monde entier"],
+        "helper_wereld_uit": ["Iedereen, overal, op hetzelfde moment.", "Everyone, everywhere, at the same time.", "Tout le monde, partout, en même temps."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
