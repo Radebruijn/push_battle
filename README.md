@@ -6,11 +6,9 @@ Push-up game voor iOS. De camera volgt de hoogte van je hoofd; elke push-up is e
 
 `index.html` is het hele spel in één bestand. Het heeft niets nodig om te draaien: geen server, geen installatie, geen account. Dubbelklikken werkt, maar voor de camera moet het via `https` of `localhost` geopend worden — dat is een beveiligingsregel van elke browser.
 
-**Zelf hosten (aanbevolen).** Sleep de map `website/` op [app.netlify.com/drop](https://app.netlify.com/drop). Je krijgt binnen een paar seconden een openbare https-link die op elke telefoon en laptop werkt, in Safari, Chrome, Brave, wat je wilt. Alles doet het daar, inclusief de camera en het hoofdherkenningsmodel.
+**De site staat live op [pushbattle.netlify.app](https://pushbattle.netlify.app).** Netlify is gekoppeld aan de GitHub-repository [Radebruijn/push_battle](https://github.com/Radebruijn/push_battle) en publiceert automatisch de map `website/` bij elke push naar `main`. Alles doet het daar, inclusief de camera en het hoofdherkenningsmodel.
 
-Na het slepen krijg je een willekeurig adres. Log in met een gratis account om de site te behouden en hem via *Site configuration → Change site name* te hernoemen naar iets als `orbslayer.netlify.app`.
-
-Wil je later iets aanpassen: draai `python3 bouw-proefversie.py` en sleep de map opnieuw op je site onder *Deploys*.
+Wil je iets aanpassen: draai `python3 bouw-proefversie.py`, commit, en push — Netlify zet het binnen een minuut live.
 
 Alternatieven die net zo goed werken: GitHub Pages of Cloudflare Pages.
 

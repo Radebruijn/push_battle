@@ -60,7 +60,7 @@ Bij *App Privacy* in App Store Connect:
 - **Camera:** kies *niet verzameld*. Het beeld verlaat het toestel niet en wordt niet bewaard; het wordt alleen ter plekke geanalyseerd.
 - **Tracking:** nee.
 
-**Privacybeleid-URL:** de pagina `privacy.html` uit dit project, gezet op je Netlify-site. Bijvoorbeeld `https://orbslayer.netlify.app/privacy.html`. Apple eist een werkende link.
+**Privacybeleid-URL:** de pagina `privacy.html` uit dit project, gezet op je Netlify-site. Dat is `https://pushbattle.netlify.app/privacy.html`. Apple eist een werkende link.
 
 ## Wat de beoordelaar moet weten
 
