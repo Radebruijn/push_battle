@@ -339,7 +339,10 @@
   .lbNaam { flex: 1; min-width: 0; font-size: 15px; font-weight: 700;
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .lbNaam small { display: block; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.45); }
-  .lbLevel { flex: none; font-size: 19px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .lbLevel { font-size: 19px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  /* het rangteken staat links van het levelnummer, ook als je een foto hebt */
+  .lbNiveau { flex: none; display: flex; align-items: center; gap: 7px; }
+  .lbNiveau .lbBadge { width: 22px; height: 22px; }
   .lbMelding { text-align: center; color: rgba(255,255,255,.5); font-size: 14px;
                line-height: 1.5; padding: 30px 10px; }
 
@@ -349,7 +352,9 @@
   .spelerKaart { width: 100%; max-width: 22rem; text-align: center; }
   .spelerBadge { width: 74px; height: 74px; margin: 0 auto 14px; }
   .spelerNaam { font-size: 24px; font-weight: 900; }
-  .spelerRang { font-size: 14px; font-weight: 700; margin: 4px 0 20px; }
+  .spelerRang { font-size: 14px; font-weight: 700; margin: 4px 0 20px;
+                display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .spelerRang .lbBadge { width: 20px; height: 20px; flex: none; }
 
   #quests { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96); display: none;
             padding: 30px 22px; overflow-y: auto; }
@@ -871,6 +876,7 @@
   <div class="accCijfers" id="accCijfers"></div>
   <div class="trofeeKop" id="trofeeKop"></div>
   <div class="trofeeKast" id="trofeeKast"></div>
+  <button class="tekstKnop" id="invOpen"></button>
 
   <div id="accFormulier">
     <input type="email" id="accEmail" autocomplete="email" inputmode="email">
@@ -2829,6 +2835,7 @@ function renderAccount() {
   }
   $('trofeeKast').innerHTML = koppen.length ? koppen.join('')
     : `<div class="trofeeLeeg">${ontsmet(t('trofee_leeg'))}</div>`;
+  $('invOpen').textContent = t('inv_titel');
 
   tekenFoto();
   $('naamLabel').textContent = t('name_label').toUpperCase();
@@ -2862,6 +2869,9 @@ $('questsDicht').addEventListener('click', e => {
 });
 $('invDicht').addEventListener('click', e => {
   e.stopPropagation(); $('inventaris').classList.remove('aan');
+});
+$('invOpen').addEventListener('click', e => {
+  e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
 });
 $('buit').addEventListener('click', e => {
   e.stopPropagation(); $('buit').classList.remove('aan');
@@ -3375,7 +3385,8 @@ function tekenKlassement() {
       `<span class="lbNaam"><span${hx ? ` style="color:${hx}"` : ''}>${ontsmet(r.naam)}</span>` +
       `${jij ? ` <small>${t('lb_you')}</small>` : ''}` +
       `<small>${ttl ? ontsmet(ttl) + ' · ' : ''}${t('rank_' + rangVanLevel(level))}</small></span>` +
-      `<span class="lbLevel" style="color:${RANG_ICONEN.colors[rangVanLevel(level) - 1]}">${level}</span>`;
+      `<span class="lbNiveau">${rangTeken(level, 22)}` +
+      `<span class="lbLevel" style="color:${RANG_ICONEN.colors[rangVanLevel(level) - 1]}">${level}</span></span>`;
     knop.onclick = e => {
       e.stopPropagation();
       // Je eigen rij brengt je naar je naam, zodat je hem daar kunt wijzigen.
@@ -3429,8 +3440,8 @@ function toonSpeler(r) {
   $('spelerBadge').innerHTML = avatar(r.foto, level, 74, r.icoon);
   $('spelerNaam').textContent = r.naam;
   $('spelerNaam').style.color = hx || '';
-  $('spelerRang').textContent =
-    (ttl ? ttl + ' · ' : '') + t('rank_level', t('rank_' + n), level);
+  $('spelerRang').innerHTML = rangTeken(level, 20) +
+    `<span>${ontsmet((ttl ? ttl + ' · ' : '') + t('rank_level', t('rank_' + n), level))}</span>`;
   $('spelerRang').style.color = RANG_ICONEN.colors[n - 1];
   $('spelerCijfers').innerHTML = [
     [r.reps, t('stat_pushups')],
@@ -4293,15 +4304,6 @@ function tekenKlikLijst(altijd = false) {
     uitleg.className = 'klikMelding';
     uitleg.textContent = t('klik_uitleg');
     lijst.appendChild(uitleg);
-  }
-  if (klikTab === 'crates') {
-    const knop = document.createElement('button');
-    knop.className = 'tekstKnop';
-    knop.textContent = t('inv_titel');
-    knop.onclick = e => {
-      e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
-    };
-    lijst.appendChild(knop);
   }
   klikPrijzenBij();
 }

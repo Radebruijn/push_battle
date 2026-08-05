@@ -116,6 +116,8 @@ De beker rechtsboven opent het klassement: iedereen met een account, hoogste lev
 
 Tik op iemand en je ziet zijn cijfers: push-ups, kills, uitgespeelde arena's, gewonnen duels, streak en XP.
 
+Het rangteken staat rechts, direct links van het levelnummer — ook als iemand een foto heeft. Links in de rij staat dan de foto, rechts blijft zichtbaar welke rang bij dat level hoort. Op de spelerskaart staat hetzelfde teken voor de regel *Vuistvechter · Level 4*.
+
 **Wat er nooit in staat, is een e-mailadres.** De server geeft alleen spelgegevens terug; e-mailadressen komen er niet in voor. Spelers verschijnen onder de naam die ze zelf kiezen, en wie er geen kiest krijgt iets als *Speler 9BBF*.
 
 **Je naam kiezen.** Bovenaan het accountscherm staat een veld met een knop ernaast. Je mag er alles in zetten wat je wilt, tot vierentwintig tekens, inclusief spaties en emoji. De knop wordt pas actief zodra je iets verandert, en Enter werkt ook. Tik je in het klassement op je eigen rij, dan sta je meteen bij dat veld.
