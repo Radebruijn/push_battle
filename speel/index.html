@@ -79,6 +79,11 @@
   #orbwrap { position: relative; width: 300px; height: 300px; display: grid; place-items: center; }
   #glow { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(14px); }
   #enemySvg { position: relative; transition: width .3s, height .3s; will-change: transform; overflow: visible; }
+  #enemySvg svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  /* De gooey-canvas is groter dan het monster zodat de gloed erbuiten past. */
+  #enemyGoo { position: absolute; left: 50%; top: 50%; width: 170%; height: 170%;
+              transform: translate(-50%, -50%); pointer-events: none; }
+  #enemySvg.goo svg { display: none; }
   #bossRing { position: absolute; border-radius: 50%; border: 2px dashed rgba(242,38,58,.45);
               animation: draai 24s linear infinite; display: none; }
   @keyframes draai { to { transform: rotate(360deg); } }
@@ -656,7 +661,10 @@
       <div id="orbwrap">
         <div id="glow"></div>
         <div id="bossRing"></div>
-        <svg id="enemySvg" viewBox="0 0 100 100"><path id="enemyPath"/></svg>
+        <div id="enemySvg">
+          <canvas id="enemyGoo"></canvas>
+          <svg viewBox="0 0 100 100"><path id="enemyPath"/></svg>
+        </div>
       </div>
       <div class="hpwrap">
         <div class="hpbar"><div class="hpfill" id="hpfill"></div></div>
@@ -1115,10 +1123,256 @@ const killsNu = () => bezoek !== null ? bezoekKills : P.killsThisArena;
 const $ = id => document.getElementById(id);
 const rgbCss = (c, a=1) => `rgba(${Math.round(c[0]*255)},${Math.round(c[1]*255)},${Math.round(c[2]*255)},${a})`;
 // verloopt van arenakleur (vol) naar bloedrood (bijna dood), net als Theme.orbColor
-const orbCss = (c, f, a=1) => {
-  const t = [0.95, 0.15, 0.22], m = c.map((v,i) => t[i] + (v - t[i]) * Math.max(0, Math.min(1, f)));
-  return rgbCss(m, a);
+const orbMix = (c, f) => {
+  const t = [0.95, 0.15, 0.22];
+  return c.map((v, i) => t[i] + (v - t[i]) * Math.max(0, Math.min(1, f)));
 };
+const orbCss = (c, f, a=1) => rgbCss(orbMix(c, f), a);
+
+/* ---------------------------------------------------------------
+   Vloeibaar monster (naar de "Liquid Gooey Orb"-shader van Tamino
+   Martinius). Het silhouet van de vijand wordt een traag golvende
+   vorm met wervelend vloeibaar binnenwerk, dunne lichte sliertjes,
+   een glazige rand en een gloed die buiten het silhouet blijft —
+   alles in de kleur die het monster op dat moment heeft, dus ook
+   het verkleuren naar rood bij schade doet gewoon mee.
+   Zonder WebGL2 blijft de gewone SVG-weergave staan.
+---------------------------------------------------------------- */
+const GOO = (() => {
+  const canvas = $('enemyGoo');
+  let gl = null;
+  try {
+    gl = canvas.getContext('webgl2', { alpha: true, antialias: false, premultipliedAlpha: false });
+  } catch (e) { /* geen WebGL2: fallback hieronder */ }
+  if (!gl) { canvas.style.display = 'none'; return { actief: false, zet() {} }; }
+
+  const VERT = `#version 300 es
+  layout(location=0) in vec2 a_pos;
+  out vec2 v_uv;
+  void main(){ v_uv = a_pos * 0.5 + 0.5; gl_Position = vec4(a_pos, 0.0, 1.0); }`;
+
+  // 2D-bewerking van de orb-shader: in plaats van een geraymarchte bol is de
+  // vorm een afstandsveld (SDF) van het vijand-silhouet. Binnen dat veld
+  // stroomt dezelfde domain-warped fbm-vloeistof als in de pen.
+  const FRAG = `#version 300 es
+  precision highp float;
+  in vec2 v_uv;
+  out vec4 fragColor;
+  uniform sampler2D u_sdf;
+  uniform float u_tijd;
+  uniform vec3 u_basis;   // huidige monsterkleur
+  uniform vec3 u_licht;   // lichte variant voor sliertjes en gloedaccenten
+
+  mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
+
+  // afstand tot het silhouet, in uv-eenheden (negatief = binnen)
+  float sdf(vec2 uv){ return (texture(u_sdf, uv).r - 0.5) * (80.0 / 192.0); }
+
+  // trage golfjes over de rand: de "gooey" vervorming van het silhouet
+  vec2 golf(vec2 p, float t){
+    return vec2(
+      sin(p.y * 7.0 + t)        + 0.6 * sin((p.x + p.y) * 11.0 - t * 0.8),
+      sin(p.x * 8.0 - t * 0.9 + 1.7) + 0.6 * sin((p.y - p.x) * 10.0 + t * 0.7));
+  }
+
+  float hash13(vec3 p3){ p3 = fract(p3 * 0.1031); p3 += dot(p3, p3.zyx + 31.32); return fract((p3.x + p3.y) * p3.z); }
+  float vnoise3(vec3 p){
+    vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),
+                   mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),
+               mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),
+                   mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y), f.z);
+  }
+  float fbm3(vec3 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 3; i++){ v += a * vnoise3(p); p *= 2.03; a *= 0.5; } return v; }
+
+  // domain-warped veld -> stromende sliertjes, net als in de pen
+  float liquid(vec3 p){
+    float t = u_tijd * 0.5;
+    p *= 2.2;
+    p.xy *= rot(t * 0.15);
+    p.yz *= rot(t * 0.10);
+    vec3 w = vec3(fbm3(p + t * 0.2), fbm3(p + vec3(4.3, 1.2, -t * 0.15)), fbm3(p.zxy + vec3(7.7, 2.3, t * 0.10)));
+    return fbm3(p + 1.8 * w);
+  }
+
+  void main(){
+    vec2 uv = v_uv;
+    vec2 p = uv - 0.5;
+    float t = u_tijd;
+
+    vec2 w = uv + golf(p * 2.0, t * 0.9) * 0.011;
+    float d = sdf(w);
+
+    // pseudo-normaal uit het afstandsveld, voor rand en glinsters
+    vec2 e = vec2(0.006, 0.0);
+    vec2 g = vec2(sdf(w + e.xy) - sdf(w - e.xy), sdf(w + e.yx) - sdf(w - e.yx));
+    vec3 n = normalize(vec3(g * 9.0, 1.0));
+
+    float diepte = -d;                       // hoe ver binnen het silhouet
+    float aa = smoothstep(0.004, -0.004, d); // zachte rand
+
+    // binnenwerk: korte volumetrische mars door de wervelende vloeistof
+    vec3 rp = vec3(p * 2.0, -0.3);
+    float trans = 1.0;
+    vec3 inner = vec3(0.0);
+    for (int k = 0; k < 6; k++) {
+      float raw = liquid(rp);
+      float dens = smoothstep(0.35, 0.75, raw);
+      float fil = pow(1.0 - abs(2.0 * raw - 1.0), 5.0);
+      vec3 cc = mix(u_basis * 0.55, u_licht, 0.5 + 0.5 * sin(raw * 6.0 + t * 0.3 + rp.y * 2.5));
+      vec3 emit = cc * dens * 0.5 + cc * fil * 1.4 + vec3(1.0) * pow(fil, 3.0) * 0.56;
+      emit += u_licht * smoothstep(0.5, 0.0, length(rp.xy)) * 0.25;
+      inner += trans * emit * 0.22;
+      trans *= 0.82;
+      rp.z += 0.13;
+    }
+
+    // glazige rand + twee glinsters, zoals de fresnel en speculars in de pen
+    float fres = pow(clamp(1.0 - diepte / 0.055, 0.0, 1.0), 3.0);
+    vec3 rim = mix(u_basis, u_licht, 0.5 + 0.5 * (n.x * 0.7 + n.y * 0.45));
+    vec3 Ein = inner * (1.0 - fres * 0.6) + rim * fres * 1.1;
+    vec3 h1 = normalize(vec3(0.45, 0.65, 1.0));
+    vec3 h2 = normalize(vec3(-0.55, 0.20, 1.0));
+    Ein += vec3(1.0) * pow(max(dot(n, h1), 0.0), 140.0) * 1.3;
+    Ein += vec3(0.9, 0.95, 1.0) * pow(max(dot(n, h2), 0.0), 60.0) * 0.5;
+
+    // gloed alleen buiten het silhouet, kleur draait langzaam rond
+    float gloed = exp(-max(d, 0.0) * 22.0);
+    float ang = atan(p.y, p.x);
+    vec3 gc = mix(u_basis, u_licht, 0.5 + 0.5 * sin(ang * 3.0 + t * 0.5));
+    vec3 Eg = (gc * gloed * 1.4 + vec3(1.0) * pow(gloed, 3.0) * 0.5) * 0.75 * (1.0 - aa);
+    float cov = clamp(max(Eg.r, max(Eg.g, Eg.b)), 0.0, 1.0);
+
+    vec3 col = mix(Eg, u_basis * 0.22 + Ein, aa);
+    float alfa = aa + (1.0 - aa) * cov;
+    fragColor = vec4(clamp(col, 0.0, 1.0), alfa);
+  }`;
+
+  function compileer(soort, bron) {
+    const sh = gl.createShader(soort);
+    gl.shaderSource(sh, bron);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh) || 'shader');
+    return sh;
+  }
+  let programma;
+  try {
+    programma = gl.createProgram();
+    gl.attachShader(programma, compileer(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(programma, compileer(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(programma);
+    if (!gl.getProgramParameter(programma, gl.LINK_STATUS)) throw new Error('link');
+  } catch (e) {
+    canvas.style.display = 'none';
+    return { actief: false, zet() {} };
+  }
+  gl.useProgram(programma);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  const U = {
+    tijd: gl.getUniformLocation(programma, 'u_tijd'),
+    basis: gl.getUniformLocation(programma, 'u_basis'),
+    licht: gl.getUniformLocation(programma, 'u_licht'),
+  };
+
+  /* Afstandsveld van een silhouet: het pad wordt klein getekend en met een
+     3-4-chamfer in twee passen omgezet naar afstanden binnen en buiten. */
+  const SDF_N = 192, SDF_RUIMTE = 1.7; // zelfde factor als de canvasgrootte
+  function chamfer(v, N) {
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+      const i = y * N + x; let m = v[i];
+      if (x > 0) m = Math.min(m, v[i - 1] + 3);
+      if (y > 0) {
+        m = Math.min(m, v[i - N] + 3);
+        if (x > 0) m = Math.min(m, v[i - N - 1] + 4);
+        if (x < N - 1) m = Math.min(m, v[i - N + 1] + 4);
+      }
+      v[i] = m;
+    }
+    for (let y = N - 1; y >= 0; y--) for (let x = N - 1; x >= 0; x--) {
+      const i = y * N + x; let m = v[i];
+      if (x < N - 1) m = Math.min(m, v[i + 1] + 3);
+      if (y < N - 1) {
+        m = Math.min(m, v[i + N] + 3);
+        if (x < N - 1) m = Math.min(m, v[i + N + 1] + 4);
+        if (x > 0) m = Math.min(m, v[i + N - 1] + 4);
+      }
+      v[i] = m;
+    }
+  }
+  const sdfTexturen = new Map();
+  function sdfTextuur(pad) {
+    if (sdfTexturen.has(pad)) return sdfTexturen.get(pad);
+    const N = SDF_N;
+    const vlak = document.createElement('canvas');
+    vlak.width = vlak.height = N;
+    const ctx = vlak.getContext('2d', { willReadFrequently: true });
+    ctx.translate(N / 2, N / 2);
+    ctx.scale(N / (100 * SDF_RUIMTE), N / (100 * SDF_RUIMTE));
+    ctx.translate(-50, -50);
+    ctx.fillStyle = '#fff';
+    ctx.fill(new Path2D(pad));
+    const alfa = ctx.getImageData(0, 0, N, N).data;
+    const INF = 1e9, buiten = new Float64Array(N * N), binnen = new Float64Array(N * N);
+    for (let i = 0; i < N * N; i++) {
+      const in_ = alfa[i * 4 + 3] > 127;
+      buiten[i] = in_ ? 0 : INF;   // afstand tot het silhouet
+      binnen[i] = in_ ? INF : 0;   // afstand tot de buitenwereld
+    }
+    chamfer(buiten, N);
+    chamfer(binnen, N);
+    const data = new Uint8Array(N * N);
+    for (let i = 0; i < N * N; i++) {
+      const d = (buiten[i] - binnen[i]) / 3; // pixels, positief = buiten
+      data[i] = Math.max(0, Math.min(255, Math.round(127.5 + d * (127.5 / 40))));
+    }
+    const tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, N, N, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    sdfTexturen.set(pad, tex);
+    return tex;
+  }
+
+  const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  const RUSTIG = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let basis = [0.5, 1, 0.3], licht = basis, huidig = null;
+
+  function zet(icoon, rgb, maat) {
+    basis = rgb;
+    licht = rgb.map(v => v + (1 - v) * 0.6);
+    const px = Math.round(maat * SDF_RUIMTE * DPR);
+    if (canvas.width !== px) canvas.width = canvas.height = px;
+    if (huidig !== icoon) {
+      huidig = icoon;
+      gl.bindTexture(gl.TEXTURE_2D, sdfTextuur(icoon));
+    }
+  }
+
+  function stap(nu) {
+    requestAnimationFrame(stap);
+    if (huidig === null || document.hidden || !canvas.width) return;
+    if (canvas.offsetParent === null) return; // scherm staat niet in beeld
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform1f(U.tijd, RUSTIG ? 1.7 : nu * 0.001);
+    gl.uniform3fv(U.basis, basis);
+    gl.uniform3fv(U.licht, licht);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+  requestAnimationFrame(stap);
+
+  return { actief: true, zet };
+})();
 
 function spawn() {
   if (killsNu() >= 9) {
@@ -1194,7 +1448,16 @@ function render() {
   svg.style.width = svg.style.height = size + 'px';
   $('enemyPath').setAttribute('d', arena.icon);
   $('enemyPath').setAttribute('fill', col);
-  svg.style.filter = `drop-shadow(0 0 14px ${orbCss(c, f, .9)}) drop-shadow(0 0 40px ${orbCss(c, f, .5)})`;
+  svg.classList.toggle('goo', GOO.actief);
+  if (GOO.actief) {
+    // De shader tekent zijn eigen gloed; de zware drop-shadows mogen uit.
+    svg.style.filter = 'none';
+    GOO.zet(arena.icon, orbMix(c, f), size);
+  } else {
+    svg.style.filter = `drop-shadow(0 0 14px ${orbCss(c, f, .9)}) drop-shadow(0 0 40px ${orbCss(c, f, .5)})`;
+  }
+  // De zachte gloeicirkel hoort bij de SVG-weergave; de shader gloeit zelf.
+  $('glow').style.display = GOO.actief ? 'none' : 'block';
   $('glow').style.background = `radial-gradient(circle, ${orbCss(c, f, .38)}, transparent 68%)`;
   $('glow').style.width = $('glow').style.height = (size * 1.7) + 'px';
   $('bossRing').style.display = enemy.boss ? 'block' : 'none';
