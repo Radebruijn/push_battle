@@ -1138,22 +1138,27 @@ const GOO = (() => {
   const canvas = $('enemyGoo');
   let gl = null;
   try {
-    gl = canvas.getContext('webgl2', { alpha: true, antialias: false, premultipliedAlpha: false });
-  } catch (e) { /* geen WebGL2: fallback hieronder */ }
+    // Gewoon WebGL 1: dat spreekt elke browser, ook oudere Safari's.
+    const opties = { alpha: true, antialias: false };
+    gl = canvas.getContext('webgl', opties) || canvas.getContext('experimental-webgl', opties);
+  } catch (e) { /* geen WebGL: fallback hieronder */ }
   if (!gl) { canvas.style.display = 'none'; return { actief: false, zet() {} }; }
 
-  const VERT = `#version 300 es
-  layout(location=0) in vec2 a_pos;
-  out vec2 v_uv;
+  const VERT = `
+  attribute vec2 a_pos;
+  varying vec2 v_uv;
   void main(){ v_uv = a_pos * 0.5 + 0.5; gl_Position = vec4(a_pos, 0.0, 1.0); }`;
 
   // 2D-bewerking van de orb-shader: in plaats van een geraymarchte bol is de
   // vorm een afstandsveld (SDF) van het vijand-silhouet. Binnen dat veld
   // stroomt dezelfde domain-warped fbm-vloeistof als in de pen.
-  const FRAG = `#version 300 es
-  precision highp float;
-  in vec2 v_uv;
-  out vec4 fragColor;
+  const FRAG = `
+  #ifdef GL_FRAGMENT_PRECISION_HIGH
+    precision highp float;
+  #else
+    precision mediump float;
+  #endif
+  varying vec2 v_uv;
   uniform sampler2D u_sdf;
   uniform float u_tijd;
   uniform vec3 u_basis;   // huidige monsterkleur
@@ -1162,7 +1167,7 @@ const GOO = (() => {
   mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
 
   // afstand tot het silhouet, in uv-eenheden (negatief = binnen)
-  float sdf(vec2 uv){ return (texture(u_sdf, uv).r - 0.5) * (80.0 / 192.0); }
+  float sdf(vec2 uv){ return (texture2D(u_sdf, uv).r - 0.5) * (80.0 / 256.0); }
 
   // trage golfjes over de rand: de "gooey" vervorming van het silhouet
   vec2 golf(vec2 p, float t){
@@ -1204,8 +1209,8 @@ const GOO = (() => {
     vec2 g = vec2(sdf(w + e.xy) - sdf(w - e.xy), sdf(w + e.yx) - sdf(w - e.yx));
     vec3 n = normalize(vec3(g * 9.0, 1.0));
 
-    float diepte = -d;                       // hoe ver binnen het silhouet
-    float aa = smoothstep(0.004, -0.004, d); // zachte rand
+    float diepte = -d;                                 // hoe ver binnen het silhouet
+    float aa = 1.0 - smoothstep(-0.004, 0.004, d);     // zachte rand
 
     // binnenwerk: korte volumetrische mars door de wervelende vloeistof
     vec3 rp = vec3(p * 2.0, -0.3);
@@ -1217,7 +1222,7 @@ const GOO = (() => {
       float fil = pow(1.0 - abs(2.0 * raw - 1.0), 5.0);
       vec3 cc = mix(u_basis * 0.55, u_licht, 0.5 + 0.5 * sin(raw * 6.0 + t * 0.3 + rp.y * 2.5));
       vec3 emit = cc * dens * 0.5 + cc * fil * 1.4 + vec3(1.0) * pow(fil, 3.0) * 0.56;
-      emit += u_licht * smoothstep(0.5, 0.0, length(rp.xy)) * 0.25;
+      emit += u_licht * (1.0 - smoothstep(0.0, 0.5, length(rp.xy))) * 0.25;
       inner += trans * emit * 0.22;
       trans *= 0.82;
       rp.z += 0.13;
@@ -1241,7 +1246,8 @@ const GOO = (() => {
 
     vec3 col = mix(Eg, u_basis * 0.22 + Ein, aa);
     float alfa = aa + (1.0 - aa) * cov;
-    fragColor = vec4(clamp(col, 0.0, 1.0), alfa);
+    // voorvermenigvuldigde alpha: zo verwacht elke browser de canvas
+    gl_FragColor = vec4(clamp(col, 0.0, 1.0) * alfa, alfa);
   }`;
 
   function compileer(soort, bron) {
@@ -1256,6 +1262,7 @@ const GOO = (() => {
     programma = gl.createProgram();
     gl.attachShader(programma, compileer(gl.VERTEX_SHADER, VERT));
     gl.attachShader(programma, compileer(gl.FRAGMENT_SHADER, FRAG));
+    gl.bindAttribLocation(programma, 0, 'a_pos');
     gl.linkProgram(programma);
     if (!gl.getProgramParameter(programma, gl.LINK_STATUS)) throw new Error('link');
   } catch (e) {
@@ -1276,7 +1283,8 @@ const GOO = (() => {
 
   /* Afstandsveld van een silhouet: het pad wordt klein getekend en met een
      3-4-chamfer in twee passen omgezet naar afstanden binnen en buiten. */
-  const SDF_N = 192, SDF_RUIMTE = 1.7; // zelfde factor als de canvasgrootte
+  // 256 is een macht van twee: WebGL1 is streng voor andere textuurmaten.
+  const SDF_N = 256, SDF_RUIMTE = 1.7; // ruimtefactor gelijk aan de canvasgrootte
   function chamfer(v, N) {
     for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
       const i = y * N + x; let m = v[i];
@@ -1329,7 +1337,7 @@ const GOO = (() => {
     gl.bindTexture(gl.TEXTURE_2D, tex);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, N, N, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, N, N, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
