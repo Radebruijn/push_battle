@@ -378,6 +378,18 @@ enum Tk: String {
     case meld_account
     case meld_fout
     case foto_regels
+    case les1
+    case les2
+    case les3
+    case les_knop
+    case les_skip
+    case geluid_label
+    case muziek_label
+    case geluid_uit
+    case geluid_uitleg
+    case muziek_uitleg
+    case menu_meer
+    case quest_stand
 }
 
 enum Strings {
@@ -736,6 +748,18 @@ enum Strings {
         "meld_account": ["Log in om iemand te kunnen melden.", "Sign in to report someone.", "Connecte-toi pour signaler quelqu'un."],
         "meld_fout": ["Melden lukte niet.", "Reporting failed.", "Le signalement a échoué."],
         "foto_regels": ["Geen naaktbeelden of aanstootgevende foto's.", "No nudity or offensive pictures.", "Pas de nudité ni d'images offensantes."],
+        "les1": ["Dit is je arena. Tik op VECHTEN om het gevecht te openen.", "This is your arena. Tap FIGHT to open the battle.", "Voici ton arène. Touche COMBATTRE pour ouvrir le combat."],
+        "les2": ["Elke push-up is een klap tegen het monster. Doe er één — of tik op het scherm om te proberen.", "Every push-up is a hit against the monster. Do one — or tap the screen to try.", "Chaque pompe frappe le monstre. Fais-en une — ou touche l'écran pour essayer."],
+        "les3": ["Deze stippen zijn de vijanden van deze arena: elke tiende is een boss. Versla hem en de volgende arena gaat open. Veel sterkte!", "These dots are this arena's enemies: every tenth is a boss. Beat it and the next arena opens. Good luck!", "Ces points sont les ennemis de cette arène : chaque dixième est un boss. Bats-le et l'arène suivante s'ouvre. Bon courage !"],
+        "les_knop": ["Begrepen", "Got it", "Compris"],
+        "les_skip": ["Overslaan", "Skip", "Passer"],
+        "geluid_label": ["Geluid", "Sound", "Son"],
+        "muziek_label": ["Muziek", "Music", "Musique"],
+        "geluid_uit": ["uit", "off", "coupé"],
+        "geluid_uitleg": ["De tonen bij elke push-up en de klikjes in de menu's.", "The tone on every push-up and the clicks in the menus.", "Le son de chaque pompe et les clics dans les menus."],
+        "muziek_uitleg": ["Een rustige lus op de achtergrond.", "A calm loop in the background.", "Une boucle tranquille en fond."],
+        "menu_meer": ["Meer", "More", "Plus"],
+        "quest_stand": ["{0} van {1}", "{0} of {1}", "{0} sur {1}"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

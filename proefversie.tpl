@@ -265,7 +265,7 @@
 
   /* burgermenu en spelmodi */
   .mBalk { display: flex; align-items: center; gap: 8px; padding: 0 12px 6px; }
-  #burger, #tandwiel, #accountKnop, #klassementKnop, #questKnop {
+  #burger, #accountKnop {
     flex: none; background: rgba(255,255,255,.07); border: 0; border-radius: 14px;
     color: rgba(255,255,255,.85); line-height: 1; cursor: pointer; width: 50px; height: 46px; }
   #burger { font-size: 30px; }
@@ -290,7 +290,6 @@
   .fotoRij .tekstKnop { margin: 0; }
   .fotoHint { font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.45;
               margin: 8px 0 16px; }
-  #klassementKnop { font-size: 21px; }
   #accountKnop.aan::after { content: ''; position: absolute; right: 7px; top: 7px;
     width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
   #tandwiel { font-size: 24px; }
@@ -389,6 +388,17 @@
                  text-overflow: ellipsis; white-space: nowrap; }
   .invDot { display: inline-block; border-radius: 50%; }
   .invT { font-weight: 900; color: #ffc740; line-height: 1; }
+  /* De les ligt onder de cameravraag (14), zodat die gewoon werkt. */
+  #les { position: fixed; inset: 0; z-index: 10; display: none; pointer-events: none; }
+  #les.aan { display: block; }
+  .lesBlok { position: fixed; background: rgba(0,0,0,.78); pointer-events: auto; }
+  .lesBubbel { position: fixed; left: 50%; transform: translateX(-50%);
+               width: min(92%, 380px); background: #15161a;
+               border: 1px solid rgba(255,199,64,.4); border-radius: 16px;
+               padding: 16px 18px; text-align: center; pointer-events: auto; }
+  #lesTekst { font-size: 14px; line-height: 1.5; }
+  #lesKnop { margin-top: 12px; }
+  #lesSkip { margin-top: 4px; }
   #buit { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.8);
           display: none; place-items: center; }
   #buit.aan { display: grid; }
@@ -469,7 +479,30 @@
   .modeKaart.aan { border-color: #ffc740; background: rgba(255,199,64,.1); }
   .modeKaart b { display: block; font-size: 19px; font-weight: 900; }
   .modeKaart span { font-size: 13px; color: rgba(255,255,255,.5); }
-  #modesDicht { display: block; margin: 8px auto 0; background: none; border: 0; font: inherit;
+  /* De rest van het menu ziet er bewust anders uit dan de spelmodi: geen brede
+     kaarten maar drie vakjes naast elkaar, met een streep ertussen. */
+  .menuScheiding { display: flex; align-items: center; gap: 12px; margin: 20px 2px 12px;
+                   font-size: 11px; font-weight: 900; letter-spacing: 3px;
+                   color: rgba(255,255,255,.35); }
+  .menuScheiding::before, .menuScheiding::after {
+    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.12); }
+  .menuExtra { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .extraKaart { position: relative; display: flex; flex-direction: column; align-items: center;
+                gap: 8px; padding: 16px 6px 13px; border-radius: 18px; cursor: pointer;
+                border: 1px solid rgba(255,255,255,.1); color: inherit; font: inherit;
+                background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); }
+  .extraKaart:active { transform: scale(.97); }
+  .extraIcoon { font-size: 26px; line-height: 1; }
+  .extraNaam { font-size: 12px; font-weight: 800; letter-spacing: .5px;
+               color: rgba(255,255,255,.75); text-align: center; }
+  .extraBadge { position: absolute; right: 8px; top: 8px; font-size: 10px; font-weight: 900;
+                padding: 3px 7px; border-radius: 99px; background: rgba(255,199,64,.2);
+                color: #ffc740; }
+  .extraBadge.af { background: rgba(74,222,128,.2); color: #4ade80; }
+  .extraBadge:empty { display: none; }
+  @media (prefers-reduced-motion: reduce) { .extraKaart:active { transform: none; } }
+
+  #modesDicht { display: block; margin: 18px auto 0; background: none; border: 0; font: inherit;
                 font-size: 14px; color: rgba(255,255,255,.45); cursor: pointer; }
 
   /* duel */
@@ -672,10 +705,7 @@
   <div class="menuVak">
     <div class="mBalk">
       <button id="burger" aria-label="menu">☰</button>
-      <button id="tandwiel" aria-label="instellingen">⚙</button>
       <div style="flex:1"></div>
-      <button id="questKnop" aria-label="opdrachten">📜</button>
-      <button id="klassementKnop" aria-label="klassement">🏆</button>
       <button id="accountKnop" aria-label="account">👤</button>
     </div>
     <h1 class="mTitel">PUSH BATTLE</h1>
@@ -805,6 +835,23 @@
     <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
     <div class="modeTekst"><b></b><span></span></div>
   </button>
+
+  <div class="menuScheiding"><span id="menuMeerKop"></span></div>
+  <div class="menuExtra">
+    <button class="extraKaart" id="questKnop">
+      <span class="extraIcoon">📜</span>
+      <span class="extraNaam" id="extraQuests"></span>
+      <span class="extraBadge" id="questBadge"></span>
+    </button>
+    <button class="extraKaart" id="klassementKnop">
+      <span class="extraIcoon">🏆</span>
+      <span class="extraNaam" id="extraKlassement"></span>
+    </button>
+    <button class="extraKaart" id="tandwiel">
+      <span class="extraIcoon">⚙</span>
+      <span class="extraNaam" id="extraInstel"></span>
+    </button>
+  </div>
   <button id="modesDicht"></button>
 </div>
 
@@ -839,6 +886,18 @@
 
 <div id="buit">
   <div class="buitKaart" id="buitKaart"></div>
+</div>
+
+<div id="les">
+  <div class="lesBlok" id="lesBoven"></div>
+  <div class="lesBlok" id="lesOnder"></div>
+  <div class="lesBlok" id="lesLinks"></div>
+  <div class="lesBlok" id="lesRechts"></div>
+  <div class="lesBubbel" id="lesBubbel">
+    <div id="lesTekst"></div>
+    <button class="grotKnop" id="lesKnop"></button>
+    <button class="tekstKnop" id="lesSkip"></button>
+  </div>
 </div>
 
 <div id="account">
@@ -911,6 +970,14 @@
   <div class="instelWaarde" id="diepteWaarde"></div>
   <input type="range" id="diepte" min="30" max="85" value="60">
   <div class="instelUitleg" id="diepteUitleg"></div>
+  <div class="instelLabel" id="geluidLabel" style="margin-top:26px"></div>
+  <div class="instelWaarde" id="geluidWaarde"></div>
+  <input type="range" id="geluid" min="0" max="100" value="70">
+  <div class="instelUitleg" id="geluidUitleg"></div>
+  <div class="instelLabel" id="muziekLabel" style="margin-top:22px"></div>
+  <div class="instelWaarde" id="muziekWaarde"></div>
+  <input type="range" id="muziek" min="0" max="100" value="35">
+  <div class="instelUitleg" id="muziekUitleg"></div>
   <div class="instelLabel" id="taalLabel" style="margin-top:26px"></div>
   <div class="taalRij" id="taalRij"></div>
   <button class="grotKnop" id="kalibreerKnop" style="margin-top:30px"></button>
@@ -1774,6 +1841,7 @@ function rep() {
   const crit = combo >= CRIT_COMBO, dmg = crit ? 2 : 1;
   if (crit) tip('combo');
   if (combo === CRIT_COMBO) questTel('combo');
+  if (lesStap === 2) lesVolgende();
 
   P.totalReps++; sessionReps++;
   klikRepBonus();
@@ -1901,6 +1969,7 @@ function toonGevecht() {
   render();
   startCameraIndienNodig();
   if (enemy.boss) tip('boss');
+  if (lesStap === 1) lesVolgende();
 }
 
 /// Toestemming wordt per apparaat onthouden, nooit via je account. Log je op
@@ -2628,7 +2697,8 @@ $('instelDicht').addEventListener('click', e => {
 $('rondleidingKnop').addEventListener('click', e => {
   e.stopPropagation();
   $('instel').classList.remove('aan');
-  toonRondleiding();
+  toonMenu();
+  lesStart();
 });
 
 $('kalibreerKnop').addEventListener('click', async e => {
@@ -2872,6 +2942,8 @@ $('invOpen').addEventListener('click', e => {
 $('buit').addEventListener('click', e => {
   e.stopPropagation(); $('buit').classList.remove('aan');
 });
+$('lesKnop').addEventListener('click', e => { e.stopPropagation(); lesVolgende(); });
+$('lesSkip').addEventListener('click', e => { e.stopPropagation(); lesKlaar(); });
 $('accDicht').addEventListener('click', e => {
   e.stopPropagation(); $('account').classList.remove('aan');
 });
@@ -3029,6 +3101,75 @@ let rlStap = 1;
 /// Binnen hetzelfde tabblad herhaalt hij zich niet, ook niet na verversen.
 function rondleidingNodig() {
   return !ingelogd() && sessionStorage.getItem('orbslayer.rondleiding') !== 'klaar';
+}
+
+/* ---------------- de interactieve les ----------------
+   Vervangt de oude dia-rondleiding: alles wordt grijs behalve het ene ding
+   dat je nú moet doen. Stap 1: op Vechten drukken. Stap 2: je eerste
+   push-up (of tik) — zo leer je de invoer. Stap 3: hoe de arena werkt,
+   met een Begrepen-knop. Dat is de hele tutorial. */
+let lesStap = 0, lesTimer = null;
+const LES_STAPPEN = [
+  { doel: 'vechten', tekst: 'les1', knop: false },
+  { doel: 'orbwrap', tekst: 'les2', knop: false },
+  { doel: 'pips',    tekst: 'les3', knop: true },
+];
+
+function lesStart() {
+  lesStap = 1;
+  $('les').classList.add('aan');
+  tekenLes();
+  clearInterval(lesTimer);
+  // Het doel kan meebewegen (schermwissel, draaien): blijf het gat volgen.
+  lesTimer = setInterval(lesPlaats, 250);
+}
+
+function tekenLes() {
+  const stap = LES_STAPPEN[lesStap - 1];
+  $('lesTekst').textContent = t(stap.tekst);
+  $('lesKnop').style.display = stap.knop ? 'block' : 'none';
+  $('lesKnop').textContent = t('les_knop');
+  $('lesSkip').textContent = t('les_skip');
+  lesPlaats();
+}
+
+/// Vier grijze blokken rondom het doel: de rest van het scherm is dood,
+/// alleen het gat blijft echt aanraakbaar.
+function lesPlaats() {
+  if (!lesStap) return;
+  const doel = $(LES_STAPPEN[lesStap - 1].doel);
+  const r = doel ? doel.getBoundingClientRect()
+                 : { left: 0, top: 0, right: 0, bottom: 0 };
+  const pad = 10;
+  const x1 = Math.max(0, r.left - pad), y1 = Math.max(0, r.top - pad);
+  const x2 = Math.min(innerWidth, r.right + pad), y2 = Math.min(innerHeight, r.bottom + pad);
+  const zet = (id, css) => Object.assign($(id).style, css);
+  zet('lesBoven',  { left: 0, top: 0, width: '100%', height: y1 + 'px' });
+  zet('lesOnder',  { left: 0, top: y2 + 'px', width: '100%',
+                     height: Math.max(0, innerHeight - y2) + 'px' });
+  zet('lesLinks',  { left: 0, top: y1 + 'px', width: x1 + 'px', height: (y2 - y1) + 'px' });
+  zet('lesRechts', { left: x2 + 'px', top: y1 + 'px',
+                     width: Math.max(0, innerWidth - x2) + 'px', height: (y2 - y1) + 'px' });
+  // De tekst komt boven of onder het gat, waar de meeste ruimte is.
+  const bubbel = $('lesBubbel');
+  if (y1 > innerHeight - y2) {
+    bubbel.style.top = ''; bubbel.style.bottom = (innerHeight - y1 + 12) + 'px';
+  } else {
+    bubbel.style.bottom = ''; bubbel.style.top = (y2 + 12) + 'px';
+  }
+}
+
+function lesVolgende() {
+  if (lesStap >= LES_STAPPEN.length) { lesKlaar(); return; }
+  lesStap++;
+  tekenLes();
+}
+
+function lesKlaar() {
+  lesStap = 0;
+  clearInterval(lesTimer);
+  $('les').classList.remove('aan');
+  sessionStorage.setItem('orbslayer.rondleiding', 'klaar');
 }
 
 function toonRondleiding() {
@@ -4405,5 +4546,5 @@ if (ingelogd()) {
   bezig(t('loading_saved'));
   haalVoortgangOp().then(() => { klaar(); render(); renderMenu(); });
 }
-else if (rondleidingNodig()) toonRondleiding();
+else if (rondleidingNodig()) lesStart();
 </script>
