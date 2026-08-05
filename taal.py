@@ -9,8 +9,19 @@ Gebruik:  python3 taal.py
 import json
 from pathlib import Path
 
+from telwoord import telwoord
+
 HIER = Path(__file__).parent
 TALEN = ["nl", "en", "fr"]
+
+
+def aantal_arenas() -> int:
+    bron = (HIER / "Orbslayer" / "Arena.swift").read_text()
+    blok = bron.split("static let all: [Arena] = [", 1)[1].split("\n    ]", 1)[0]
+    aantal = blok.count("Arena(")
+    if aantal == 0:
+        raise SystemExit("Geen arena's gevonden in Arena.swift")
+    return aantal
 
 
 def lees() -> dict[str, list[str]]:
@@ -18,7 +29,14 @@ def lees() -> dict[str, list[str]]:
     for sleutel, waarden in data.items():
         if len(waarden) != len(TALEN):
             raise SystemExit(f"'{sleutel}' heeft {len(waarden)} vertalingen, verwacht {len(TALEN)}")
-    return data
+    # {AANTAL_ARENAS} wordt het aantal arena's uit Arena.swift, voluit in de
+    # taal van de tekst. Zo blijft dat aantal overal kloppen als er een
+    # wereld bij komt of af gaat.
+    woorden = [telwoord(aantal_arenas(), taal) for taal in TALEN]
+    return {
+        sleutel: [w.replace("{AANTAL_ARENAS}", woorden[i]) for i, w in enumerate(waarden)]
+        for sleutel, waarden in data.items()
+    }
 
 
 def swift_string(s: str) -> str:

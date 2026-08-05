@@ -1,5 +1,5 @@
 {
-  "_uitleg": "Alle interfaceteksten in Nederlands, Engels en Frans. Draai 'python3 taal.py' na een wijziging: dat schrijft Orbslayer/Strings.swift en zet dezelfde teksten in de browserversie. {0} en {1} zijn invulplekken.",
+  "_uitleg": "Alle interfaceteksten in Nederlands, Engels en Frans. Draai 'python3 taal.py' na een wijziging: dat schrijft Orbslayer/Strings.swift en zet dezelfde teksten in de browserversie. {0} en {1} zijn invulplekken. {AANTAL_ARENAS} wordt bij het bouwen vervangen door het aantal arena's uit Arena.swift, voluit geschreven in de taal van de tekst.",
   "teksten": {
     "fight": [
       "VECHTEN",
@@ -842,9 +842,9 @@
       "Quatre façons de jouer"
     ],
     "tour5_tekst": [
-      "In de arena vecht je je door eenentwintig werelden. In het duel neem je het zestig seconden op tegen een tegenstander, online tegen een echte speler, en in de clicker bouw je met je push-ups een imperium.",
-      "In the arena you fight through twenty-one worlds. In the duel you race an opponent for sixty seconds, online you race a real player, and in the clicker you build an empire out of your push-ups.",
-      "Dans l'arène tu traverses vingt et un mondes. En duel tu affrontes un adversaire pendant soixante secondes, en ligne un vrai joueur, et dans le clicker tu bâtis un empire avec tes pompes."
+      "In de arena vecht je je door {AANTAL_ARENAS} werelden. In het duel neem je het zestig seconden op tegen een tegenstander, online tegen een echte speler, en in de clicker bouw je met je push-ups een imperium.",
+      "In the arena you fight through {AANTAL_ARENAS} worlds. In the duel you race an opponent for sixty seconds, online you race a real player, and in the clicker you build an empire out of your push-ups.",
+      "Dans l'arène tu traverses {AANTAL_ARENAS} mondes. En duel tu affrontes un adversaire pendant soixante secondes, en ligne un vrai joueur, et dans le clicker tu bâtis un empire avec tes pompes."
     ],
     "tour6_kop": [
       "Bewaar je voortgang",

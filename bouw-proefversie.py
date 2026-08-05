@@ -9,7 +9,10 @@ import re
 import sys
 from pathlib import Path
 
+from telwoord import telwoord
+
 HIER = Path(__file__).parent
+TALEN = ["nl", "en", "fr"]
 SJABLOON = Path(sys.argv[1]) if len(sys.argv) > 1 else HIER / "proefversie.tpl"
 UIT = HIER / "proefversie.html"
 
@@ -57,6 +60,33 @@ def lees_mode_icons() -> dict[str, str]:
     return dict(re.findall(r'static let (\w+) = "([^"]+)"', bron))
 
 
+def werk_documentatie_bij(arenas: list[dict]) -> None:
+    """Vult het aantal werelden (en de eerste en laatste naam) in de
+    documentatie in, zodat APPSTORE.md en README.md meegroeien met
+    Arena.swift zonder dat iemand eraan hoeft te denken."""
+    woord = telwoord(len(arenas), "nl")
+    eerste = arenas[0]["name"]["nl"]
+    laatste = arenas[-1]["name"]["nl"]
+    plekken = [
+        (HIER / "APPSTORE.md",
+         re.compile(r"Vecht je door \S+ werelden heen, van [^,.]+ naar [^,.]+\."),
+         f"Vecht je door {woord} werelden heen, van {eerste} naar {laatste}."),
+        (HIER / "README.md",
+         re.compile(r"waarin je alle \S+ naast elkaar ziet"),
+         f"waarin je alle {woord} naast elkaar ziet"),
+    ]
+    for pad, patroon, nieuw in plekken:
+        oud = pad.read_text()
+        vervangen, geraakt = patroon.subn(nieuw, oud)
+        if geraakt != 1:
+            raise SystemExit(
+                f"Zin over het aantal werelden {geraakt}× gevonden in {pad.name}, verwacht 1×"
+            )
+        if vervangen != oud:
+            pad.write_text(vervangen)
+            print(f"{pad.name}: aantal werelden bijgewerkt naar {woord}")
+
+
 def main() -> None:
     arenas = lees_arenas()
     sjabloon = SJABLOON.read_text()
@@ -68,7 +98,16 @@ def main() -> None:
     data = json.dumps(arenas, ensure_ascii=False).replace("\n", "")
     pagina = sjabloon.replace("__ARENAS__", data)
 
+    # Het aantal arena's, voluit geschreven: __AANTAL_ARENAS__ in het sjabloon
+    # (Nederlandstalige SEO-tekst) en {AANTAL_ARENAS} in taal.json (per taal).
+    woorden = {taal: telwoord(len(arenas), taal) for taal in TALEN}
+    pagina = pagina.replace("__AANTAL_ARENAS__", woorden["nl"])
+
     teksten = json.loads((HIER / "taal.json").read_text())["teksten"]
+    teksten = {
+        sleutel: [w.replace("{AANTAL_ARENAS}", woorden[TALEN[i]]) for i, w in enumerate(waarden)]
+        for sleutel, waarden in teksten.items()
+    }
     if sjabloon.count("__TEKSTEN__") != 1:
         raise SystemExit("Sjabloon moet precies één __TEKSTEN__ bevatten")
     pagina = pagina.replace(
@@ -95,8 +134,11 @@ def main() -> None:
                             json.dumps(lees_rang_icons(), ensure_ascii=False))
 
     if any(p in pagina for p in ("__ARENAS__", "__TEKSTEN__", "__MODEICONEN__",
-                                 "__ICOON180__", "__RANGICONEN__")):
+                                 "__ICOON180__", "__RANGICONEN__",
+                                 "__AANTAL_ARENAS__", "{AANTAL_ARENAS}")):
         raise SystemExit("Placeholder niet volledig vervangen")
+
+    werk_documentatie_bij(arenas)
     # proefversie.html blijft zonder <html>-omhulsel: zo kan hij als artifact
     # gepubliceerd worden. De website krijgt wel een volledig document, want
     # zoekmachines lezen liever een pagina met een taal en een nette kop.

@@ -56,6 +56,8 @@ python3 taal.py && python3 bouw-proefversie.py
 
 Dat schrijft `Orbslayer/Strings.swift` voor de app en zet dezelfde teksten in de browserversie, zodat die twee niet uit elkaar kunnen lopen. De vertalingen van de arena's zelf staan bij de arena's in `Orbslayer/Arena.swift`.
 
+Het aantal werelden staat nergens hard in een zin. In `taal.json` staat `{AANTAL_ARENAS}` en in `proefversie.tpl` staat `__AANTAL_ARENAS__`; de bouwscripts tellen de arena's in `Orbslayer/Arena.swift` en vullen het telwoord in, voluit en in de juiste taal (`telwoord.py`). Ook de zinnen hierover in `APPSTORE.md` en dit bestand worden bij het bouwen bijgewerkt, inclusief de naam van de eerste en laatste wereld. Komt er dus een arena bij of gaat er een af, dan klopt na één keer bouwen elke tekst weer.
+
 ## Account en voortgang
 
 Zonder account speel je gewoon door; je voortgang staat dan in de browser waarin je speelt. Log je in met de knop rechtsboven, dan gaat alles mee naar elk apparaat waarop je inlogt — je telefoon en je laptop delen dezelfde voortgang.
