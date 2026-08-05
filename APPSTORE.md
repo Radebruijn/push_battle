@@ -30,7 +30,7 @@ Push Battle maakt van push-ups een gevecht.
 Zet je telefoon rechtop naast je op de grond. De camera volgt de hoogte van je hoofd en telt elke volledige push-up. Je hoeft niets aan te raken en niets bij te houden — je zakt, je komt omhoog, en het monster voor je krijgt een klap.
 
 ARENA
-Vecht je door twintig werelden heen, van de Orkvelden naar de Leegte. Elke tiende vijand is een boss die je in één sessie moet neerhalen. Doe je tien herhalingen achter elkaar, dan slaat elke volgende dubbel zo hard.
+Vecht je door twintig werelden heen, van Orkenrijk naar Naamloze Diep. Elke tiende vijand is een boss die je in één sessie moet neerhalen. Doe je tien herhalingen achter elkaar, dan slaat elke volgende dubbel zo hard.
 
 DUEL
 Zestig seconden tegen een tegenstander. Jij kiest hoe zwaar: van warmlopen tot onmogelijk. Hoeveel hij gaat doen hoor je niet vooraf — je ziet alleen hoe zwaar het niveau is, en tijdens de minuut of je voor of achter ligt.

@@ -196,7 +196,7 @@ Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wor
 
 ## Iconen
 
-Vijanden heten naar wat ze zijn: in De Orkvelden vecht je tegen een Ork, in De Rottende Weiden tegen een Zombie, en de boss van een arena is de Grote variant daarvan. Elk soort heeft een eigen silhouet: een ork met slagtanden, een schedel, een spin, een vleermuis, een bliksemschicht in een ring, een oog in de leegte. Dat icoon is de vijand die je slaat — hij ademt, krimpt bij elke klap en verkleurt van de arenakleur naar bloedrood naarmate hij doodgaat. In het menu zie je dezelfde iconen klein terug op de kaartjes van komende arena's.
+Vijanden heten naar wat ze zijn: in Orkenrijk vecht je tegen een Ork, in Spinnenkuil tegen een Spin, en de boss van een arena is de Grote variant daarvan. Elk soort heeft een eigen silhouet: een ork met slagtanden, een schedel, een spin, een vleermuis, een bliksemschicht in een ring, een oog in de leegte. Dat icoon is de vijand die je slaat — hij ademt, krimpt bij elke klap en verkleurt van de arenakleur naar bloedrood naarmate hij doodgaat. In het menu zie je dezelfde iconen klein terug op de kaartjes van komende arena's.
 
 De iconen worden getekend door `iconen.py` en als SVG-pad in `Orbslayer/Arena.swift` gezet. Wil je er een aanpassen, bewerk dan de vorm in `iconen.py` en draai:
 
@@ -264,29 +264,29 @@ Elke arena is een eigen wereld met een eigen ras, kleur en boss. Versla je de bo
 
 | Arena | Wereld | Vijanden | Minion HP | Boss HP |
 |---|---|---|---|---|
-| 1 | Het Orkenrijk | Orks | 5 | 25 |
-| 2 | De Oorlogshorde | Oorlogsorks | 6 | 30 |
-| 3 | De Spinnenkuil | Spinnen | 8 | 40 |
-| 4 | De Bottenburcht | Skeletten | 9 | 45 |
-| 5 | Het Trollenmoeras | Trollen | 11 | 55 |
+| 1 | Orkenrijk | Orks | 5 | 25 |
+| 2 | Oorlogshorde | Oorlogsorks | 6 | 30 |
+| 3 | Spinnenkuil | Spinnen | 8 | 40 |
+| 4 | Bottenburcht | Skeletten | 9 | 45 |
+| 5 | Trollenmoeras | Trollen | 11 | 55 |
 | 6 | Pluizige Pussy | Katjes | 12 | 60 |
-| 7 | De Zielenmist | Geesten | 14 | 70 |
-| 8 | De Bloedkathedraal | Vampiers | 15 | 75 |
-| 9 | Het Grote Wolvenwoud | Weerwolven | 17 | 85 |
-| 10 | De Golemgroeve | Golems | 18 | 90 |
-| 11 | De Demonenpoort | Demonen | 20 | 100 |
-| 12 | De IJsreuzenburcht | IJsreuzen | 21 | 105 |
-| 13 | Het Duivelsdiep | Zeeduivels | 23 | 115 |
-| 14 | De Bliksemtoren | Bliksemgeesten | 24 | 120 |
-| 15 | De Slangentempel | Slangenvolk | 26 | 130 |
-| 16 | Het Drakennest | Draken | 27 | 135 |
-| 17 | Het Titanengraf | Titanen | 29 | 145 |
-| 18 | Het Rijk der Verdoemden | Verdoemden | 30 | 150 |
-| 19 | De Val der Engelen | Gevallen Engelen | 32 | 160 |
-| 20 | De Sterrensmidse | Sterrensmeden | 33 | 165 |
-| 21 | Het Naamloze Diep | Het Naamloze | 35 | 175 |
+| 7 | Zielenmist | Geesten | 14 | 70 |
+| 8 | Bloedkathedraal | Vampiers | 15 | 75 |
+| 9 | Grote Wolvenwoud | Weerwolven | 17 | 85 |
+| 10 | Golemgroeve | Golems | 18 | 90 |
+| 11 | Demonenpoort | Demonen | 20 | 100 |
+| 12 | IJsreuzenburcht | IJsreuzen | 21 | 105 |
+| 13 | Duivelsdiep | Zeeduivels | 23 | 115 |
+| 14 | Bliksemtoren | Bliksemgeesten | 24 | 120 |
+| 15 | Slangentempel | Slangenvolk | 26 | 130 |
+| 16 | Drakennest | Draken | 27 | 135 |
+| 17 | Titanengraf | Titanen | 29 | 145 |
+| 18 | Rijk der Verdoemden | Verdoemden | 30 | 150 |
+| 19 | Val der Engelen | Gevallen Engelen | 32 | 160 |
+| 20 | Sterrensmidse | Sterrensmeden | 33 | 165 |
+| 21 | Naamloze Diep | Het Naamloze | 35 | 175 |
 
-Daarna begint de reeks opnieuw, maar zwaarder: arena 22 is Het Orkenrijk II met minions van 36 HP, daarna Het Orkenrijk III, enzovoort. Het houdt dus nooit op.
+Daarna begint de reeks opnieuw, maar zwaarder: arena 22 is Orkenrijk II met minions van 36 HP, daarna Orkenrijk III, enzovoort. Het houdt dus nooit op.
 
 De hele interface kleurt mee met de arena waarin je zit, en bij het betreden van een nieuwe arena krijg je een korte intro in beeld.
 
