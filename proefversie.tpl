@@ -1686,11 +1686,10 @@ function pushup(echt = false) {
   if ($('menu').classList.contains('uit') && !$('duelSetup').classList.contains('aan')) { questRep(); rep(); }
 }
 
-document.body.addEventListener('pointerdown', e => {
-  if (e.target.closest('button') || e.target.closest('input')) return;
-  if (cameraOn) return;   // met camera aan tellen alleen echte push-ups
-  pushup();
-});
+/// Tikken op het scherm telt bewust NIET als push-up: alleen de camera telt.
+/// (Vroeger was een tik een testherhaling, maar dan kon je al vechtend
+/// valsspelen door op je scherm te rammen.) De spatiebalk blijft werken als
+/// testknop op een computer — op een telefoon bestaat die toch niet.
 document.addEventListener('keydown', e => {
   if (e.code === 'Space') { e.preventDefault(); pushup(); }
 });

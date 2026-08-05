@@ -757,7 +757,7 @@ enum Strings {
         "meld_fout": ["Melden lukte niet.", "Reporting failed.", "Le signalement a échoué."],
         "foto_regels": ["Geen naaktbeelden of aanstootgevende foto's.", "No nudity or offensive pictures.", "Pas de nudité ni d'images offensantes."],
         "les1": ["Dit is je arena. Tik op VECHTEN om het gevecht te openen.", "This is your arena. Tap FIGHT to open the battle.", "Voici ton arène. Touche COMBATTRE pour ouvrir le combat."],
-        "les2": ["Elke push-up is een klap tegen het monster. Doe er één — of tik op het scherm om te proberen.", "Every push-up is a hit against the monster. Do one — or tap the screen to try.", "Chaque pompe frappe le monstre. Fais-en une — ou touche l'écran pour essayer."],
+        "les2": ["Elke push-up is een klap tegen het monster. Ga liggen en doe er één!", "Every push-up is a hit against the monster. Get down and do one!", "Chaque pompe frappe le monstre. Mets-toi en position et fais-en une !"],
         "les3": ["Deze stippen zijn de vijanden van deze arena; elke tiende is een boss. Versla nu je eerste ork — nog een paar push-ups en hij ligt om!", "These dots are this arena's enemies; every tenth is a boss. Now defeat your first orc — a few more push-ups and it's down!", "Ces points sont les ennemis de cette arène ; chaque dixième est un boss. Bats ton premier orc — encore quelques pompes et il tombe !"],
         "les_knop": ["Begrepen", "Got it", "Compris"],
         "les_skip": ["Overslaan", "Skip", "Passer"],
