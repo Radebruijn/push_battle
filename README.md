@@ -242,7 +242,7 @@ Bij de eerste run op een echt toestel moet je in Xcode onder *Signing & Capabili
 
 ## Hoe je speelt
 
-Zet je telefoon rechtop naast je op de grond, tegen een muur of iets zwaars, zodat de frontcamera je van opzij ziet. Bij de eerste keer vragen we een kalibratie in twee stappen: één keer met gestrekte armen (bovenste stand) en één keer met je borst bijna op de grond (onderste stand). Daarna zie je rechts in beeld een balk met een bolletje dat live met je hoofd meebeweegt.
+Zet je telefoon rechtop voor je op de grond, tegen een muur of iets zwaars, zodat de frontcamera je van de voorkant ziet. Bij de eerste keer vragen we een kalibratie in twee stappen: één keer met gestrekte armen (bovenste stand) en één keer met je borst bijna op de grond (onderste stand). Daarna zie je rechts in beeld een balk met een bolletje dat live met je hoofd meebeweegt.
 
 Gevolgd wordt **je hele hoofd**. Een houdingsmodel geeft losse punten voor je neus, je ogen en je oren, en daarvan nemen we het gemiddelde. Dat is bewust breder dan gezichtsherkenning: onderin een push-up kijk je naar de grond en is je gezicht niet meer te zien, maar je oor en achterhoofd wel. Zo blijf je juist op je laagste punt gevolgd, en maakt het niet uit of je omhoog of omlaag kijkt.
 

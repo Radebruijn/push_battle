@@ -357,9 +357,9 @@
       "Fais une pompe — toute ta tête est suivie"
     ],
     "hint_searching": [
-      "Zoekt je hoofd… zorg dat je zijwaarts in beeld ligt",
-      "Looking for your head… make sure you are in view from the side",
-      "Recherche de ta tête… place-toi de profil dans le cadre"
+      "Zoekt je hoofd… zorg dat je recht voor de camera ligt",
+      "Looking for your head… make sure you are facing the camera",
+      "Recherche de ta tête… place-toi face à la caméra"
     ],
     "hint_sim": [
       "Simulator: tik op het scherm voor een rep",
@@ -737,9 +737,9 @@
       "Voici ta base. Lance un combat en bas ; choisis un autre mode en haut à gauche."
     ],
     "tip_setup": [
-      "Zet je telefoon rechtop naast je op de grond, zodat de camera je van opzij ziet.",
-      "Stand your phone upright next to you on the floor, so the camera sees you from the side.",
-      "Pose ton téléphone debout à côté de toi, pour que la caméra te voie de profil."
+      "Zet je telefoon rechtop voor je op de grond, zodat de camera je van de voorkant ziet.",
+      "Stand your phone upright in front of you on the floor, so the camera sees you from the front.",
+      "Pose ton téléphone debout devant toi, pour que la caméra te voie de face."
     ],
     "tip_bar": [
       "De balk rechts is jouw hoogte. Ga onder het onderste streepje en weer boven het bovenste: dat is één push-up.",
@@ -807,14 +807,14 @@
       "Push Battle transforme les pompes en combat. Chaque répétition frappe le monstre devant toi."
     ],
     "tour2_kop": [
-      "Zet je telefoon neer",
-      "Put your phone down",
-      "Pose ton téléphone"
+      "Kalibreer je telefoon",
+      "Calibrate your phone",
+      "Calibre ton téléphone"
     ],
     "tour2_tekst": [
-      "Rechtop naast je op de grond, zodat de camera je van opzij ziet. Tijdens het trainen hoef je niets aan te raken.",
-      "Upright next to you on the floor, so the camera sees you from the side. You never have to touch it while training.",
-      "Debout à côté de toi au sol, pour que la caméra te voie de profil. Tu n'as rien à toucher pendant l'entraînement."
+      "Zet je telefoon rechtop voor je op de grond, zodat de camera je van de voorkant ziet. Tijdens het trainen hoef je niets aan te raken.",
+      "Place your phone upright on the floor in front of you, so the camera sees you from the front. You never have to touch it while training.",
+      "Pose ton téléphone debout au sol devant toi, pour que la caméra te voie de face. Tu n'as rien à toucher pendant l'entraînement."
     ],
     "tour3_kop": [
       "Zo wordt geteld",
