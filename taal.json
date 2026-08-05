@@ -1782,9 +1782,9 @@
       "Chaque pompe frappe le monstre. Fais-en une — ou touche l'écran pour essayer."
     ],
     "les3": [
-      "Deze stippen zijn de vijanden van deze arena: elke tiende is een boss. Versla hem en de volgende arena gaat open. Veel sterkte!",
-      "These dots are this arena's enemies: every tenth is a boss. Beat it and the next arena opens. Good luck!",
-      "Ces points sont les ennemis de cette arène : chaque dixième est un boss. Bats-le et l'arène suivante s'ouvre. Bon courage !"
+      "Deze stippen zijn de vijanden van deze arena; elke tiende is een boss. Versla nu je eerste ork — nog een paar push-ups en hij ligt om!",
+      "These dots are this arena's enemies; every tenth is a boss. Now defeat your first orc — a few more push-ups and it's down!",
+      "Ces points sont les ennemis de cette arène ; chaque dixième est un boss. Bats ton premier orc — encore quelques pompes et il tombe !"
     ],
     "les_knop": [
       "Begrepen",
@@ -1830,6 +1830,41 @@
       "{0} van {1}",
       "{0} of {1}",
       "{0} sur {1}"
+    ],
+    "sign_out_zeker": [
+      "Zeker weten? Tik nog een keer.",
+      "Are you sure? Tap once more.",
+      "Tu es sûr ? Touche encore une fois."
+    ],
+    "les4": [
+      "Goed gedaan! Klaar met trainen? Met deze knop sluit je het gevecht. Tik erop.",
+      "Well done! Finished training? This button closes the fight. Tap it.",
+      "Bien joué ! Fini l'entraînement ? Ce bouton ferme le combat. Touche-le."
+    ],
+    "les5": [
+      "Hier zitten de spelmodi. Open het menu.",
+      "The game modes live here. Open the menu.",
+      "Les modes de jeu sont ici. Ouvre le menu."
+    ],
+    "les6": [
+      "Duel: zestig seconden tegen een tegenstander. Jij kiest vooraf hoe zwaar hij is.",
+      "Duel: sixty seconds against an opponent. You choose beforehand how tough it is.",
+      "Duel : soixante secondes contre un adversaire. Tu choisis sa force à l'avance."
+    ],
+    "les7": [
+      "Online: zestig seconden tegen een echt mens. Hiervoor heb je een account nodig.",
+      "Online: sixty seconds against a real person. You need an account for this.",
+      "En ligne : soixante secondes contre une vraie personne. Il te faut un compte."
+    ],
+    "les8": [
+      "De clicker: elke echte push-up is een munt. Koop er helpers, techniek en crates van.",
+      "The clicker: every real push-up is a coin. Spend them on helpers, technique and crates.",
+      "Le clicker : chaque vraie pompe est une pièce. Achète des aides, de la technique et des caisses."
+    ],
+    "les9": [
+      "En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Dat is alles — trainen maar!",
+      "And these are your quests: three a day and two a week, with XP and push-ups as rewards. That's everything — get training!",
+      "Et voici tes missions : trois par jour et deux par semaine, avec XP et pompes en récompense. C'est tout — à toi de jouer !"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

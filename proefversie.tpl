@@ -392,6 +392,7 @@
      camerabeeldje (normaal 12) gaat tijdens de les achter het grijs, anders
      hangt je eigen hoofd voor de uitleg. */
   body.lesAan #cam { z-index: 9; }
+  body.lesAan #modes { z-index: 9; }
   #les { position: fixed; inset: 0; z-index: 10; display: none; pointer-events: none; }
   #les.aan { display: block; }
   .lesBlok { position: fixed; background: rgba(0,0,0,.78); pointer-events: auto; }
@@ -453,6 +454,17 @@
   .pwEisen .goed { color: #4ade80; }
   .pwEisen .teken { width: 12px; flex: none; }
   .accPrive { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; }
+  /* De inventaris hoort bij je spullen, niet bij het afsluiten; hij staat
+     daarom boven bij je cijfers en is een echte knop. */
+  .accKnopBreed { display: block; width: 100%; margin: 2px 0 24px; padding: 13px 0;
+                  border-radius: 14px; border: 1px solid rgba(255,255,255,.14);
+                  background: rgba(255,255,255,.06); color: #fff; font: inherit;
+                  font-size: 15px; font-weight: 800; cursor: pointer; }
+  /* Uitloggen staat apart onderaan, met een streep en ruimte ervoor, zodat je
+     er niet per ongeluk op tikt als je wilde sluiten. */
+  .accScheiding { height: 1px; background: rgba(255,255,255,.1); margin: 30px 0 0; }
+  #accUitloggen { margin-top: 22px; margin-bottom: 10px; color: rgba(242,38,58,.75); }
+  #accUitloggen.zeker { color: #f2263a; font-weight: 800; }
   .accMelding { font-size: 13px; text-align: center; min-height: 34px; line-height: 1.4;
                 color: #ffc740; padding: 6px 0; font-weight: 600; }
 
@@ -896,6 +908,7 @@
   <div class="lesBlok" id="lesOnder"></div>
   <div class="lesBlok" id="lesLinks"></div>
   <div class="lesBlok" id="lesRechts"></div>
+  <div class="lesBlok" id="lesMidden" style="background:transparent"></div>
   <div class="lesBubbel" id="lesBubbel">
     <div id="lesTekst"></div>
     <button class="grotKnop" id="lesKnop"></button>
@@ -932,9 +945,9 @@
   </div>
 
   <div class="accCijfers" id="accCijfers"></div>
+  <button class="accKnopBreed" id="invOpen"></button>
   <div class="trofeeKop" id="trofeeKop"></div>
   <div class="trofeeKast" id="trofeeKast"></div>
-  <button class="tekstKnop" id="invOpen"></button>
 
   <div id="accFormulier">
     <input type="email" id="accEmail" autocomplete="email" inputmode="email">
@@ -944,8 +957,9 @@
     <button class="grotKnop" id="accInloggen"></button>
     <button class="tekstKnop" id="accRegistreren"></button>
   </div>
-  <button class="tekstKnop" id="accUitloggen"></button>
   <button class="tekstKnop" id="accDicht"></button>
+  <div class="accScheiding"></div>
+  <button class="tekstKnop" id="accUitloggen"></button>
 </div>
 
 <div id="laden">
@@ -1875,6 +1889,7 @@ function rep() {
     P.totalXP += gained; P.totalKills++;
     questTel('kills');
     if (wasBoss) questTel('boss');
+    if (lesStap === 3) lesVolgende();
 
     let entered = null;
     if (wasBoss) {
@@ -1966,6 +1981,7 @@ function toonMenu() {
   $('cambalk').classList.remove('aan');
   if (cameraOn) stopCamera();
   renderMenu();
+  if (lesStap === 4) lesVolgende();
 }
 
 function toonGevecht() {
@@ -2627,6 +2643,7 @@ let duelNiveau = 50, duelStart = 0, duelJij = 0, duelTegen = 0, duelTimer = null
 function toonModi() {
   $('modes').classList.add('aan');
   $('modesKop').textContent = t('menu_modes');
+  if (lesStap === 5) lesVolgende();
   const vul = (id, icoon, titel, sub, actief) => {
     const k = $(id);
     k.querySelector('path').setAttribute('d', icoon);
@@ -3008,6 +3025,8 @@ function toonAccount() {
   renderAccount();
 }
 
+let uitlogTimer = null;
+
 function renderAccount() {
   $('accountKop').textContent = t('account').toUpperCase();
   $('accStatus').textContent = ingelogd()
@@ -3052,6 +3071,8 @@ function renderAccount() {
   $('accInloggen').textContent = t('sign_in');
   toonWachtwoordEisen();
   $('accRegistreren').textContent = t('sign_up');
+  $('accUitloggen').classList.remove('zeker');
+  clearTimeout(uitlogTimer);
   $('accUitloggen').textContent = t('sign_out');
   $('accDicht').textContent = t('close');
 }
@@ -3082,7 +3103,25 @@ $('lesSkip').addEventListener('click', e => { e.stopPropagation(); lesKlaar(); }
 $('accDicht').addEventListener('click', e => {
   e.stopPropagation(); $('account').classList.remove('aan');
 });
-$('accUitloggen').addEventListener('click', e => { e.stopPropagation(); logUit(); });
+/// Uitloggen vraagt om een tweede tik. Eén misklik mag je nooit je account
+/// kosten, en een apart venster is voor zoiets kleins te veel.
+$('accUitloggen').addEventListener('click', e => {
+  e.stopPropagation();
+  const knop = $('accUitloggen');
+  if (knop.classList.contains('zeker')) {
+    clearTimeout(uitlogTimer);
+    knop.classList.remove('zeker');
+    logUit();
+    return;
+  }
+  knop.classList.add('zeker');
+  knop.textContent = t('sign_out_zeker');
+  clearTimeout(uitlogTimer);
+  uitlogTimer = setTimeout(() => {
+    knop.classList.remove('zeker');
+    knop.textContent = t('sign_out');
+  }, 4000);
+});
 
 $('accInloggen').addEventListener('click', async e => {
   e.stopPropagation();
@@ -3244,10 +3283,20 @@ function rondleidingNodig() {
    push-up (of tik) — zo leer je de invoer. Stap 3: hoe de arena werkt,
    met een Begrepen-knop. Dat is de hele tutorial. */
 let lesStap = 0, lesTimer = null;
+/// 'dood' legt een onzichtbaar blok over het gat: je ziet het doel oplichten
+/// maar kunt het niet indrukken — voor uitlegstappen met een Begrepen-knop.
+/// 'bij' draait één keer bij binnenkomst van de stap.
 const LES_STAPPEN = [
-  { doel: 'vechten', tekst: 'les1', knop: false },
-  { doel: 'orbwrap', tekst: 'les2', knop: false },
-  { doel: 'pips',    tekst: 'les3', knop: true },
+  { doel: 'vechten',    tekst: 'les1' },                 // klik op Vechten
+  { doel: 'orbwrap',    tekst: 'les2' },                 // je eerste push-up
+  { doel: 'pips',       tekst: 'les3' },                 // versla je eerste ork
+  { doel: 'terug',      tekst: 'les4' },                 // zo sluit je het gevecht
+  { doel: 'burger',     tekst: 'les5' },                 // open de spelmodi
+  { doel: 'modeDuel',   tekst: 'les6', knop: true, dood: true },
+  { doel: 'modeOnline', tekst: 'les7', knop: true, dood: true },
+  { doel: 'modeKlik',   tekst: 'les8', knop: true, dood: true },
+  { doel: 'questKnop',  tekst: 'les9', knop: true, dood: true,
+    bij: () => $('modes').classList.remove('aan') },
 ];
 
 function lesStart() {
@@ -3262,6 +3311,7 @@ function lesStart() {
 
 function tekenLes() {
   const stap = LES_STAPPEN[lesStap - 1];
+  stap.bij?.();
   $('lesTekst').textContent = t(stap.tekst);
   $('lesKnop').style.display = stap.knop ? 'block' : 'none';
   $('lesKnop').textContent = t('les_knop');
@@ -3286,6 +3336,12 @@ function lesPlaats() {
   zet('lesLinks',  { left: 0, top: y1 + 'px', width: x1 + 'px', height: (y2 - y1) + 'px' });
   zet('lesRechts', { left: x2 + 'px', top: y1 + 'px',
                      width: Math.max(0, innerWidth - x2) + 'px', height: (y2 - y1) + 'px' });
+  // Bij uitlegstappen ligt er een onzichtbaar blok óver het gat: kijken mag,
+  // aanraken niet — anders start je midden in de les per ongeluk een duel.
+  zet('lesMidden', LES_STAPPEN[lesStap - 1].dood
+    ? { display: 'block', left: x1 + 'px', top: y1 + 'px',
+        width: (x2 - x1) + 'px', height: (y2 - y1) + 'px' }
+    : { display: 'none' });
   // De tekst komt boven of onder het gat, waar de meeste ruimte is.
   const bubbel = $('lesBubbel');
   if (y1 > innerHeight - y2) {

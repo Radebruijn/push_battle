@@ -77,7 +77,9 @@ Het aantal werelden staat nergens hard in een zin. In `taal.json` staat `{AANTAL
 
 Zonder account speel je gewoon door; je voortgang staat dan in de browser waarin je speelt. Log je in met de knop rechtsboven, dan gaat alles mee naar elk apparaat waarop je inlogt — je telefoon en je laptop delen dezelfde voortgang.
 
-Op het accountscherm staan al je cijfers bij elkaar: push-ups, kills, uitgespeelde arena's, gewonnen duels, je streak en je level.
+Op het accountscherm staan al je cijfers bij elkaar: push-ups, kills, uitgespeelde arena's, gewonnen duels, je streak en je level. Daaronder staat **Inventaris** als eigen knop, en daaronder de trofeeënkast.
+
+**Uitloggen staat expres apart.** Het is de laatste regel van het scherm, achter een streep en met ruimte eromheen, en het staat in rood. Eén tik zet er *Zeker weten? Tik nog een keer* — pas de tweede tik logt je echt uit, en na vier seconden vervalt dat vanzelf. Een misklik op **Sluiten** kan je dus nooit je account kosten.
 
 Bij het inloggen kijkt hij welke voortgang het verst is, die van de server of die van dit apparaat, en houdt de verste aan. Zo raak je nooit iets kwijt door in te loggen.
 
