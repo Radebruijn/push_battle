@@ -72,8 +72,8 @@
   .boss-tag { font-size: 11px; font-weight: 900; letter-spacing: 4px; color: #f2263a; margin-bottom: 2px; }
   .race { font-size: 12px; color: rgba(255,255,255,.55); }
 
-  #orbwrap { position: relative; width: 300px; height: 300px; display: grid; place-items: center; }
-  #glow { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(14px); }
+  #orbwrap { position: relative; width: 320px; height: 320px; display: grid; place-items: center; }
+  #glow { position: absolute; width: 320px; height: 320px; border-radius: 50%; filter: blur(14px); }
   #enemySvg { position: relative; transition: width .3s, height .3s; will-change: transform; overflow: visible; }
   #bossRing { position: absolute; border-radius: 50%; border: 2px dashed rgba(242,38,58,.45);
               animation: draai 24s linear infinite; display: none; }
@@ -742,7 +742,7 @@
     <div class="mKaart">
       <div class="mArenaLabel" id="mArenaLabel"></div>
       <div class="mArenaNaam" id="mArenaNaam"></div>
-      <svg class="mIcoon" id="mIcoon" viewBox="0 0 100 100"><path id="mIcoonPad"/></svg>
+      <svg class="mIcoon" id="mIcoon" viewBox="0 0 100 100"></svg>
       <div class="mVijand" id="mVijand"></div>
       <div class="mHp" id="mHp"></div>
       <div class="mPips" id="mPips"></div>
@@ -785,7 +785,7 @@
       <div id="orbwrap">
         <div id="glow"></div>
         <div id="bossRing"></div>
-        <svg id="enemySvg" viewBox="0 0 100 100"><path id="enemyPath"/></svg>
+        <svg id="enemySvg" viewBox="0 0 100 100"></svg>
       </div>
       <div class="hpwrap">
         <div class="hpbar"><div class="hpfill" id="hpfill"></div></div>
@@ -1224,6 +1224,35 @@ window.addEventListener('error', ev => {
 const ARENAS = __ARENAS__;
 const TEKSTEN = __TEKSTEN__;
 const MODE_ICONEN = __MODEICONEN__;
+const ARENA_ART = __ARENAART__;
+
+/* Elk monster bestaat uit lagen met een kleurrol. De rollen krijgen hier hun
+   echte kleur: het lijf in de kleur van de arena, met een donkere en een
+   lichtere variant erbij, en vaste kleuren voor stof, ogen en mond. Om elke
+   laag komt een donkere lijn — dat maakt de stripstijl. */
+const KLEUR_STOF = '#8a8578', KLEUR_BROEK = '#3f4a5a';
+const KLEUR_WIT = '#f0eee4', KLEUR_ZWART = '#1a1a22', KLEUR_LIJN = '#15151c';
+
+function rolKleur(rol, c, hoofd) {
+  if (rol === 'lijf') return hoofd;
+  if (rol === 'diep') return rgbCss(c.map(v => v * 0.6));
+  if (rol === 'licht') return rgbCss(c.map(v => Math.min(1, v * 1.2 + 0.14)));
+  if (rol === 'kleding') return KLEUR_STOF;
+  if (rol === 'broek') return KLEUR_BROEK;
+  if (rol === 'wit') return KLEUR_WIT;
+  return KLEUR_ZWART;
+}
+
+/// De binnenkant van een <svg> voor één monster. Zonder tekening valt hij
+/// terug op het oude silhouet in één kleur.
+function monsterPaden(a, hoofd) {
+  const lagen = ARENA_ART[a.race.nl];
+  if (!lagen) return `<path d="${a.icon}" fill="${hoofd}"/>`;
+  return lagen.map(([d, rol]) =>
+    `<path d="${d}" fill="${rolKleur(rol, a.rgb, hoofd)}" stroke="${KLEUR_LIJN}"` +
+    ` stroke-width="${rol === 'wit' || rol === 'zwart' ? 1.6 : 2.8}"` +
+    ` stroke-linejoin="round"/>`).join('');
+}
 const RANG_ICONEN = __RANGICONEN__;
 const TALEN = ['nl', 'en', 'fr'];
 
@@ -1505,14 +1534,13 @@ function render() {
   $('enemyName').className = 'enemy-name' + (enemy.boss ? ' boss' : '');
   $('raceLine').textContent = enemy.boss ? '' : tt(arena.race);
 
-  const size = enemy.boss ? 235 : 175, col = orbCss(c, f);
+  const size = enemy.boss ? 300 : 235, col = orbCss(c, f);
   const svg = $('enemySvg');
   svg.style.width = svg.style.height = size + 'px';
-  $('enemyPath').setAttribute('d', arena.icon);
-  $('enemyPath').setAttribute('fill', col);
-  svg.style.filter = `drop-shadow(0 0 14px ${orbCss(c, f, .9)}) drop-shadow(0 0 40px ${orbCss(c, f, .5)})`;
-  $('glow').style.background = `radial-gradient(circle, ${orbCss(c, f, .38)}, transparent 68%)`;
-  $('glow').style.width = $('glow').style.height = (size * 1.7) + 'px';
+  svg.innerHTML = monsterPaden(arena, col);
+  // Geen gloed meer om het monster: de tekening moet het zelf doen.
+  $('glow').style.background = `radial-gradient(circle, ${rgbCss(c, .12)}, transparent 70%)`;
+  $('glow').style.width = $('glow').style.height = (size * 1.5) + 'px';
   $('bossRing').style.display = enemy.boss ? 'block' : 'none';
   $('bossRing').style.width = $('bossRing').style.height = (size * 1.25) + 'px';
 
@@ -1910,9 +1938,8 @@ function renderMenu() {
   $('mArenaLabel').textContent = t('arena_n_race', idxNu(), tt(arena.race).toUpperCase());
   $('mArenaNaam').textContent = tt(arena.name);
   $('mArenaNaam').style.color = rgbCss(c);
-  $('mIcoonPad').setAttribute('d', arena.icon);
-  $('mIcoonPad').setAttribute('fill', orbCss(c, f));
-  $('mIcoon').style.filter = `drop-shadow(0 0 12px ${orbCss(c, f, .8)})`;
+  $('mIcoon').innerHTML = monsterPaden(arena, orbCss(c, f));
+  $('mIcoon').style.filter = 'none';
   $('mVijand').textContent = enemy.boss ? t('boss_named', vijandNaam()) : vijandNaam();
   $('mVijand').style.color = enemy.boss ? '#f2263a' : '#fff';
   $('mHp').textContent = t('hp_short', enemy.hp);
@@ -1934,7 +1961,7 @@ function renderMenu() {
     const knop = document.createElement('button');
     knop.className = 'mSlot' + (bezoek === i ? ' mHier' : '');
     knop.innerHTML =
-      `<div class="mVak"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb, .85)}"/></svg></div>` +
+      `<div class="mVak"><svg viewBox="0 0 100 100">${monsterPaden(a, rgbCss(a.rgb, .85))}</svg></div>` +
       `<div class="mSlotNaam" style="color:rgba(255,255,255,.75)">${tt(a.name)}</div>` +
       `<div class="mSlotRas">${tt(a.race)}</div>` +
       `<div class="mSlotSlot">✓</div>`;
@@ -1949,7 +1976,7 @@ function renderMenu() {
     const knop = document.createElement('button');
     knop.className = 'mSlot mVoorhoede';
     knop.innerHTML =
-      `<div class="mVak"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb, .85)}"/></svg></div>` +
+      `<div class="mVak"><svg viewBox="0 0 100 100">${monsterPaden(a, rgbCss(a.rgb, .85))}</svg></div>` +
       `<div class="mSlotNaam" style="color:rgba(255,255,255,.9)">${tt(a.name)}</div>` +
       `<div class="mSlotRas">${tt(a.race)}</div>` +
       `<div class="mSlotSlot">▶</div>`;
@@ -1964,7 +1991,7 @@ function renderMenu() {
     knop.className = 'mSlot';
     knop.innerHTML =
       `<div class="mVak">` +
-      (a ? `<svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb, .5)}"/></svg>`
+      (a ? `<svg viewBox="0 0 100 100">${monsterPaden(a, rgbCss(a.rgb, .5))}</svg>`
          : `<span>?</span>`) +
       `</div>` +
       `<div class="mSlotNaam" style="color:${a ? 'rgba(255,255,255,.75)' : 'rgba(255,255,255,.4)'}">` +
@@ -3260,7 +3287,7 @@ function cosVisual(c, maat = 40) {
   if (c.soort === 'icoon') {
     const a = arenaAt(c.arena);
     return `<svg viewBox="0 0 100 100" style="width:${maat}px;height:${maat}px">` +
-           `<path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>`;
+           monsterPaden(a, rgbCss(a.rgb)) + `</svg>`;
   }
   if (c.soort === 'kleur') {
     const d = Math.round(maat * 0.7);
@@ -3327,7 +3354,7 @@ function renderInventaris() {
   for (let i = 1; i <= Math.max(ARENAS.length, ronde); i++) {
     const a = arenaAt(i);
     koppen.push(i < P.arenaIndex
-      ? `<div class="trofee"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>` +
+      ? `<div class="trofee"><svg viewBox="0 0 100 100">${monsterPaden(a, rgbCss(a.rgb))}</svg>` +
         `<span>${ontsmet(tt(a.boss))}</span></div>`
       : `<div class="trofee dicht"><b>?</b><span>${ontsmet(t('trofee_nog'))}</span></div>`);
   }
@@ -3353,7 +3380,7 @@ function avatar(foto, level, maat, icoonId) {
   if (c && c.soort === 'icoon') {
     const a = arenaAt(c.arena);
     return `<svg class="lbBadge" viewBox="0 0 100 100" style="width:${maat}px;height:${maat}px">` +
-           `<path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>`;
+           monsterPaden(a, rgbCss(a.rgb)) + `</svg>`;
   }
   return rangTeken(level, maat);
 }

@@ -55,6 +55,17 @@ def lees_rang_icons() -> dict[str, list[str]]:
     return {"paths": paden, "colors": kleuren}
 
 
+def lees_arena_art() -> dict[str, list[list[str]]]:
+    """Leest de tekeningen in lagen uit ArenaArt.swift: ras -> [[pad, rol], ...]."""
+    bron = (HIER / "Orbslayer" / "ArenaArt.swift")
+    if not bron.exists():
+        return {}
+    uit: dict[str, list[list[str]]] = {}
+    for ras, stuk in re.findall(r'"([^"]+)": "([^"]+)"', bron.read_text()):
+        uit[ras] = [laag.split("|") for laag in stuk.split(";")]
+    return uit
+
+
 def lees_mode_icons() -> dict[str, str]:
     bron = (HIER / "Orbslayer" / "ModeIcons.swift").read_text()
     return dict(re.findall(r'static let (\w+) = "([^"]+)"', bron))
@@ -160,13 +171,18 @@ def main() -> None:
         raise SystemExit("Sjabloon moet precies één __MODEICONEN__ bevatten")
     pagina = pagina.replace("__MODEICONEN__", json.dumps(icons, ensure_ascii=False))
 
+    if sjabloon.count("__ARENAART__") != 1:
+        raise SystemExit("Sjabloon moet precies één __ARENAART__ bevatten")
+    pagina = pagina.replace("__ARENAART__",
+                            json.dumps(lees_arena_art(), ensure_ascii=False))
+
     if sjabloon.count("__RANGICONEN__") != 1:
         raise SystemExit("Sjabloon moet precies één __RANGICONEN__ bevatten")
     pagina = pagina.replace("__RANGICONEN__",
                             json.dumps(lees_rang_icons(), ensure_ascii=False))
 
     if any(p in pagina for p in ("__ARENAS__", "__TEKSTEN__", "__MODEICONEN__",
-                                 "__ICOON180__", "__RANGICONEN__",
+                                 "__ICOON180__", "__RANGICONEN__", "__ARENAART__",
                                  "__AANTAL_ARENAS__", "{AANTAL_ARENAS}")):
         raise SystemExit("Placeholder niet volledig vervangen")
 

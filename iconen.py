@@ -443,50 +443,67 @@ def hand(cx: float, cy: float, r: float = 6.5) -> str:
     return circle(cx, cy, r)
 
 
-ART: dict[str, list[tuple[str, str]]] = {
-    "Orks": [
-        # achterste arm en been liggen achter het lijf
+ART: dict[str, list[tuple[str, str]]] = {}
+
+
+def romp(kleding_rol: str = "kleding", broek_rol: str = "broek") -> list[tuple[str, str]]:
+    """Het standaardlijf: achterste arm en been, dan benen, broek en hemd.
+    Elke tweevoeter wordt hierop gebouwd, zodat ze familie van elkaar blijven."""
+    return [
         (bar(37, 56, 22, 76, 12) + hand(21, 78, 8), "diep"),
         (bar(44, 74, 34, 92, 14), "diep"),
         (poly([(22, 88), (38, 86), (39, 97), (21, 97)]), "diep"),
-        # voorste been met een dikke voet
         (bar(58, 74, 68, 90, 14), "lijf"),
         (poly([(60, 86), (80, 88), (81, 97), (59, 97)]), "lijf"),
-        # broek en hemd
-        (poly([(36, 68), (64, 68), (70, 82), (58, 82), (56, 74), (44, 74), (42, 82), (30, 82)]), "broek"),
-        (poly([(34, 50), (66, 50), (72, 72), (28, 72)]), "kleding"),
+        (poly([(36, 68), (64, 68), (70, 82), (58, 82), (56, 74),
+               (44, 74), (42, 82), (30, 82)]), broek_rol),
+        (poly([(34, 50), (66, 50), (72, 72), (28, 72)]), kleding_rol),
         (poly([(34, 50), (41, 50), (37, 72), (28, 72)]), "diep"),
-        # kop: groot, laag en breed, zoals in een strip
+    ]
+
+
+def voorarm(rol: str = "lijf") -> list[tuple[str, str]]:
+    """De arm die naar voren steekt; die tekenen we altijd als laatste."""
+    return [(bar(66, 54, 88, 62, 13) + hand(89, 64, 9), rol)]
+
+
+def ogen(y: float = 26, r: float = 8, spreiding: float = 10) -> list[tuple[str, str]]:
+    return [
+        (circle(50 - spreiding, y, r), "wit"),
+        (circle(50 + spreiding, y, r), "wit"),
+        (circle(50 - spreiding + 2, y + 1.5, r * 0.42), "zwart"),
+        (circle(50 + spreiding + 2, y + 1.5, r * 0.42), "zwart"),
+    ]
+
+
+def bek(boven: float = 39, onder: float = 49, breed: float = 17,
+        tanden: bool = True) -> list[tuple[str, str]]:
+    lagen = [(poly([(50 - breed, boven), (50 + breed, boven),
+                    (50 + breed - 4, onder), (50 - breed + 4, onder)]), "zwart")]
+    if tanden:
+        lagen += [
+            (poly([(50 - breed + 3, boven + 1), (50 - breed + 10, onder + 2),
+                   (50 - breed + 12, boven + 1)]), "wit"),
+            (poly([(50 + breed - 12, boven + 1), (50 + breed - 10, onder + 2),
+                   (50 + breed - 3, boven + 1)]), "wit"),
+        ]
+    return lagen
+
+
+ART = {
+    # 1 Orks — grote kop, puntoren, twee slagtanden
+    "Orks": romp() + [
         (ellipse(50, 28, 27, 24), "lijf"),
         (poly([(26, 24), (6, 12), (28, 38)]), "lijf"),
         (poly([(74, 24), (94, 12), (72, 38)]), "lijf"),
         (ellipse(50, 20, 20, 9), "licht"),
-        (circle(40, 24, 9), "wit"),
-        (circle(60, 24, 9), "wit"),
-        (circle(42, 26, 4), "zwart"),
-        (circle(62, 26, 4), "zwart"),
-        # brede grijns: donkere bek met twee slagtanden die eruit steken
-        (poly([(33, 39), (67, 39), (63, 49), (37, 49)]), "zwart"),
-        (poly([(37, 40), (44, 51), (46, 40)]), "wit"),
-        (poly([(54, 40), (56, 51), (63, 40)]), "wit"),
-        # arm naar voren, met een grote knuist
-        (bar(66, 54, 88, 62, 13) + hand(89, 64, 9), "lijf"),
-    ],
-    "Oorlogsorks": [
-        # achterste arm met knots, en het achterste been
-        (bar(36, 56, 20, 74, 12) + hand(19, 76, 8), "diep"),
-        (bar(44, 76, 34, 93, 15), "diep"),
-        (poly([(22, 89), (38, 87), (39, 97), (21, 97)]), "diep"),
-        (bar(58, 76, 68, 91, 15), "lijf"),
-        (poly([(60, 87), (80, 89), (81, 97), (59, 97)]), "lijf"),
-        # rok van platen en een borstplaat
-        (poly([(34, 70), (66, 70), (72, 84), (28, 84)]), "broek"),
-        (poly([(33, 50), (67, 50), (73, 72), (27, 72)]), "kleding"),
-        (poly([(44, 50), (56, 50), (56, 72), (44, 72)]), "licht"),
-        # schouderstukken
+    ] + ogen(24, 9) + bek(39, 49, 17) + voorarm(),
+
+    # 2 Oorlogsorks — dezelfde bouw, maar met helm, hoorns en schouderstukken
+    "Oorlogsorks": romp("kleding", "broek") + [
         (ellipse(30, 52, 12, 9), "kleding"),
         (ellipse(70, 52, 12, 9), "kleding"),
-        # kop met helm en hoorns
+        (poly([(44, 50), (56, 50), (56, 72), (44, 72)]), "licht"),
         (ellipse(50, 30, 26, 22), "lijf"),
         (poly([(27, 26), (9, 16), (28, 38)]), "lijf"),
         (poly([(73, 26), (91, 16), (72, 38)]), "lijf"),
@@ -494,49 +511,111 @@ ART: dict[str, list[tuple[str, str]]] = {
         (poly([(46, 26), (54, 26), (53, 36), (47, 36)]), "kleding"),
         (poly([(25, 20), (12, 4), (34, 12)]), "licht"),
         (poly([(75, 20), (88, 4), (66, 12)]), "licht"),
-        (circle(40, 30, 8), "wit"),
-        (circle(60, 30, 8), "wit"),
-        (circle(42, 31, 3.5), "zwart"),
-        (circle(62, 31, 3.5), "zwart"),
-        (poly([(33, 41), (67, 41), (63, 50), (37, 50)]), "zwart"),
-        (poly([(36, 42), (43, 54), (45, 42)]), "wit"),
-        (poly([(55, 42), (57, 54), (64, 42)]), "wit"),
-        (bar(68, 56, 88, 64, 13) + hand(89, 66, 9), "lijf"),
-    ],
+    ] + ogen(30, 8) + bek(41, 50, 17) + voorarm(),
+
+    # 3 Spinnen — dik achterlijf, acht poten, vier ogen
     "Spinnen": [
-        # acht poten: eerst de achterste in schaduwkleur
         *[(bar(50 + s * 12, hy, 50 + s * kx, ky, 6) + bar(50 + s * kx, ky, 50 + s * ex, ey, 5), laag)
           for hy, kx, ky, ex, ey, laag in [
               (58, 34, 24, 46, 52, "diep"), (62, 38, 40, 48, 74, "diep"),
               (54, 30, 18, 44, 40, "lijf"), (66, 34, 52, 46, 92, "lijf")]
           for s in (-1, 1)],
-        # dik achterlijf met een lichte tekening
         (ellipse(50, 66, 24, 25), "lijf"),
         (poly([(50, 46), (60, 60), (50, 74), (40, 60)]), "licht"),
-        # kopborststuk
         (ellipse(50, 38, 16, 14), "diep"),
-        # ogen: twee grote en twee kleine
         (circle(43, 34, 6), "wit"),
         (circle(57, 34, 6), "wit"),
         (circle(44, 35, 2.6), "zwart"),
         (circle(58, 35, 2.6), "zwart"),
         (circle(36, 40, 3), "wit"),
         (circle(64, 40, 3), "wit"),
-        # gifkaken
         (poly([(43, 48), (46, 58), (48, 48)]), "wit"),
         (poly([(52, 48), (54, 58), (57, 48)]), "wit"),
     ],
+
+    # 4 Skeletten — botten in plaats van vlees, ribben op de borst
+    "Skeletten": romp("licht", "diep") + [
+        (poly([(38, 54), (62, 54), (62, 58), (38, 58)]), "diep"),
+        (poly([(38, 61), (62, 61), (62, 65), (38, 65)]), "diep"),
+        (poly([(47, 52), (53, 52), (53, 70), (47, 70)]), "diep"),
+        (ellipse(50, 28, 24, 22), "licht"),
+        (poly([(34, 40), (66, 40), (64, 50), (36, 50)]), "licht"),
+        (circle(40, 26, 8), "zwart"),
+        (circle(60, 26, 8), "zwart"),
+        (poly([(47, 34), (53, 34), (50, 41)]), "zwart"),
+        (poly([(40, 42), (43, 42), (43, 50), (40, 50)]), "zwart"),
+        (poly([(48, 42), (52, 42), (52, 50), (48, 50)]), "zwart"),
+        (poly([(57, 42), (60, 42), (60, 50), (57, 50)]), "zwart"),
+    ] + voorarm("licht"),
+
+    # 5 Trollen — kleine kop op een zware buik, tanden naar boven
+    "Trollen": romp("lijf", "broek") + [
+        (ellipse(50, 62, 30, 22), "lijf"),
+        (ellipse(50, 66, 18, 13), "licht"),
+        (ellipse(50, 28, 22, 19), "lijf"),
+        (poly([(30, 26), (16, 16), (31, 36)]), "lijf"),
+        (poly([(70, 26), (84, 16), (69, 36)]), "lijf"),
+    ] + ogen(24, 6, 9) + [
+        (poly([(36, 36), (64, 36), (61, 44), (39, 44)]), "zwart"),
+        (poly([(40, 44), (43, 30), (46, 44)]), "wit"),
+        (poly([(54, 44), (57, 30), (60, 44)]), "wit"),
+    ] + voorarm(),
+
+    # 6 Katjes — klein en pluizig, met staart
+    "Katjes": [
+        (bar(70, 76, 92, 58, 9) + circle(93, 56, 5), "diep"),
+        (bar(40, 74, 34, 92, 12), "diep"),
+        (ellipse(36, 94, 9, 5), "diep"),
+        (bar(60, 74, 66, 92, 12), "lijf"),
+        (ellipse(68, 94, 9, 5), "lijf"),
+        (ellipse(50, 66, 22, 20), "lijf"),
+        (ellipse(50, 70, 12, 12), "licht"),
+        (ellipse(50, 34, 25, 22), "lijf"),
+        (poly([(28, 30), (20, 6), (46, 22)]), "lijf"),
+        (poly([(72, 30), (80, 6), (54, 22)]), "lijf"),
+        (poly([(32, 27), (27, 13), (41, 23)]), "licht"),
+        (poly([(68, 27), (73, 13), (59, 23)]), "licht"),
+    ] + ogen(32, 7, 10) + [
+        (poly([(46, 42), (54, 42), (50, 48)]), "zwart"),
+        (bar(28, 40, 6, 34, 3), "diep"),
+        (bar(28, 46, 6, 52, 3), "diep"),
+        (bar(72, 40, 94, 34, 3), "diep"),
+        (bar(72, 46, 94, 52, 3), "diep"),
+    ],
+
+    # 7 Geesten — zwevend laken zonder benen
+    "Geesten": [
+        (raw("M50 8C70 8 82 24 82 44L82 92L72 82L62 92L50 82L38 92L28 82L18 92L18 44C18 24 30 8 50 8Z"),
+         "licht"),
+        (raw("M50 14C64 14 72 26 72 42L72 74L64 68L54 76L50 70L50 14Z"), "lijf"),
+        (circle(40, 40, 9), "zwart"),
+        (circle(60, 40, 9), "zwart"),
+        (ellipse(50, 60, 8, 11), "zwart"),
+    ],
+
+    # 8 Vampiers — bleke kop, zwarte kraag, hoektanden
+    "Vampiers": [
+        (poly([(22, 52), (78, 52), (94, 96), (6, 96)]), "diep"),
+        (poly([(34, 54), (66, 54), (74, 96), (26, 96)]), "kleding"),
+        (poly([(42, 54), (58, 54), (58, 96), (42, 96)]), "licht"),
+        (poly([(26, 44), (50, 60), (74, 44), (78, 58), (50, 72), (22, 58)]), "diep"),
+        (ellipse(50, 28, 23, 22), "licht"),
+        (poly([(27, 22), (30, 4), (50, 16), (70, 4), (73, 22), (50, 14)]), "zwart"),
+    ] + ogen(28, 7, 9) + [
+        (poly([(40, 40), (60, 40), (57, 46), (43, 46)]), "zwart"),
+        (poly([(43, 40), (45, 50), (47, 40)]), "wit"),
+        (poly([(53, 40), (55, 50), (57, 40)]), "wit"),
+    ],
+
+    # 9 Weerwolven — breed, met snuit, oren en klauwen
     "Weerwolven": [
-        # zware benen en een staart achter het lijf
         (bar(40, 74, 30, 92, 15), "diep"),
         (poly([(18, 88), (36, 86), (37, 97), (17, 97)]), "diep"),
         (bar(60, 74, 70, 92, 15), "lijf"),
         (poly([(62, 86), (82, 88), (83, 97), (61, 97)]), "lijf"),
         (bar(66, 62, 92, 74, 10) + poly([(88, 66), (99, 80), (86, 80)]), "diep"),
-        # borst met lichte buik
         (poly([(30, 48), (70, 48), (76, 78), (24, 78)]), "lijf"),
         (poly([(42, 54), (58, 54), (62, 78), (38, 78)]), "licht"),
-        # armen met klauwen
         (bar(30, 52, 14, 72, 13), "lijf"),
         (poly([(8, 70), (20, 70), (18, 80), (6, 78)]), "lijf"),
         (poly([(6, 78), (2, 86), (10, 82)]), "wit"),
@@ -545,7 +624,6 @@ ART: dict[str, list[tuple[str, str]]] = {
         (poly([(80, 68), (92, 68), (94, 78), (82, 80)]), "lijf"),
         (poly([(94, 76), (98, 84), (90, 82)]), "wit"),
         (poly([(88, 78), (90, 87), (83, 84)]), "wit"),
-        # kop met snuit en oren
         (ellipse(50, 30, 25, 21), "lijf"),
         (poly([(28, 22), (18, 2), (40, 16)]), "lijf"),
         (poly([(72, 22), (82, 2), (60, 16)]), "lijf"),
@@ -553,13 +631,172 @@ ART: dict[str, list[tuple[str, str]]] = {
         (poly([(68, 19), (73, 10), (63, 15)]), "diep"),
         (ellipse(50, 42, 15, 11), "licht"),
         (circle(50, 38, 5), "zwart"),
-        (circle(40, 27, 7), "wit"),
-        (circle(60, 27, 7), "wit"),
-        (circle(41, 28, 3.2), "zwart"),
-        (circle(61, 28, 3.2), "zwart"),
-        (poly([(38, 46), (62, 46), (58, 53), (42, 53)]), "zwart"),
-        (poly([(40, 46), (43, 55), (46, 46)]), "wit"),
-        (poly([(54, 46), (57, 55), (60, 46)]), "wit"),
+    ] + ogen(27, 7, 10) + bek(46, 53, 12),
+
+    # 10 Golems — blokken steen met een scheur
+    "Golems": [
+        (poly([(28, 74), (44, 74), (44, 96), (26, 96)]), "diep"),
+        (poly([(56, 74), (72, 74), (74, 96), (56, 96)]), "lijf"),
+        (poly([(14, 46), (30, 44), (32, 76), (16, 78)]), "diep"),
+        (poly([(70, 44), (86, 46), (84, 78), (68, 76)]), "lijf"),
+        (poly([(28, 40), (72, 40), (76, 78), (24, 78)]), "lijf"),
+        (poly([(50, 40), (56, 54), (48, 62), (54, 78), (44, 78), (48, 60), (42, 52)]), "diep"),
+        (poly([(30, 12), (70, 12), (74, 38), (26, 38)]), "lijf"),
+        (poly([(34, 20), (46, 20), (46, 28), (34, 28)]), "licht"),
+        (poly([(54, 20), (66, 20), (66, 28), (54, 28)]), "licht"),
+    ],
+
+    # 11 Demonen — hoorns, staart en een grijns
+    "Demonen": [
+        (bar(68, 76, 92, 62, 8) + poly([(88, 56), (99, 62), (88, 68)]), "diep"),
+    ] + romp("lijf", "diep") + [
+        (ellipse(50, 28, 24, 21), "lijf"),
+        (poly([(28, 20), (14, 0), (38, 14)]), "licht"),
+        (poly([(72, 20), (86, 0), (62, 14)]), "licht"),
+        (poly([(36, 20), (48, 26), (34, 30)]), "zwart"),
+        (poly([(64, 20), (52, 26), (66, 30)]), "zwart"),
+        (circle(41, 26, 7), "wit"),
+        (circle(59, 26, 7), "wit"),
+        (circle(42, 27, 3), "zwart"),
+        (circle(60, 27, 3), "zwart"),
+        (poly([(34, 38), (66, 38), (58, 50), (42, 50)]), "zwart"),
+        (poly([(37, 39), (42, 47), (45, 39)]), "wit"),
+        (poly([(55, 39), (58, 47), (63, 39)]), "wit"),
+    ] + voorarm(),
+
+    # 12 IJsreuzen — zware kop met baard en ijspegels
+    "IJsreuzen": romp("kleding", "broek") + [
+        (ellipse(30, 52, 13, 10), "kleding"),
+        (ellipse(70, 52, 13, 10), "kleding"),
+        (poly([(32, 44), (68, 44), (74, 74), (26, 74)]), "wit"),
+        (ellipse(50, 26, 25, 22), "lijf"),
+        (poly([(26, 30), (74, 30), (70, 52), (58, 44), (50, 56), (42, 44), (30, 52)]), "wit"),
+    ] + ogen(24, 7, 10) + [
+        (poly([(30, 8), (36, 26), (42, 8)]), "licht"),
+        (poly([(58, 8), (64, 26), (70, 8)]), "licht"),
+    ] + voorarm(),
+
+    # 13 Zeeduivels — brede bek met lokkertje
+    "Zeeduivels": [
+        (poly([(14, 40), (30, 56), (14, 74)]), "diep"),
+        (poly([(86, 40), (70, 56), (86, 74)]), "diep"),
+        (poly([(50, 76), (70, 92), (30, 92)]), "diep"),
+        (ellipse(50, 56, 32, 28), "lijf"),
+        (ellipse(50, 62, 20, 16), "licht"),
+        (poly([(24, 60), (76, 60), (70, 76), (30, 76)]), "zwart"),
+        (poly([(27, 61), (33, 74), (37, 61)]), "wit"),
+        (poly([(41, 61), (46, 74), (50, 61)]), "wit"),
+        (poly([(55, 61), (60, 74), (64, 61)]), "wit"),
+        (circle(38, 44, 8), "wit"),
+        (circle(62, 44, 8), "wit"),
+        (circle(39, 45, 3.5), "zwart"),
+        (circle(63, 45, 3.5), "zwart"),
+        (bar(50, 30, 62, 10, 4), "diep"),
+        (circle(64, 8, 8), "licht"),
+    ],
+
+    # 14 Bliksemgeesten — een schicht met ogen
+    "Bliksemgeesten": [
+        (poly([(56, 4), (26, 50), (44, 50), (32, 96), (74, 40), (54, 40), (74, 4)]), "lijf"),
+        (poly([(54, 14), (36, 46), (48, 46), (40, 82), (66, 44), (52, 44), (64, 14)]), "licht"),
+        (circle(45, 34, 7), "wit"),
+        (circle(59, 30, 7), "wit"),
+        (circle(46, 35, 3), "zwart"),
+        (circle(60, 31, 3), "zwart"),
+    ],
+
+    # 15 Slangenvolk — kap, staart in plaats van benen
+    "Slangenvolk": [
+        (raw("M50 62C24 62 12 74 12 84C12 92 20 96 32 96L84 96C90 96 92 92 92 88C92 84 88 82 82 82L36 82C30 82 30 76 36 76L60 76Z"),
+         "diep"),
+        (poly([(36, 46), (64, 46), (70, 70), (30, 70)]), "lijf"),
+        (poly([(20, 26), (50, 12), (80, 26), (76, 44), (50, 34), (24, 44)]), "diep"),
+        (ellipse(50, 32, 20, 20), "lijf"),
+        (ellipse(50, 42, 12, 10), "licht"),
+    ] + ogen(30, 7, 9) + [
+        (poly([(44, 46), (47, 56), (50, 46)]), "wit"),
+        (poly([(50, 46), (53, 56), (56, 46)]), "wit"),
+        (bar(50, 50, 50, 66, 3), "zwart"),
+    ],
+
+    # 16 Draken — kop met hoorns, vleugels erachter
+    "Draken": [
+        (poly([(30, 30), (2, 14), (8, 60), (32, 62)]), "diep"),
+        (poly([(70, 30), (98, 14), (92, 60), (68, 62)]), "diep"),
+        (bar(50, 74, 84, 90, 10) + poly([(80, 84), (96, 92), (78, 96)]), "diep"),
+        (poly([(34, 48), (66, 48), (72, 80), (28, 80)]), "lijf"),
+        (poly([(44, 54), (56, 54), (60, 80), (40, 80)]), "licht"),
+        (ellipse(50, 28, 24, 20), "lijf"),
+        (poly([(30, 18), (20, 0), (44, 12)]), "licht"),
+        (poly([(70, 18), (80, 0), (56, 12)]), "licht"),
+        (ellipse(50, 40, 16, 12), "licht"),
+        (circle(44, 40, 3), "zwart"),
+        (circle(56, 40, 3), "zwart"),
+    ] + ogen(26, 7, 10) + [
+        (poly([(36, 44), (64, 44), (60, 52), (40, 52)]), "zwart"),
+        (poly([(39, 45), (42, 54), (45, 45)]), "wit"),
+        (poly([(55, 45), (58, 54), (61, 45)]), "wit"),
+    ],
+
+    # 17 Titanen — enorme schouders, kleine kop, barsten
+    "Titanen": [
+        (poly([(24, 76), (44, 76), (44, 96), (22, 96)]), "diep"),
+        (poly([(56, 76), (76, 76), (78, 96), (56, 96)]), "lijf"),
+        (poly([(6, 38), (30, 34), (34, 80), (10, 82)]), "diep"),
+        (poly([(70, 34), (94, 38), (90, 82), (66, 80)]), "lijf"),
+        (poly([(22, 32), (78, 32), (84, 80), (16, 80)]), "lijf"),
+        (poly([(46, 32), (54, 48), (44, 58), (52, 80), (42, 80), (48, 56), (40, 46)]), "diep"),
+        (ellipse(50, 20, 16, 14), "lijf"),
+        (poly([(40, 16), (46, 16), (46, 24), (40, 24)]), "licht"),
+        (poly([(54, 16), (60, 16), (60, 24), (54, 24)]), "licht"),
+    ],
+
+    # 18 Verdoemden — kap zonder gezicht
+    "Verdoemden": [
+        (poly([(24, 48), (76, 48), (88, 96), (12, 96)]), "diep"),
+        (poly([(34, 52), (66, 52), (72, 96), (28, 96)]), "kleding"),
+        (raw("M50 6C70 6 82 22 82 42L82 58L68 50C62 58 56 60 50 60C44 60 38 58 32 50L18 58L18 42C18 22 30 6 50 6Z"),
+         "lijf"),
+        (raw("M50 16C64 16 72 28 72 42L72 50C64 54 58 56 50 56C42 56 36 54 28 50L28 42C28 28 36 16 50 16Z"),
+         "zwart"),
+        (circle(41, 38, 5), "licht"),
+        (circle(59, 38, 5), "licht"),
+    ],
+
+    # 19 Gevallen Engelen — vleugels en een gebroken kring
+    "Gevallen Engelen": [
+        (raw("M34 34C18 24 6 30 2 44C10 42 16 44 20 48C10 52 4 60 6 72C14 62 24 60 34 62Z"), "wit"),
+        (raw("M66 34C82 24 94 30 98 44C90 42 84 44 80 48C90 52 96 60 94 72C86 62 76 60 66 62Z"), "wit"),
+    ] + romp("licht", "diep") + [
+        (ellipse(50, 28, 22, 20), "lijf"),
+        (poly([(28, 24), (32, 8), (50, 18), (68, 8), (72, 24), (50, 16)]), "diep"),
+        (poly([(30, 6), (48, 2), (48, 8), (34, 11)]), "licht"),
+        (poly([(52, 2), (70, 6), (66, 11), (52, 8)]), "licht"),
+    ] + ogen(28, 7, 9) + [
+        (poly([(42, 40), (58, 40), (56, 46), (44, 46)]), "zwart"),
+    ] + voorarm("licht"),
+
+    # 20 Sterrensmeden — schort, hamer en een ster op de borst
+    "Sterrensmeden": romp("kleding", "diep") + [
+        (poly([(38, 50), (62, 50), (66, 78), (34, 78)]), "broek"),
+        (poly([(50, 54), (54, 62), (62, 62), (56, 68), (58, 76), (50, 71),
+               (42, 76), (44, 68), (38, 62), (46, 62)]), "licht"),
+        (ellipse(50, 28, 23, 20), "lijf"),
+        (poly([(28, 34), (72, 34), (68, 52), (32, 52)]), "wit"),
+    ] + ogen(26, 7, 9) + [
+        (bar(76, 60, 88, 26, 7), "diep"),
+        (poly([(72, 26), (96, 20), (98, 34), (74, 38)]), "kleding"),
+    ],
+
+    # 21 Het Naamloze — één oog in een massa met tentakels
+    "Het Naamloze": [
+        *[(bar(50, 62, 50 + dx, dy, 9) + circle(50 + dx, dy, 5), "diep")
+          for dx, dy in [(-40, 92), (-24, 98), (0, 99), (24, 98), (40, 92)]],
+        (raw("M50 8C74 8 92 26 92 50C92 74 74 92 50 92C26 92 8 74 8 50C8 26 26 8 50 8Z"), "lijf"),
+        (raw("M50 20C66 20 78 32 78 48C78 64 66 76 50 76C34 76 22 64 22 48C22 32 34 20 50 20Z"), "diep"),
+        (ellipse(50, 48, 22, 20), "wit"),
+        (circle(50, 48, 11), "lijf"),
+        (circle(50, 48, 5), "zwart"),
     ],
 }
 
