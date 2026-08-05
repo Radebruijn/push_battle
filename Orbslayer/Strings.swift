@@ -397,6 +397,7 @@ enum Tk: String {
     case les7
     case les8
     case les9
+    case trofee_nog
 }
 
 enum Strings {
@@ -774,6 +775,7 @@ enum Strings {
         "les7": ["Online: zestig seconden tegen een echt mens. Hiervoor heb je een account nodig.", "Online: sixty seconds against a real person. You need an account for this.", "En ligne : soixante secondes contre une vraie personne. Il te faut un compte."],
         "les8": ["De clicker: elke echte push-up is een munt. Koop er helpers, techniek en crates van.", "The clicker: every real push-up is a coin. Spend them on helpers, technique and crates.", "Le clicker : chaque vraie pompe est une pièce. Achète des aides, de la technique et des caisses."],
         "les9": ["En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Dat is alles — trainen maar!", "And these are your quests: three a day and two a week, with XP and push-ups as rewards. That's everything — get training!", "Et voici tes missions : trois par jour et deux par semaine, avec XP et pompes en récompense. C'est tout — à toi de jouer !"],
+        "trofee_nog": ["nog niet", "not yet", "pas encore"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

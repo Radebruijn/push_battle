@@ -429,6 +429,9 @@
   .trofee svg { width: 38px; height: 38px; display: block; margin: 0 auto; }
   .trofee span { font-size: 9px; color: rgba(255,255,255,.55); display: block;
                  margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trofee.dicht { opacity: .4; }
+  .trofee.dicht b { display: block; font-size: 26px; font-weight: 900; line-height: 38px;
+                    color: rgba(255,255,255,.5); }
   .trofeeLeeg { grid-column: 1 / -1; font-size: 12px; color: rgba(255,255,255,.4); }
   #accNaam { margin-bottom: 22px; }
   #accNaam .instelLabel { text-align: left; margin-bottom: 8px; }
@@ -455,11 +458,21 @@
                   border-radius: 14px; border: 1px solid rgba(255,255,255,.14);
                   background: rgba(255,255,255,.06); color: #fff; font: inherit;
                   font-size: 15px; font-weight: 800; cursor: pointer; }
-  /* Uitloggen staat apart onderaan, met een streep en ruimte ervoor, zodat je
-     er niet per ongeluk op tikt als je wilde sluiten. */
-  .accScheiding { height: 1px; background: rgba(255,255,255,.1); margin: 30px 0 0; }
-  #accUitloggen { margin-top: 22px; margin-bottom: 10px; color: rgba(242,38,58,.75); }
-  #accUitloggen.zeker { color: #f2263a; font-weight: 800; }
+  /* Sluiten is een kruisje rechtsboven en blijft in beeld terwijl je scrolt.
+     Uitloggen staat daardoor alleen onderaan, ver van alles vandaan. */
+  .sluitKruis { position: fixed; right: 12px; top: 12px; z-index: 3;
+                width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+                border: 1px solid rgba(255,255,255,.14); background: rgba(18,18,22,.92);
+                color: rgba(255,255,255,.8); font-size: 19px; line-height: 1; }
+  .sluitKruis:active { background: rgba(255,255,255,.14); }
+  .sluitKruis.links { left: 12px; right: auto; }
+  .uitlogVak { display: flex; justify-content: center; margin-top: 54px; padding: 26px 0 12px;
+               border-top: 1px solid rgba(255,255,255,.08); }
+  .uitlogKnop { padding: 11px 28px; border-radius: 99px; cursor: pointer; font: inherit;
+                font-size: 14px; font-weight: 800; letter-spacing: .5px;
+                border: 1px solid rgba(242,38,58,.4); background: rgba(242,38,58,.08);
+                color: #ff6b7d; }
+  .uitlogKnop.zeker { border-color: #f2263a; background: rgba(242,38,58,.18); color: #fff; }
   .accMelding { font-size: 13px; text-align: center; min-height: 34px; line-height: 1.4;
                 color: #ffc740; padding: 6px 0; font-weight: 600; }
 
@@ -886,9 +899,11 @@
 </div>
 
 <div id="inventaris">
+  <button class="sluitKruis links" id="invDicht" aria-label="sluiten">✕</button>
   <h2 id="invKop"></h2>
   <div id="invLijst"></div>
-  <button class="tekstKnop" id="invDicht"></button>
+  <div class="trofeeKop" id="trofeeKop"></div>
+  <div class="trofeeKast" id="trofeeKast"></div>
 </div>
 
 <div id="buit">
@@ -909,6 +924,7 @@
 </div>
 
 <div id="account">
+  <button class="sluitKruis" id="accDicht" aria-label="sluiten">✕</button>
   <h2 id="accountKop"></h2>
   <div class="accStatus" id="accStatus"></div>
 
@@ -938,8 +954,6 @@
 
   <div class="accCijfers" id="accCijfers"></div>
   <button class="accKnopBreed" id="invOpen"></button>
-  <div class="trofeeKop" id="trofeeKop"></div>
-  <div class="trofeeKast" id="trofeeKast"></div>
 
   <div id="accFormulier">
     <input type="email" id="accEmail" autocomplete="email" inputmode="email">
@@ -949,9 +963,9 @@
     <button class="grotKnop" id="accInloggen"></button>
     <button class="tekstKnop" id="accRegistreren"></button>
   </div>
-  <button class="tekstKnop" id="accDicht"></button>
-  <div class="accScheiding"></div>
-  <button class="tekstKnop" id="accUitloggen"></button>
+  <div class="uitlogVak" id="uitlogVak">
+    <button class="uitlogKnop" id="accUitloggen"></button>
+  </div>
 </div>
 
 <div id="laden">
@@ -2772,18 +2786,6 @@ function renderAccount() {
     [playerLevel(), t('stat_level')],
   ].map(([w, l]) => `<div class="accCijfer"><b>${w}</b><span>${l}</span></div>`).join('');
 
-  // De trofeeënkast: de kop van elke boss die je ooit hebt neergehaald.
-  // Arena i is veroverd zodra je voorbij i bent; herbezoeken tellen niet dubbel.
-  $('trofeeKop').textContent = t('trofee_titel').toUpperCase();
-  const koppen = [];
-  for (let i = 1; i < P.arenaIndex; i++) {
-    const a = arenaAt(i);
-    koppen.push(
-      `<div class="trofee"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>` +
-      `<span>${ontsmet(tt(a.boss))}</span></div>`);
-  }
-  $('trofeeKast').innerHTML = koppen.length ? koppen.join('')
-    : `<div class="trofeeLeeg">${ontsmet(t('trofee_leeg'))}</div>`;
   $('invOpen').textContent = t('inv_titel');
 
   tekenFoto();
@@ -2794,7 +2796,7 @@ function renderAccount() {
   $('naamOpslaan').textContent = t('name_save');
   werkNaamKnopBij();
   $('accFormulier').style.display = ingelogd() ? 'none' : 'block';
-  $('accUitloggen').style.display = ingelogd() ? 'block' : 'none';
+  $('uitlogVak').style.display = ingelogd() ? 'flex' : 'none';
   $('accEmail').placeholder = t('email');
   $('accWachtwoord').placeholder = t('password');
   $('accInloggen').textContent = t('sign_in');
@@ -2803,7 +2805,7 @@ function renderAccount() {
   $('accUitloggen').classList.remove('zeker');
   clearTimeout(uitlogTimer);
   $('accUitloggen').textContent = t('sign_out');
-  $('accDicht').textContent = t('close');
+  $('accDicht').title = t('close');
 }
 
 function accMelding(tekst, fout = false) {
@@ -3313,7 +3315,25 @@ function renderInventaris() {
       html += `</div>`;
     });
   $('invLijst').innerHTML = html;
-  $('invDicht').textContent = t('close');
+
+  // De trofeeënkast hoort bij je spullen: de kop van elke boss die je ooit hebt
+  // neergehaald. Arena i is veroverd zodra je voorbij i bent; herbezoeken
+  // tellen niet dubbel.
+  $('trofeeKop').textContent = t('trofee_titel').toUpperCase();
+  // De hele ronde staat er, ook wat er nog komt: wat je hebt met de kop van de
+  // boss erop, de rest als vraagteken. Zo zie je waar je naartoe werkt.
+  const ronde = Math.ceil(Math.max(1, P.arenaIndex - 1) / ARENAS.length) * ARENAS.length;
+  const koppen = [];
+  for (let i = 1; i <= Math.max(ARENAS.length, ronde); i++) {
+    const a = arenaAt(i);
+    koppen.push(i < P.arenaIndex
+      ? `<div class="trofee"><svg viewBox="0 0 100 100"><path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>` +
+        `<span>${ontsmet(tt(a.boss))}</span></div>`
+      : `<div class="trofee dicht"><b>?</b><span>${ontsmet(t('trofee_nog'))}</span></div>`);
+  }
+  $('trofeeKast').innerHTML = koppen.join('');
+
+  $('invDicht').title = t('close');
   // Aantikken = dragen; nog een keer = weer afdoen.
   $('invLijst').querySelectorAll('.invVak[data-id]').forEach(k => k.onclick = e => {
     e.stopPropagation();

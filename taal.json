@@ -1865,6 +1865,11 @@
       "En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Dat is alles — trainen maar!",
       "And these are your quests: three a day and two a week, with XP and push-ups as rewards. That's everything — get training!",
       "Et voici tes missions : trois par jour et deux par semaine, avec XP et pompes en récompense. C'est tout — à toi de jouer !"
+    ],
+    "trofee_nog": [
+      "nog niet",
+      "not yet",
+      "pas encore"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",
