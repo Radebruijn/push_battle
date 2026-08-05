@@ -35,6 +35,20 @@ enum Tk: String {
     case stat_pushups
     case stat_kills
     case stat_arenas
+    case quests_titel
+    case quests_vandaag
+    case quests_week
+    case quest_af
+    case quest_reps25
+    case quest_kills3
+    case quest_boss1
+    case quest_combo1
+    case quest_duel1
+    case quest_snel20
+    case quest_wreps300
+    case quest_wboss5
+    case quest_wduel5
+    case quest_wkills40
     case trofee_titel
     case trofee_leeg
     case arena_n
@@ -314,6 +328,15 @@ enum Tk: String {
     case helper_werelddeel_uit
     case helper_wereld
     case helper_wereld_uit
+    case foto_label
+    case foto_kies
+    case foto_weg
+    case foto_hint
+    case foto_prive
+    case foto_lokaal
+    case foto_klaar
+    case foto_fout
+    case foto_bezig
 }
 
 enum Strings {
@@ -329,6 +352,20 @@ enum Strings {
         "stat_pushups": ["push-ups", "push-ups", "pompes"],
         "stat_kills": ["kills", "kills", "victimes"],
         "stat_arenas": ["arena's uit", "arenas cleared", "arènes finies"],
+        "quests_titel": ["Opdrachten", "Quests", "Missions"],
+        "quests_vandaag": ["Vandaag", "Today", "Aujourd'hui"],
+        "quests_week": ["Deze week", "This week", "Cette semaine"],
+        "quest_af": ["Opdracht volbracht: {0}", "Quest complete: {0}", "Mission accomplie : {0}"],
+        "quest_reps25": ["Doe {0} push-ups", "Do {0} push-ups", "Fais {0} pompes"],
+        "quest_kills3": ["Versla {0} vijanden", "Defeat {0} enemies", "Bats {0} ennemis"],
+        "quest_boss1": ["Versla een boss", "Defeat a boss", "Bats un boss"],
+        "quest_combo1": ["Maak een combo van 10", "Build a 10-rep combo", "Fais un combo de 10"],
+        "quest_duel1": ["Win een duel", "Win a duel", "Gagne un duel"],
+        "quest_snel20": ["Doe {0} push-ups binnen 60 seconden", "Do {0} push-ups within 60 seconds", "Fais {0} pompes en 60 secondes"],
+        "quest_wreps300": ["Doe {0} push-ups deze week", "Do {0} push-ups this week", "Fais {0} pompes cette semaine"],
+        "quest_wboss5": ["Versla {0} bosses deze week", "Defeat {0} bosses this week", "Bats {0} boss cette semaine"],
+        "quest_wduel5": ["Win {0} duels deze week", "Win {0} duels this week", "Gagne {0} duels cette semaine"],
+        "quest_wkills40": ["Versla {0} vijanden deze week", "Defeat {0} enemies this week", "Bats {0} ennemis cette semaine"],
         "trofee_titel": ["Trofeeënkast", "Trophy cabinet", "Vitrine à trophées"],
         "trofee_leeg": ["Versla je eerste boss en zijn kop hangt hier.", "Defeat your first boss and its head will hang here.", "Bats ton premier boss et sa tête sera accrochée ici."],
         "arena_n": ["ARENA {0}", "ARENA {0}", "ARÈNE {0}"],
@@ -608,6 +645,15 @@ enum Strings {
         "helper_werelddeel_uit": ["Miljoenen mensen tegelijk.", "Millions of people at once.", "Des millions de personnes à la fois."],
         "helper_wereld": ["De hele wereld", "The whole world", "Le monde entier"],
         "helper_wereld_uit": ["Iedereen, overal, op hetzelfde moment.", "Everyone, everywhere, at the same time.", "Tout le monde, partout, en même temps."],
+        "foto_label": ["Je foto", "Your photo", "Ta photo"],
+        "foto_kies": ["Foto kiezen", "Choose photo", "Choisir une photo"],
+        "foto_weg": ["Foto weghalen", "Remove photo", "Retirer la photo"],
+        "foto_hint": ["Tik op de cirkel om een foto te kiezen of er een te maken. Plakken werkt ook.", "Tap the circle to choose or take a photo. Pasting works too.", "Touche le cercle pour choisir ou prendre une photo. Le collage marche aussi."],
+        "foto_prive": ["Iedereen met een account ziet je foto in het klassement.", "Everyone with an account sees your photo in the leaderboard.", "Toute personne ayant un compte voit ta photo au classement."],
+        "foto_lokaal": ["Zonder account blijft je foto op dit apparaat.", "Without an account your photo stays on this device.", "Sans compte, ta photo reste sur cet appareil."],
+        "foto_klaar": ["Foto opgeslagen.", "Photo saved.", "Photo enregistrée."],
+        "foto_fout": ["Dat plaatje lukte niet. Probeer een andere foto.", "That image did not work. Try another photo.", "Cette image n'a pas fonctionné. Essaie une autre photo."],
+        "foto_bezig": ["Foto verkleinen…", "Resizing photo…", "Réduction de la photo…"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

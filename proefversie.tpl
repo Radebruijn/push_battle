@@ -265,11 +265,27 @@
 
   /* burgermenu en spelmodi */
   .mBalk { display: flex; align-items: center; gap: 8px; padding: 0 12px 6px; }
-  #burger, #tandwiel, #accountKnop, #klassementKnop {
+  #burger, #tandwiel, #accountKnop, #klassementKnop, #questKnop {
     flex: none; background: rgba(255,255,255,.07); border: 0; border-radius: 14px;
     color: rgba(255,255,255,.85); line-height: 1; cursor: pointer; width: 50px; height: 46px; }
   #burger { font-size: 30px; }
-  #accountKnop { font-size: 22px; position: relative; }
+  #accountKnop { font-size: 22px; position: relative; overflow: hidden; }
+  #accountKnop img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
+                     display: block; margin: 0 auto; }
+  /* eigen foto */
+  .fotoRond { border-radius: 50%; object-fit: cover; display: block;
+              background: rgba(255,255,255,.08); }
+  #accFoto { text-align: center; margin-bottom: 18px; }
+  #accFotoKnop { width: 104px; height: 104px; border-radius: 50%; padding: 0; cursor: pointer;
+                 border: 2px dashed rgba(255,255,255,.22); background: rgba(255,255,255,.05);
+                 overflow: hidden; display: grid; place-items: center; margin: 0 auto 10px; }
+  #accFotoKnop.heeft { border-style: solid; border-color: rgba(255,199,64,.55); }
+  #accFotoKnop img, #accFotoKnop svg { width: 100%; height: 100%; }
+  #accFotoKnop .plus { font-size: 34px; color: rgba(255,255,255,.45); line-height: 1; }
+  .fotoRij { display: flex; gap: 16px; justify-content: center; }
+  .fotoRij .tekstKnop { margin: 0; }
+  .fotoHint { font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.45;
+              max-width: 22rem; margin: 8px auto 0; }
   #klassementKnop { font-size: 21px; }
   #accountKnop.aan::after { content: ''; position: absolute; right: 7px; top: 7px;
     width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
@@ -326,6 +342,26 @@
   .spelerBadge { width: 74px; height: 74px; margin: 0 auto 14px; }
   .spelerNaam { font-size: 24px; font-weight: 900; }
   .spelerRang { font-size: 14px; font-weight: 700; margin: 4px 0 20px; }
+
+  #quests { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96); display: none;
+            padding: 30px 22px; overflow-y: auto; }
+  #quests.aan { display: block; }
+  #quests h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
+               color: rgba(255,255,255,.5); margin: 0 0 6px; text-align: center; }
+  .qKop { font-size: 11px; font-weight: 800; letter-spacing: 2px;
+          color: rgba(255,255,255,.5); margin: 18px 2px 8px; }
+  .qRij { position: relative; background: rgba(255,255,255,.05); border-radius: 14px;
+          padding: 12px 14px 14px; margin-bottom: 8px; }
+  .qRij.af { opacity: .55; }
+  .qTekst b { font-size: 14px; font-weight: 700; display: block; padding-right: 64px; }
+  .qTekst small { font-size: 11px; color: #ffc740; }
+  .qStand { position: absolute; right: 14px; top: 14px; font-size: 13px; font-weight: 800;
+            color: rgba(255,255,255,.6); font-variant-numeric: tabular-nums; }
+  .qRij.af .qStand { color: #7dde7d; }
+  .qBalk { height: 4px; border-radius: 2px; background: rgba(255,255,255,.1);
+           margin-top: 8px; overflow: hidden; }
+  .qBalk i { display: block; height: 100%;
+             background: linear-gradient(to right, #ffc740, #ff9d2e); }
 
   #account { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96); display: none;
              padding: 30px 22px; overflow-y: auto; }
@@ -601,6 +637,7 @@
       <button id="burger" aria-label="menu">☰</button>
       <button id="tandwiel" aria-label="instellingen">⚙</button>
       <div style="flex:1"></div>
+      <button id="questKnop" aria-label="opdrachten">📜</button>
       <button id="klassementKnop" aria-label="klassement">🏆</button>
       <button id="accountKnop" aria-label="account">👤</button>
     </div>
@@ -750,9 +787,25 @@
   </div>
 </div>
 
+<div id="quests">
+  <h2 id="questsKop"></h2>
+  <div id="questsLijst"></div>
+  <button class="tekstKnop" id="questsDicht"></button>
+</div>
+
 <div id="account">
   <h2 id="accountKop"></h2>
   <div class="accStatus" id="accStatus"></div>
+
+  <div id="accFoto">
+    <button id="accFotoKnop" aria-label="foto"><span class="plus">+</span></button>
+    <div class="fotoRij">
+      <button class="tekstKnop" id="fotoKies"></button>
+      <button class="tekstKnop" id="fotoWeg"></button>
+    </div>
+    <div class="fotoHint" id="fotoHint"></div>
+    <input type="file" id="fotoInvoer" accept="image/*" hidden>
+  </div>
 
   <div id="accNaam">
     <div class="instelLabel" id="naamLabel"></div>
@@ -1419,6 +1472,120 @@ function effStreak() {
 function streakMult() { const s = effStreak();
   return s >= 30 ? 1.5 : s >= 14 ? 1.35 : s >= 7 ? 1.25 : s >= 3 ? 1.1 : 1; }
 
+/* ---------------- dag- en weekopdrachten ----------------
+   Elke dag drie opdrachten en elke week twee. De datum bepaalt de keuze,
+   dus iedereen heeft dezelfde. Voortgang loopt vanzelf mee met wat je toch
+   al doet; de beloning — XP en soms push-ups voor de clicker — wordt
+   automatisch uitgekeerd met een melding. */
+const QUEST_DAG = [
+  { id: 'reps25', doel: 25, xp: 60,  klik: 25 },
+  { id: 'kills3', doel: 3,  xp: 50,  klik: 0 },
+  { id: 'boss1',  doel: 1,  xp: 80,  klik: 40 },
+  { id: 'combo1', doel: 1,  xp: 60,  klik: 0 },
+  { id: 'duel1',  doel: 1,  xp: 80,  klik: 30 },
+  { id: 'snel20', doel: 20, xp: 100, klik: 50 },
+];
+const QUEST_WEEK = [
+  { id: 'wreps300', doel: 300, xp: 500, klik: 300 },
+  { id: 'wboss5',   doel: 5,   xp: 400, klik: 150 },
+  { id: 'wduel5',   doel: 5,   xp: 400, klik: 200 },
+  { id: 'wkills40', doel: 40,  xp: 350, klik: 150 },
+];
+/// Welke teller elke opdracht bijhoudt.
+const QUEST_TELLER = {
+  reps25: 'reps', kills3: 'kills', boss1: 'boss', combo1: 'combo',
+  duel1: 'duel', snel20: 'snel',
+  wreps300: 'reps', wboss5: 'boss', wduel5: 'duel', wkills40: 'kills',
+};
+const dagNr = () => Math.floor(Date.now() / 864e5);
+const weekNr = () => Math.floor((dagNr() + 3) / 7);   // weken beginnen op maandag
+/// Deterministisch husselen: hetzelfde zaad geeft iedereen dezelfde keuze.
+function questKeuze(pool, zaad, n) {
+  const lijst = [...pool];
+  let s = (zaad * 2654435761) % 4294967296;
+  for (let i = lijst.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    const j = s % (i + 1);
+    [lijst[i], lijst[j]] = [lijst[j], lijst[i]];
+  }
+  return lijst.slice(0, n);
+}
+const dagQuests = () => questKeuze(QUEST_DAG, dagNr(), 3);
+const weekQuests = () => questKeuze(QUEST_WEEK, weekNr() + 7919, 2);
+
+/// Voortgang staat in het profiel en synct dus mee met je account.
+function questStaat() {
+  if (!P.quests || typeof P.quests !== 'object') P.quests = {};
+  const q = P.quests;
+  if (q.dag !== dagNr()) { q.dag = dagNr(); q.dagTel = {}; q.dagKlaar = []; }
+  if (q.week !== weekNr()) { q.week = weekNr(); q.weekTel = {}; q.weekKlaar = []; }
+  q.dagTel = q.dagTel || {}; q.dagKlaar = q.dagKlaar || [];
+  q.weekTel = q.weekTel || {}; q.weekKlaar = q.weekKlaar || [];
+  return q;
+}
+
+let repMomenten = [];   // voor de snelheidsopdracht, alleen deze sessie
+
+/// Eén ingang voor alles wat een opdracht vooruit helpt.
+function questTel(teller, n = 1) {
+  const q = questStaat();
+  q.dagTel[teller] = (q.dagTel[teller] || 0) + n;
+  q.weekTel[teller] = (q.weekTel[teller] || 0) + n;
+  questCheck();
+}
+
+/// Elke push-up telt mee, en de snelheidsteller is een hoogste stand:
+/// hoeveel deed je er binnen één minuut.
+function questRep() {
+  const nu = Date.now();
+  repMomenten.push(nu);
+  repMomenten = repMomenten.filter(m => nu - m <= 60000);
+  const q = questStaat();
+  if (repMomenten.length > (q.dagTel.snel || 0)) q.dagTel.snel = repMomenten.length;
+  questTel('reps');
+}
+
+function questCheck() {
+  const q = questStaat();
+  [[dagQuests(), q.dagTel, q.dagKlaar], [weekQuests(), q.weekTel, q.weekKlaar]]
+    .forEach(([lijst, tel, klaar]) => lijst.forEach(quest => {
+      if (klaar.includes(quest.id)) return;
+      if ((tel[QUEST_TELLER[quest.id]] || 0) < quest.doel) return;
+      klaar.push(quest.id);
+      P.totalXP += quest.xp;
+      if (quest.klik) klikVerdien(quest.klik);
+      let tekst = t('quest_af', t('quest_' + quest.id, quest.doel)) + '\n+' + quest.xp + ' XP';
+      if (quest.klik) tekst += ' · +' + quest.klik + ' ' + t('stat_pushups');
+      melding(tekst, 5000);
+    }));
+  if ($('quests').classList.contains('aan')) renderQuests();
+}
+
+function renderQuests() {
+  const q = questStaat();
+  $('questsKop').textContent = t('quests_titel').toUpperCase();
+  const blok = (kop, lijst, tel, klaar) => {
+    let html = `<div class="qKop">${ontsmet(kop)}</div>`;
+    lijst.forEach(quest => {
+      const af = klaar.includes(quest.id);
+      const stand = Math.min(tel[QUEST_TELLER[quest.id]] || 0, quest.doel);
+      const loon = '+' + quest.xp + ' XP'
+        + (quest.klik ? ' · +' + quest.klik + ' ' + t('stat_pushups') : '');
+      html += `<div class="qRij${af ? ' af' : ''}">` +
+        `<div class="qTekst"><b>${ontsmet(t('quest_' + quest.id, quest.doel))}</b>` +
+        `<small>${ontsmet(loon)}</small></div>` +
+        `<div class="qStand">${af ? '✓' : stand + ' / ' + quest.doel}</div>` +
+        `<div class="qBalk"><i style="width:${af ? 100 : Math.round(stand / quest.doel * 100)}%"></i></div>` +
+        `</div>`;
+    });
+    return html;
+  };
+  $('questsLijst').innerHTML =
+    blok(t('quests_vandaag'), dagQuests(), q.dagTel, q.dagKlaar) +
+    blok(t('quests_week'), weekQuests(), q.weekTel, q.weekKlaar);
+  $('questsDicht').textContent = t('close');
+}
+
 function render() {
   const arena = arenaAt(idxNu()), c = arena.rgb, f = enemy.hp / enemy.max;
 
@@ -1552,6 +1719,7 @@ function rep() {
   lastRep = now;
   const crit = combo >= CRIT_COMBO, dmg = crit ? 2 : 1;
   if (crit) tip('combo');
+  if (combo === CRIT_COMBO) questTel('combo');
 
   P.totalReps++; sessionReps++;
   klikRepBonus();
@@ -1580,6 +1748,8 @@ function rep() {
     const gained = Math.floor((wasBoss ? bossXP(idxNu()) : minionXP(idxNu()))
                               * streakMult() * xpMaal());
     P.totalXP += gained; P.totalKills++;
+    questTel('kills');
+    if (wasBoss) questTel('boss');
 
     let entered = null;
     if (wasBoss) {
@@ -1619,13 +1789,13 @@ function rep() {
 /// een tik op het scherm is dat niet, en telt in de clicker dus niet mee.
 function pushup(echt = false) {
   if ($('klik').classList.contains('aan')) {
-    if (echt) { P.totalReps++; klikRepBonus(); save(); }
+    if (echt) { P.totalReps++; questRep(); klikRepBonus(); save(); }
     return;
   }
-  if (olFase === 'bezig') { olRep(); return; }
+  if (olFase === 'bezig') { questRep(); olRep(); return; }
   if (olFase !== 'uit') return;          // lobby, wachten of uitslag: niet tellen
-  if (duelFase === 'bezig') { duelRep(); return; }
-  if ($('menu').classList.contains('uit') && !$('duelSetup').classList.contains('aan')) rep();
+  if (duelFase === 'bezig') { questRep(); duelRep(); return; }
+  if ($('menu').classList.contains('uit') && !$('duelSetup').classList.contains('aan')) { questRep(); rep(); }
 }
 
 document.body.addEventListener('pointerdown', e => {
@@ -2349,7 +2519,7 @@ function eindigDuel() {
   const xp = (gewonnen ? duelWinstXP(duelNiveau) : duelVerliesXP(duelNiveau)) * xpMaal();
 
   P.totalXP += xp;
-  if (gewonnen) { P.duelsWon = (P.duelsWon || 0) + 1; tikStreak(); }
+  if (gewonnen) { P.duelsWon = (P.duelsWon || 0) + 1; tikStreak(); questTel('duel'); }
   P.duelBest = P.duelBest || {};
   if (duelJij > (P.duelBest[duelNiveau] || 0)) P.duelBest[duelNiveau] = duelJij;
   save();
@@ -2543,10 +2713,14 @@ function logUit() {
 /// zodat je nooit iets kwijtraakt door in te loggen.
 async function haalVoortgangOp() {
   if (!ingelogd()) return;
-  const a = await sbVraag('/rest/v1/progress?select=profile&user_id=eq.' + sessie.id);
+  const a = await sbVraag('/rest/v1/progress?select=profile,foto&user_id=eq.' + sessie.id);
   if (!a.ok) return;
   const rijen = await a.json();
   const opServer = rijen[0]?.profile;
+  // De foto van de server wint; heeft de server er geen en dit apparaat wel,
+  // dan sturen we die van hier alsnog op.
+  if (fotoOk(rijen[0]?.foto)) { mijnFoto = rijen[0].foto; localStorage.setItem('orbslayer.foto', mijnFoto); tekenFoto(); }
+  else if (fotoOk(mijnFoto)) await zetFoto(mijnFoto);
   if (opServer && (opServer.totalReps ?? 0) > (P.totalReps ?? 0)) {
     P = { ...DEFAULTS, ...opServer };
     spawn();
@@ -2604,6 +2778,7 @@ function renderAccount() {
   $('trofeeKast').innerHTML = koppen.length ? koppen.join('')
     : `<div class="trofeeLeeg">${ontsmet(t('trofee_leeg'))}</div>`;
 
+  tekenFoto();
   $('naamLabel').textContent = t('name_label').toUpperCase();
   $('naamVeld').placeholder = t('name_hint');
   $('naamVeld').value = P.naam || '';
@@ -2627,6 +2802,12 @@ function accMelding(tekst, fout = false) {
 }
 
 $('accountKnop').addEventListener('click', e => { e.stopPropagation(); toonAccount(); });
+$('questKnop').addEventListener('click', e => {
+  e.stopPropagation(); $('quests').classList.add('aan'); renderQuests();
+});
+$('questsDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('quests').classList.remove('aan');
+});
 $('accDicht').addEventListener('click', e => {
   e.stopPropagation(); $('account').classList.remove('aan');
 });
@@ -2832,6 +3013,106 @@ $('rondleiding').addEventListener('pointerdown', e => e.stopPropagation());
    Tik op een speler om zijn cijfers te zien.
 ---------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------
+   Je eigen foto. Hij wordt op dit apparaat verkleind tot een vierkantje
+   van 128 pixels en als tekst bij je account bewaard — in een eigen kolom,
+   niet in je voortgang, want die wordt tijdens het spelen om de paar
+   seconden weggeschreven en daar hoort geen plaatje bij.
+---------------------------------------------------------------- */
+const FOTO_MAAT = 128, FOTO_MAX = 30000;
+let mijnFoto = localStorage.getItem('orbslayer.foto') || '';
+
+/// Streng: alleen een echt plaatje in tekstvorm mag het scherm op. Foto's van
+/// andere spelers komen tenslotte van buiten.
+const fotoOk = f => typeof f === 'string' && f.length <= 40000 &&
+                    /^data:image\/(png|jpe?g|webp);base64,[A-Za-z0-9+/=]+$/.test(f);
+
+/// Snijdt het midden eruit, verkleint, en verlaagt de kwaliteit tot het
+/// plaatje klein genoeg is om mee te reizen.
+async function maakFoto(bron) {
+  const beeld = await createImageBitmap(bron);
+  const vlak = document.createElement('canvas');
+  vlak.width = vlak.height = FOTO_MAAT;
+  const zijde = Math.min(beeld.width, beeld.height);
+  vlak.getContext('2d').drawImage(
+    beeld, (beeld.width - zijde) / 2, (beeld.height - zijde) / 2, zijde, zijde,
+    0, 0, FOTO_MAAT, FOTO_MAAT);
+  let kwaliteit = 0.72, uit = vlak.toDataURL('image/jpeg', kwaliteit);
+  while (uit.length > FOTO_MAX && kwaliteit > 0.3) {
+    kwaliteit -= 0.12;
+    uit = vlak.toDataURL('image/jpeg', kwaliteit);
+  }
+  if (!fotoOk(uit)) throw new Error('te groot');
+  return uit;
+}
+
+async function zetFoto(nieuw) {
+  mijnFoto = nieuw || '';
+  if (mijnFoto) localStorage.setItem('orbslayer.foto', mijnFoto);
+  else localStorage.removeItem('orbslayer.foto');
+  tekenFoto();
+  if (!ingelogd()) return;
+  try {
+    await sbVraag('/rest/v1/progress', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates' },
+      body: JSON.stringify([{ user_id: sessie.id, foto: mijnFoto || null }]),
+    });
+  } catch (e) { /* offline: hij staat in elk geval op dit apparaat */ }
+}
+
+/// Een rond fotootje, of het rangteken als iemand nog geen foto heeft.
+function avatar(foto, level, maat) {
+  return fotoOk(foto)
+    ? `<img class="fotoRond" src="${foto}" alt="" width="${maat}" height="${maat}"` +
+      ` style="width:${maat}px;height:${maat}px">`
+    : rangTeken(level, maat);
+}
+
+/// Zet je eigen foto op de knop rechtsboven en in het accountscherm.
+function tekenFoto() {
+  const knop = $('accountKnop');
+  knop.innerHTML = fotoOk(mijnFoto)
+    ? `<img src="${mijnFoto}" alt="">` : '\u{1F464}';
+  const vak = $('accFotoKnop');
+  vak.classList.toggle('heeft', fotoOk(mijnFoto));
+  vak.innerHTML = fotoOk(mijnFoto)
+    ? `<img class="fotoRond" src="${mijnFoto}" alt="">`
+    : (P.naam || ingelogd() ? avatar('', playerLevel(), 96) : '<span class="plus">+</span>');
+  $('fotoKies').textContent = t('foto_kies');
+  $('fotoWeg').textContent = t('foto_weg');
+  $('fotoWeg').style.display = fotoOk(mijnFoto) ? 'block' : 'none';
+  $('fotoHint').textContent = t('foto_hint') + ' ' +
+    (ingelogd() ? t('foto_prive') : t('foto_lokaal'));
+}
+
+async function kiesFoto(bron) {
+  try {
+    bezig(t('foto_bezig'));
+    await zetFoto(await maakFoto(bron));
+    klaar();
+    melding(t('foto_klaar'));
+  } catch (e) { klaar(); melding(t('foto_fout'), 3500); }
+}
+
+$('accFotoKnop').addEventListener('click', e => { e.stopPropagation(); $('fotoInvoer').click(); });
+$('fotoKies').addEventListener('click', e => { e.stopPropagation(); $('fotoInvoer').click(); });
+$('fotoWeg').addEventListener('click', e => { e.stopPropagation(); zetFoto(''); });
+$('fotoInvoer').addEventListener('change', e => {
+  const bestand = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (bestand) kiesFoto(bestand);
+});
+// Plakken werkt ook: kopieer een foto en druk op ctrl+V in het accountscherm.
+window.addEventListener('paste', e => {
+  if (!$('account').classList.contains('aan')) return;
+  const items = [...(e.clipboardData ? e.clipboardData.items : [])];
+  const plaatje = items.find(i => i.type && i.type.startsWith('image/'));
+  if (!plaatje) return;
+  e.preventDefault();
+  kiesFoto(plaatje.getAsFile());
+});
+
 /// Level uit een XP-totaal, met dezelfde staffel als je eigen level.
 function levelVanXp(xp) {
   let over = xp, l = 1;
@@ -2889,7 +3170,7 @@ function tekenKlassement() {
     knop.className = 'lbRij' + (jij ? ' jij' : '');
     knop.innerHTML =
       `<span class="lbPlek">${i + 1}</span>` +
-      rangTeken(level) +
+      avatar(r.foto, level, 34) +
       `<span class="lbNaam">${ontsmet(r.naam)}${jij ? ` <small>${t('lb_you')}</small>` : ''}` +
       `<small>${t('rank_' + rangVanLevel(level))}</small></span>` +
       `<span class="lbLevel" style="color:${RANG_ICONEN.colors[rangVanLevel(level) - 1]}">${level}</span>`;
@@ -2920,7 +3201,7 @@ function ontsmet(tekst) {
 function toonSpeler(r) {
   const level = levelVanXp(r.xp), n = rangVanLevel(level);
   $('speler').classList.add('aan');
-  $('spelerBadge').innerHTML = rangTeken(level, 74);
+  $('spelerBadge').innerHTML = avatar(r.foto, level, 74);
   $('spelerNaam').textContent = r.naam;
   $('spelerRang').textContent = t('rank_level', t('rank_' + n), level);
   $('spelerRang').style.color = RANG_ICONEN.colors[n - 1];
@@ -3262,7 +3543,7 @@ function olEinde(reden) {
             : gewonnen ? duelWinstXP(olPeil()) : duelVerliesXP(olPeil())) * xpMaal();
 
   P.totalXP += xp;
-  if (gewonnen) { P.onlineWon = (P.onlineWon || 0) + 1; tikStreak(); }
+  if (gewonnen) { P.onlineWon = (P.onlineWon || 0) + 1; tikStreak(); questTel('duel'); }
   save();
 
   $('oduUitKop').textContent = afgehaakt ? t('ol_win_by_leave')
