@@ -427,6 +427,159 @@ PLANK_ICOON = (
 )
 
 
+# ---------------------------------------------------------------------------
+# Tekeningen in stripstijl: geen silhouet meer maar een heel figuur, opgebouwd
+# uit lagen met elk een eigen kleurrol. De rollen worden pas in het spel
+# ingevuld, zodat elke arena zijn eigen kleur houdt:
+#   lijf   de kleur van de arena          licht  lichtere versie (hoogsel)
+#   diep   donkerder (schaduw, achterste)  wit    ogen en tanden
+#   kleding stof                           zwart  pupillen, mond
+#   broek  donkere stof
+# Elke laag krijgt in het spel een donkere omlijning; dat maakt de stripstijl.
+# ---------------------------------------------------------------------------
+
+
+def hand(cx: float, cy: float, r: float = 6.5) -> str:
+    return circle(cx, cy, r)
+
+
+ART: dict[str, list[tuple[str, str]]] = {
+    "Orks": [
+        # achterste arm en been liggen achter het lijf
+        (bar(37, 56, 22, 76, 12) + hand(21, 78, 8), "diep"),
+        (bar(44, 74, 34, 92, 14), "diep"),
+        (poly([(22, 88), (38, 86), (39, 97), (21, 97)]), "diep"),
+        # voorste been met een dikke voet
+        (bar(58, 74, 68, 90, 14), "lijf"),
+        (poly([(60, 86), (80, 88), (81, 97), (59, 97)]), "lijf"),
+        # broek en hemd
+        (poly([(36, 68), (64, 68), (70, 82), (58, 82), (56, 74), (44, 74), (42, 82), (30, 82)]), "broek"),
+        (poly([(34, 50), (66, 50), (72, 72), (28, 72)]), "kleding"),
+        (poly([(34, 50), (41, 50), (37, 72), (28, 72)]), "diep"),
+        # kop: groot, laag en breed, zoals in een strip
+        (ellipse(50, 28, 27, 24), "lijf"),
+        (poly([(26, 24), (6, 12), (28, 38)]), "lijf"),
+        (poly([(74, 24), (94, 12), (72, 38)]), "lijf"),
+        (ellipse(50, 20, 20, 9), "licht"),
+        (circle(40, 24, 9), "wit"),
+        (circle(60, 24, 9), "wit"),
+        (circle(42, 26, 4), "zwart"),
+        (circle(62, 26, 4), "zwart"),
+        # brede grijns: donkere bek met twee slagtanden die eruit steken
+        (poly([(33, 39), (67, 39), (63, 49), (37, 49)]), "zwart"),
+        (poly([(37, 40), (44, 51), (46, 40)]), "wit"),
+        (poly([(54, 40), (56, 51), (63, 40)]), "wit"),
+        # arm naar voren, met een grote knuist
+        (bar(66, 54, 88, 62, 13) + hand(89, 64, 9), "lijf"),
+    ],
+    "Oorlogsorks": [
+        # achterste arm met knots, en het achterste been
+        (bar(36, 56, 20, 74, 12) + hand(19, 76, 8), "diep"),
+        (bar(44, 76, 34, 93, 15), "diep"),
+        (poly([(22, 89), (38, 87), (39, 97), (21, 97)]), "diep"),
+        (bar(58, 76, 68, 91, 15), "lijf"),
+        (poly([(60, 87), (80, 89), (81, 97), (59, 97)]), "lijf"),
+        # rok van platen en een borstplaat
+        (poly([(34, 70), (66, 70), (72, 84), (28, 84)]), "broek"),
+        (poly([(33, 50), (67, 50), (73, 72), (27, 72)]), "kleding"),
+        (poly([(44, 50), (56, 50), (56, 72), (44, 72)]), "licht"),
+        # schouderstukken
+        (ellipse(30, 52, 12, 9), "kleding"),
+        (ellipse(70, 52, 12, 9), "kleding"),
+        # kop met helm en hoorns
+        (ellipse(50, 30, 26, 22), "lijf"),
+        (poly([(27, 26), (9, 16), (28, 38)]), "lijf"),
+        (poly([(73, 26), (91, 16), (72, 38)]), "lijf"),
+        (poly([(23, 26), (77, 26), (79, 13), (21, 13)]), "kleding"),
+        (poly([(46, 26), (54, 26), (53, 36), (47, 36)]), "kleding"),
+        (poly([(25, 20), (12, 4), (34, 12)]), "licht"),
+        (poly([(75, 20), (88, 4), (66, 12)]), "licht"),
+        (circle(40, 30, 8), "wit"),
+        (circle(60, 30, 8), "wit"),
+        (circle(42, 31, 3.5), "zwart"),
+        (circle(62, 31, 3.5), "zwart"),
+        (poly([(33, 41), (67, 41), (63, 50), (37, 50)]), "zwart"),
+        (poly([(36, 42), (43, 54), (45, 42)]), "wit"),
+        (poly([(55, 42), (57, 54), (64, 42)]), "wit"),
+        (bar(68, 56, 88, 64, 13) + hand(89, 66, 9), "lijf"),
+    ],
+    "Spinnen": [
+        # acht poten: eerst de achterste in schaduwkleur
+        *[(bar(50 + s * 12, hy, 50 + s * kx, ky, 6) + bar(50 + s * kx, ky, 50 + s * ex, ey, 5), laag)
+          for hy, kx, ky, ex, ey, laag in [
+              (58, 34, 24, 46, 52, "diep"), (62, 38, 40, 48, 74, "diep"),
+              (54, 30, 18, 44, 40, "lijf"), (66, 34, 52, 46, 92, "lijf")]
+          for s in (-1, 1)],
+        # dik achterlijf met een lichte tekening
+        (ellipse(50, 66, 24, 25), "lijf"),
+        (poly([(50, 46), (60, 60), (50, 74), (40, 60)]), "licht"),
+        # kopborststuk
+        (ellipse(50, 38, 16, 14), "diep"),
+        # ogen: twee grote en twee kleine
+        (circle(43, 34, 6), "wit"),
+        (circle(57, 34, 6), "wit"),
+        (circle(44, 35, 2.6), "zwart"),
+        (circle(58, 35, 2.6), "zwart"),
+        (circle(36, 40, 3), "wit"),
+        (circle(64, 40, 3), "wit"),
+        # gifkaken
+        (poly([(43, 48), (46, 58), (48, 48)]), "wit"),
+        (poly([(52, 48), (54, 58), (57, 48)]), "wit"),
+    ],
+    "Weerwolven": [
+        # zware benen en een staart achter het lijf
+        (bar(40, 74, 30, 92, 15), "diep"),
+        (poly([(18, 88), (36, 86), (37, 97), (17, 97)]), "diep"),
+        (bar(60, 74, 70, 92, 15), "lijf"),
+        (poly([(62, 86), (82, 88), (83, 97), (61, 97)]), "lijf"),
+        (bar(66, 62, 92, 74, 10) + poly([(88, 66), (99, 80), (86, 80)]), "diep"),
+        # borst met lichte buik
+        (poly([(30, 48), (70, 48), (76, 78), (24, 78)]), "lijf"),
+        (poly([(42, 54), (58, 54), (62, 78), (38, 78)]), "licht"),
+        # armen met klauwen
+        (bar(30, 52, 14, 72, 13), "lijf"),
+        (poly([(8, 70), (20, 70), (18, 80), (6, 78)]), "lijf"),
+        (poly([(6, 78), (2, 86), (10, 82)]), "wit"),
+        (poly([(12, 80), (10, 89), (17, 84)]), "wit"),
+        (bar(70, 52, 86, 70, 13), "lijf"),
+        (poly([(80, 68), (92, 68), (94, 78), (82, 80)]), "lijf"),
+        (poly([(94, 76), (98, 84), (90, 82)]), "wit"),
+        (poly([(88, 78), (90, 87), (83, 84)]), "wit"),
+        # kop met snuit en oren
+        (ellipse(50, 30, 25, 21), "lijf"),
+        (poly([(28, 22), (18, 2), (40, 16)]), "lijf"),
+        (poly([(72, 22), (82, 2), (60, 16)]), "lijf"),
+        (poly([(32, 19), (27, 10), (37, 15)]), "diep"),
+        (poly([(68, 19), (73, 10), (63, 15)]), "diep"),
+        (ellipse(50, 42, 15, 11), "licht"),
+        (circle(50, 38, 5), "zwart"),
+        (circle(40, 27, 7), "wit"),
+        (circle(60, 27, 7), "wit"),
+        (circle(41, 28, 3.2), "zwart"),
+        (circle(61, 28, 3.2), "zwart"),
+        (poly([(38, 46), (62, 46), (58, 53), (42, 53)]), "zwart"),
+        (poly([(40, 46), (43, 55), (46, 46)]), "wit"),
+        (poly([(54, 46), (57, 55), (60, 46)]), "wit"),
+    ],
+}
+
+
+def schrijf_arena_art() -> None:
+    """Zet de tekeningen als 'pad|rol;pad|rol' in ArenaArt.swift."""
+    regels = [
+        "// Automatisch gegenereerd door iconen.py — bewerk daar de tekeningen.",
+        "",
+        "/// Tekeningen van de vijanden in lagen: elk stuk een pad met een kleurrol.",
+        "enum ArenaArt {",
+        "    static let art: [String: String] = [",
+    ]
+    for ras, lagen in ART.items():
+        stuk = ";".join(f"{d}|{rol}" for d, rol in lagen)
+        regels.append(f'        "{ras}": "{stuk}",')
+    regels += ["    ]", "}", ""]
+    (HIER / "Orbslayer" / "ArenaArt.swift").write_text("\n".join(regels))
+
+
 def schrijf_mode_icons() -> None:
     regels = [
         "// Automatisch gegenereerd door iconen.py — bewerk daar de vormen.",
@@ -550,6 +703,7 @@ if __name__ == "__main__":
     else:
         aantal = patch_arena_swift()
         schrijf_mode_icons()
+        schrijf_arena_art()
         schrijf_rang_icons()
         print(f"{aantal} iconen in Arena.swift gezet, "
               f"{len(MODE_ICONEN)} modus-iconen, {len(RANG_ICONEN)} rangtekens")
