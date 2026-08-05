@@ -204,7 +204,7 @@ De iconen worden getekend door `iconen.py` en als SVG-pad in `Orbslayer/Arena.sw
 python3 iconen.py && python3 bouw-proefversie.py
 ```
 
-Met `python3 iconen.py --preview` krijg je `overzicht-iconen.html`, waarin je alle twintig naast elkaar ziet.
+Met `python3 iconen.py --preview` krijg je `overzicht-iconen.html`, waarin je alle eenentwintig naast elkaar ziet.
 
 ## Gevonden worden
 

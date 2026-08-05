@@ -12,7 +12,7 @@
 <link rel="icon" href="__ICOON180__">
 
 <!-- Voor zoekmachines en voor het voorbeeldkaartje als je de link deelt. -->
-<meta name="description" content="Gratis push-up spel dat je herhalingen telt met de camera. Vecht je door twintig arena's, of neem het zestig seconden op tegen een tegenstander — offline of live tegen een echte speler. Werkt in elke browser, op je telefoon en je laptop.">
+<meta name="description" content="Gratis push-up spel dat je herhalingen telt met de camera. Vecht je door eenentwintig arena's, of neem het zestig seconden op tegen een tegenstander — offline of live tegen een echte speler. Werkt in elke browser, op je telefoon en je laptop.">
 <meta name="keywords" content="push-up spel, pushup game, push up teller, push-ups tellen, workout game, fitness spel, thuis trainen, camera teller, krachttraining">
 <meta name="author" content="Push Battle">
 <meta name="robots" content="index, follow">
@@ -35,7 +35,7 @@
   "@type": "VideoGame",
   "name": "Push Battle",
   "alternateName": "Push-up spel",
-  "description": "Push-up spel dat je herhalingen telt met de camera. Vecht je door twintig arena's, of neem het zestig seconden op tegen een tegenstander — alleen of online tegen een echte speler.",
+  "description": "Push-up spel dat je herhalingen telt met de camera. Vecht je door eenentwintig arena's, of neem het zestig seconden op tegen een tegenstander — alleen of online tegen een echte speler.",
   "genre": ["Fitness", "Casual"],
   "gamePlatform": ["Web browser", "iOS", "Android"],
   "applicationCategory": "GameApplication",
@@ -966,7 +966,7 @@
   <p>
     Push Battle telt je push-ups met de camera van je telefoon of laptop. Je zet
     je toestel rechtop naast je neer, en elke volledige herhaling is een aanval
-    op het monster voor je. Er zijn twintig arena's met steeds sterkere
+    op het monster voor je. Er zijn eenentwintig arena's met steeds sterkere
     vijanden, een duel van zestig seconden waarin je het tegen een tegenstander
     opneemt, en een online modus waarin je live tegen een echte speler racet —
     tegen een willekeurige tegenstander of tegen een vriend met een code. In de
