@@ -4,9 +4,11 @@ Push-up game voor iOS. De camera volgt de hoogte van je hoofd; elke push-up is e
 
 ## De website
 
-`index.html` is het hele spel in één bestand. Het heeft niets nodig om te draaien: geen server, geen installatie, geen account. Dubbelklikken werkt, maar voor de camera moet het via `https` of `localhost` geopend worden — dat is een beveiligingsregel van elke browser.
+De voorpagina (`index.html`) is de promopagina: die vertelt wat het spel is en verwijst door naar het spel zelf. Het spel is één bestand op `speel/index.html`. Het heeft niets nodig om te draaien: geen server, geen installatie, geen account. Dubbelklikken werkt, maar voor de camera moet het via `https` of `localhost` geopend worden — dat is een beveiligingsregel van elke browser.
 
-**De site staat live op [pushbattle.netlify.app](https://pushbattle.netlify.app).** Netlify is gekoppeld aan de GitHub-repository [Radebruijn/push_battle](https://github.com/Radebruijn/push_battle) en publiceert automatisch de map `website/` bij elke push naar `main`. Alles doet het daar, inclusief de camera en het hoofdherkenningsmodel.
+**De site staat live op [pushbattle.netlify.app](https://pushbattle.netlify.app)**, met het spel op [pushbattle.netlify.app/speel](https://pushbattle.netlify.app/speel/). Netlify is gekoppeld aan de GitHub-repository [Radebruijn/push_battle](https://github.com/Radebruijn/push_battle) en publiceert automatisch de map `website/` bij elke push naar `main`. Alles doet het daar, inclusief de camera en het hoofdherkenningsmodel.
+
+De promopagina wordt gebouwd uit `promo.tpl`; haar teksten staan in de aparte `promo`-sectie van `taal.json` (drie talen, net als het spel) en blijven zo buiten `Strings.swift` van de app. Ze deelt de arena's, iconen en het app-icoon met het spel, dus een nieuw monster of icoon verschijnt vanzelf ook op de voorpagina.
 
 Wil je iets aanpassen: draai `python3 bouw-proefversie.py`, commit, en push — Netlify zet het binnen een minuut live.
 

@@ -87,6 +87,39 @@ def werk_documentatie_bij(arenas: list[dict]) -> None:
             print(f"{pad.name}: aantal werelden bijgewerkt naar {woord}")
 
 
+def bouw_promo(arenas: list[dict], woorden: dict[str, str],
+               icoon_data: str, icons: dict[str, str]) -> str:
+    """Bouwt de promopagina (de voorpagina van de site) uit promo.tpl.
+    De teksten komen uit de aparte 'promo'-sectie van taal.json, zodat ze
+    niet in Strings.swift van de app belanden."""
+    sjabloon = (HIER / "promo.tpl").read_text()
+    promo = json.loads((HIER / "taal.json").read_text()).get("promo")
+    if not promo:
+        raise SystemExit("taal.json mist de 'promo'-sectie")
+    for sleutel, waarden in promo.items():
+        if len(waarden) != len(TALEN):
+            raise SystemExit(f"promo '{sleutel}' heeft {len(waarden)} vertalingen")
+    promo = {
+        sleutel: [w.replace("{AANTAL_ARENAS}", woorden[TALEN[i]]) for i, w in enumerate(waarden)]
+        for sleutel, waarden in promo.items()
+    }
+
+    vervangingen = {
+        "__PROMO_TEKSTEN__": (1, json.dumps(promo, ensure_ascii=False)),
+        "__ARENAS__": (1, json.dumps(arenas, ensure_ascii=False).replace("\n", "")),
+        "__MODEICONEN__": (1, json.dumps(icons, ensure_ascii=False)),
+        "__ICOON180__": (3, icoon_data),
+        "__AANTAL_ARENAS__": (1, woorden["nl"]),
+    }
+    pagina = sjabloon
+    for plek, (aantal, waarde) in vervangingen.items():
+        if sjabloon.count(plek) != aantal:
+            raise SystemExit(f"promo.tpl moet {plek} precies {aantal}× bevatten, "
+                             f"gevonden: {sjabloon.count(plek)}")
+        pagina = pagina.replace(plek, waarde)
+    return pagina
+
+
 def main() -> None:
     arenas = lees_arenas()
     sjabloon = SJABLOON.read_text()
@@ -116,12 +149,11 @@ def main() -> None:
     icoon = HIER / "website" / "icon-180.png"
     if sjabloon.count("__ICOON180__") != 2:
         raise SystemExit("Sjabloon moet precies twee keer __ICOON180__ bevatten")
-    if icoon.exists():
-        import base64
-        data = base64.b64encode(icoon.read_bytes()).decode()
-        pagina = pagina.replace("__ICOON180__", "data:image/png;base64," + data)
-    else:
+    if not icoon.exists():
         raise SystemExit("website/icon-180.png ontbreekt — draai eerst appicoon.py")
+    import base64
+    icoon_data = "data:image/png;base64," + base64.b64encode(icoon.read_bytes()).decode()
+    pagina = pagina.replace("__ICOON180__", icoon_data)
 
     icons = lees_mode_icons()
     if sjabloon.count("__MODEICONEN__") != 1:
@@ -154,11 +186,18 @@ def main() -> None:
         + "\n</body>\n</html>\n"
     )
     pagina = document
-    # index.html is dezelfde pagina onder de naam die webhosters verwachten.
-    (HIER / "index.html").write_text(pagina)
-    # website/ is de map die je op een hoster sleept.
+    # Het spel woont op /speel/; de voorpagina is de promopagina hieronder.
+    # website/ is de map die de hoster publiceert; de kopie in de repo-wortel
+    # is er zodat een lokale server dezelfde paden heeft.
     (HIER / "website").mkdir(exist_ok=True)
-    (HIER / "website" / "index.html").write_text(pagina)
+    for basis in (HIER, HIER / "website"):
+        (basis / "speel").mkdir(exist_ok=True)
+        (basis / "speel" / "index.html").write_text(pagina)
+
+    promo = bouw_promo(arenas, woorden, icoon_data, icons)
+    (HIER / "index.html").write_text(promo)
+    (HIER / "website" / "index.html").write_text(promo)
+
     # privacy.html hoort bij de site; Apple eist een werkende privacylink.
     for naam in ("robots.txt", "sitemap.xml"):
         bron = HIER / "website" / naam
@@ -168,7 +207,8 @@ def main() -> None:
     privacy = HIER / "privacy.html"
     if privacy.exists():
         (HIER / "website" / "privacy.html").write_text(privacy.read_text())
-    print(f"{UIT.name} + index.html gebouwd — {len(arenas)} arena's, {len(pagina)} tekens")
+    print(f"{UIT.name} + speel/index.html + promopagina gebouwd — "
+          f"{len(arenas)} arena's, {len(pagina)} tekens")
 
 
 if __name__ == "__main__":

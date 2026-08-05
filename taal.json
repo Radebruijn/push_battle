@@ -1451,5 +1451,138 @@
       "Everyone, everywhere, at the same time.",
       "Tout le monde, partout, en même temps."
     ]
+  },
+  "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",
+  "promo": {
+    "hero_kop": [
+      "Elke push-up is een klap",
+      "Every push-up is a hit",
+      "Chaque pompe est un coup"
+    ],
+    "hero_sub": [
+      "Push Battle telt je push-ups met de camera en maakt er een gevecht van. Niets vasthouden, niets bijhouden — telefoon neerzetten en pushen.",
+      "Push Battle counts your push-ups with the camera and turns them into a fight. Nothing to hold, nothing to track — put your phone down and push.",
+      "Push Battle compte tes pompes avec la caméra et les transforme en combat. Rien à tenir, rien à noter — pose ton téléphone et pousse."
+    ],
+    "cta_speel": [
+      "Speel gratis in je browser",
+      "Play free in your browser",
+      "Joue gratuitement dans ton navigateur"
+    ],
+    "cta_appstore": [
+      "Binnenkort in de App Store",
+      "Coming soon to the App Store",
+      "Bientôt sur l'App Store"
+    ],
+    "hoe_kop": [
+      "Zo werkt het",
+      "How it works",
+      "Comment ça marche"
+    ],
+    "hoe1_kop": [
+      "Zet je telefoon neer",
+      "Put your phone down",
+      "Pose ton téléphone"
+    ],
+    "hoe1_tekst": [
+      "Rechtop voor je op de grond, zodat de camera je van de voorkant ziet.",
+      "Upright on the floor in front of you, so the camera sees you from the front.",
+      "Debout au sol devant toi, pour que la caméra te voie de face."
+    ],
+    "hoe2_kop": [
+      "De camera telt",
+      "The camera counts",
+      "La caméra compte"
+    ],
+    "hoe2_tekst": [
+      "Zak en kom weer omhoog: dat is één. Tijdens het trainen raak je niets aan.",
+      "Go down and come back up: that is one. You never touch anything while training.",
+      "Descends et remonte : ça fait une. Tu ne touches à rien pendant l'entraînement."
+    ],
+    "hoe3_kop": [
+      "Het monster incasseert",
+      "The monster takes the hits",
+      "Le monstre encaisse"
+    ],
+    "hoe3_tekst": [
+      "Elke herhaling is een aanval. Versla de boss en reis door naar de volgende wereld.",
+      "Every rep is an attack. Defeat the boss and travel on to the next world.",
+      "Chaque répétition est une attaque. Bats le boss et passe au monde suivant."
+    ],
+    "modi_kop": [
+      "Vier manieren om te spelen",
+      "Four ways to play",
+      "Quatre façons de jouer"
+    ],
+    "modus_arena_kop": [
+      "Arena",
+      "Arena",
+      "Arène"
+    ],
+    "modus_arena": [
+      "Vecht je door {AANTAL_ARENAS} werelden, elk met een eigen ras en een eigen boss.",
+      "Fight through {AANTAL_ARENAS} worlds, each with its own race and its own boss.",
+      "Traverse {AANTAL_ARENAS} mondes, chacun avec sa race et son boss."
+    ],
+    "modus_duel_kop": [
+      "Duel",
+      "Duel",
+      "Duel"
+    ],
+    "modus_duel": [
+      "Zestig seconden tegen een tegenstander. Jij kiest hoe zwaar.",
+      "Sixty seconds against an opponent. You choose how hard.",
+      "Soixante secondes contre un adversaire. Tu choisis la difficulté."
+    ],
+    "modus_online_kop": [
+      "Online",
+      "Online",
+      "En ligne"
+    ],
+    "modus_online": [
+      "Race live tegen een echte speler, of daag een vriend uit met een code.",
+      "Race a real player live, or challenge a friend with a code.",
+      "Affronte un vrai joueur en direct, ou défie un ami avec un code."
+    ],
+    "modus_clicker_kop": [
+      "Clicker",
+      "Clicker",
+      "Clicker"
+    ],
+    "modus_clicker": [
+      "Bouw met je push-ups een imperium van helpers dat vanzelf doortelt.",
+      "Build an empire of helpers with your push-ups that keeps counting on its own.",
+      "Bâtis avec tes pompes un empire d'assistants qui compte tout seul."
+    ],
+    "werelden_kop": [
+      "{AANTAL_ARENAS} werelden vol monsters",
+      "{AANTAL_ARENAS} worlds full of monsters",
+      "{AANTAL_ARENAS} mondes pleins de monstres"
+    ],
+    "werelden_tekst": [
+      "Van ork tot titaan: elke arena heeft een eigen kleur, een eigen ras en een boss die je in één sessie moet vellen.",
+      "From orc to titan: every arena has its own colour, its own race and a boss you must fell in a single session.",
+      "De l'orque au titan : chaque arène a sa couleur, sa race et un boss à terrasser en une seule session."
+    ],
+    "privacy_kop": [
+      "Jouw camera blijft van jou",
+      "Your camera stays yours",
+      "Ta caméra reste à toi"
+    ],
+    "privacy_tekst": [
+      "Het beeld wordt alleen op je eigen toestel geanalyseerd. Er gaat geen enkel beeld naar een server en er wordt niets opgenomen of bewaard.",
+      "The image is analysed on your own device only. Not a single frame goes to a server, and nothing is recorded or stored.",
+      "L'image est analysée uniquement sur ton appareil. Pas une seule image ne part vers un serveur, et rien n'est enregistré ni conservé."
+    ],
+    "voet_gratis": [
+      "Gratis, zonder installatie, in het Nederlands, Engels en Frans.",
+      "Free, no installation, in Dutch, English and French.",
+      "Gratuit, sans installation, en néerlandais, anglais et français."
+    ],
+    "voet_privacy": [
+      "Privacybeleid",
+      "Privacy policy",
+      "Politique de confidentialité"
+    ]
   }
 }

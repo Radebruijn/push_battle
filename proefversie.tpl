@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Push Battle">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="/manifest.json">
 <!-- Het icoon staat er als data-URI in, zodat de pagina één bestand blijft. -->
 <link rel="apple-touch-icon" href="__ICOON180__">
 <link rel="icon" href="__ICOON180__">
@@ -22,12 +22,12 @@
 <meta property="og:site_name" content="Push Battle">
 <meta property="og:title" content="Push Battle — push-ups tellen als gevecht">
 <meta property="og:description" content="Zet je telefoon naast je neer en push. De camera telt je herhalingen en elke push-up is een klap tegen het monster voor je.">
-<meta property="og:image" content="icon-512.png">
+<meta property="og:image" content="https://pushbattle.netlify.app/icon-512.png">
 <meta property="og:locale" content="nl_NL">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Push Battle — push-ups tellen als gevecht">
 <meta name="twitter:description" content="Zet je telefoon naast je neer en push. De camera telt je herhalingen en elke push-up is een klap tegen het monster voor je.">
-<meta name="twitter:image" content="icon-512.png">
+<meta name="twitter:image" content="https://pushbattle.netlify.app/icon-512.png">
 
 <script type="application/ld+json">
 {

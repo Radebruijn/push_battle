@@ -2,7 +2,7 @@
   "name": "Push Battle",
   "short_name": "Push Battle",
   "description": "Push-ups tellen als gevecht: de camera telt, jij slaat.",
-  "start_url": "./",
+  "start_url": "/speel/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
