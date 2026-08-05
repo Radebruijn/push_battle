@@ -74,6 +74,30 @@ Bij het inloggen kijkt hij welke voortgang het verst is, die van de server of di
 
 De gegevens staan in het Supabase-project `orbslayer` in tabel `progress`. Elke rij hoort bij één account, en de databaseregels zorgen dat niemand anders die kan lezen of wijzigen — dat is getest.
 
+## Je eigen foto
+
+Bovenaan het accountscherm staan je foto en je naam naast elkaar: links een ronde knop, rechts het naamveld. Tik op de cirkel en je kiest een foto uit je bibliotheek of maakt er meteen een met je camera — op de telefoon biedt de browser dat allebei aan. Op een laptop kun je ook gewoon **een foto kopiëren en in het accountscherm plakken**; dat werkt met ctrl+V.
+
+De foto wordt op je eigen apparaat verkleind tot een vierkant van 128 pixels en teruggebracht tot een paar kilobyte, zodat hij overal snel laadt. Wat je kiest zie je meteen terug op de knop rechtsboven, in het klassement en op je spelerskaart. Heb je geen foto, dan blijft je rangteken staan — niemand ziet dus een leeg vakje.
+
+**Wie ziet hem?** Zonder account blijft je foto op dat ene apparaat staan. Log je in, dan reist hij mee naar je andere apparaten en zien alle spelers met een account hem in het klassement. Weg is ook echt weg: **Foto weghalen** wist hem hier én op de server.
+
+**Waarom hij niet in je voortgang zit.** Je voortgang wordt tijdens het spelen om de paar seconden weggeschreven, en daar hoort geen plaatje van een paar kilobyte elke keer bij. De foto heeft daarom een eigen kolom `foto` in de tabel `progress`, die alleen wordt geschreven als je hem verandert. De database accepteert alleen tekst die als `data:image/…` begint en niet groter is dan veertig kilobyte, en de browser laat alleen zo'n plaatje op het scherm — plaatjes van andere spelers komen tenslotte van buiten. Beide grenzen zijn getest.
+
+## Wat er niet mag
+
+Het klassement is voor iedereen met een account zichtbaar, en spelers kiezen daar zelf hun naam en foto. Er staat daarom een portier op — en die staat op de server, niet in de browser, want een pagina kan iedereen aanpassen.
+
+**Namen.** Voor je naam wordt opgeslagen, vraagt het spel de server of hij mag. Die maakt hem eerst kaal: hoofdletters weg, accenten weg, cijferschrift terug naar letters (`n1gg4` wordt `nigga`), alles wat geen letter is eruit (dus punten en spaties helpen niet), en drie of meer dezelfde letters achter elkaar worden er twee (`niggggga` wordt `nigga`). Wat overblijft gaat langs een lijst met racistische scheldwoorden, nazi-verwijzingen en platte geslachtsdelen. Zit er iets in, dan krijg je *"Die naam kan niet"* en blijft je oude naam staan.
+
+De lijst bevat bewust alleen ondubbelzinnige woorden, want een onterecht geweigerde naam is ook vervelend. Getest: *Niger*, *Nigeriaan*, *Aaron*, *Poesje* en *Bosbaviaan* mogen gewoon; de scheldwoorden en hun verhaspelingen niet.
+
+Wie het toch voor elkaar krijgt langs de browser te komen, wint er niets mee: het klassement en de online duels halen de naam door dezelfde controle en tonen dan `Speler ABCD`.
+
+**Foto's.** Of een foto door de beugel kan, kan een programma niet betrouwbaar zien — daar heb je een herkenningsmodel voor nodig dat hier niet draait. Daarom staat er iets anders: op elke spelerskaart in het klassement zit **Deze speler melden**. Melden kan alleen met een account, één keer per speler, en jezelf melden gaat niet. Bij **drie verschillende melders verdwijnt de foto** meteen uit het klassement; de speler zelf blijft gewoon in de lijst staan met zijn rangteken. Ook dat is getest, inclusief de weg terug: dubbel melden telt niet dubbel en uitgelogd melden wordt geweigerd.
+
+De regel staat er ook bij als je een foto kiest: geen naaktbeelden of aanstootgevende foto's.
+
 ## De rondleiding
 
 Open je het spel voor het eerst zonder account, dan begint een rondleiding van zes schermen die het hele scherm vult. Zolang die loopt kun je niets anders doen: alleen **Overslaan** rechtsboven en de knop onderaan reageren. De zes schermen leggen uit wat het spel is, hoe je je telefoon neerzet, hoe er geteld wordt, waarom kalibreren nodig is, welke spelmodi er zijn en wat een account oplevert. Elk scherm heeft een eigen tekening.

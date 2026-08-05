@@ -262,6 +262,40 @@ enum Tk: String {
     case klik_helpers
     case klik_upgrades
     case klik_winkel
+    case klik_crates
+    case inv_titel
+    case inv_sec_titels
+    case inv_sec_iconen
+    case inv_sec_kleuren
+    case krat_hout
+    case krat_hout_uit
+    case krat_zilver
+    case krat_zilver_uit
+    case krat_goud
+    case krat_goud_uit
+    case graad_1
+    case graad_2
+    case graad_3
+    case buit_nieuw
+    case buit_dubbel
+    case cos_vroegevogel
+    case cos_doorzetter
+    case cos_vloerveger
+    case cos_nachtuil
+    case cos_orkenschrik
+    case cos_bossenjager
+    case cos_ijzerenborst
+    case cos_combokoning
+    case cos_demachine
+    case cos_onverwoestbaar
+    case cos_goud
+    case cos_gras
+    case cos_lucht
+    case cos_roze
+    case cos_paars
+    case cos_vuur
+    case cos_bloed
+    case cos_ijs
     case klik_leeg_helpers
     case klik_leeg_upgrades
     case klik_weg
@@ -337,6 +371,13 @@ enum Tk: String {
     case foto_klaar
     case foto_fout
     case foto_bezig
+    case naam_geweigerd
+    case meld_knop
+    case meld_klaar
+    case meld_verborgen
+    case meld_account
+    case meld_fout
+    case foto_regels
 }
 
 enum Strings {
@@ -579,6 +620,40 @@ enum Strings {
         "klik_helpers": ["Helpers", "Helpers", "Aides"],
         "klik_upgrades": ["Upgrades", "Upgrades", "Améliorations"],
         "klik_winkel": ["Winkel", "Shop", "Boutique"],
+        "klik_crates": ["Crates", "Crates", "Caisses"],
+        "inv_titel": ["Inventaris", "Inventory", "Inventaire"],
+        "inv_sec_titels": ["Titels", "Titles", "Titres"],
+        "inv_sec_iconen": ["Iconen", "Icons", "Icônes"],
+        "inv_sec_kleuren": ["Naamkleuren", "Name colors", "Couleurs de nom"],
+        "krat_hout": ["Houten krat", "Wooden crate", "Caisse en bois"],
+        "krat_hout_uit": ["Meestal iets gewoons, soms iets zeldzaams.", "Usually something common, sometimes rare.", "Souvent un objet commun, parfois rare."],
+        "krat_zilver": ["Zilveren krat", "Silver crate", "Caisse en argent"],
+        "krat_zilver_uit": ["Goede kans op iets zeldzaams.", "A good chance of something rare.", "Bonne chance d'objet rare."],
+        "krat_goud": ["Gouden krat", "Golden crate", "Caisse en or"],
+        "krat_goud_uit": ["Grote kans op zeldzaam of episch.", "A big chance of rare or epic.", "Grande chance de rare ou épique."],
+        "graad_1": ["Gewoon", "Common", "Commun"],
+        "graad_2": ["Zeldzaam", "Rare", "Rare"],
+        "graad_3": ["Episch", "Epic", "Épique"],
+        "buit_nieuw": ["NIEUW", "NEW", "NOUVEAU"],
+        "buit_dubbel": ["Dubbel — je krijgt {0} push-ups terug", "Duplicate — you get {0} push-ups back", "Doublon — tu récupères {0} pompes"],
+        "cos_vroegevogel": ["De Vroege Vogel", "The Early Bird", "Le Lève-Tôt"],
+        "cos_doorzetter": ["De Doorzetter", "The Grinder", "Le Persévérant"],
+        "cos_vloerveger": ["De Vloerveger", "The Floor Sweeper", "Le Balayeur"],
+        "cos_nachtuil": ["De Nachtuil", "The Night Owl", "Le Noctambule"],
+        "cos_orkenschrik": ["Orkenschrik", "Orc's Bane", "Terreur des Orcs"],
+        "cos_bossenjager": ["Bossenjager", "Boss Hunter", "Chasseur de Boss"],
+        "cos_ijzerenborst": ["IJzeren Borst", "Iron Chest", "Torse de Fer"],
+        "cos_combokoning": ["Combokoning", "Combo King", "Roi du Combo"],
+        "cos_demachine": ["De Machine", "The Machine", "La Machine"],
+        "cos_onverwoestbaar": ["De Onverwoestbare", "The Unbreakable", "L'Indestructible"],
+        "cos_goud": ["Goud", "Gold", "Or"],
+        "cos_gras": ["Gras", "Grass", "Herbe"],
+        "cos_lucht": ["Lucht", "Sky", "Ciel"],
+        "cos_roze": ["Roze", "Pink", "Rose"],
+        "cos_paars": ["Paars", "Purple", "Violet"],
+        "cos_vuur": ["Vuur", "Fire", "Feu"],
+        "cos_bloed": ["Bloed", "Blood", "Sang"],
+        "cos_ijs": ["IJs", "Ice", "Glace"],
         "klik_leeg_helpers": ["Doe push-ups. Bij vijfentwintig kun je je eerste helper kopen.", "Do push-ups. At twenty-five you can buy your first helper.", "Fais des pompes. À vingt-cinq, tu peux acheter ta première aide."],
         "klik_leeg_upgrades": ["Nog niets te verbeteren. Koop eerst helpers, of blijf tikken.", "Nothing to improve yet. Buy helpers first, or keep tapping.", "Rien à améliorer pour l'instant. Achète des aides ou continue à taper."],
         "klik_weg": ["Terwijl je weg was: +{0}", "While you were gone: +{0}", "Pendant ton absence : +{0}"],
@@ -654,6 +729,13 @@ enum Strings {
         "foto_klaar": ["Foto opgeslagen.", "Photo saved.", "Photo enregistrée."],
         "foto_fout": ["Dat plaatje lukte niet. Probeer een andere foto.", "That image did not work. Try another photo.", "Cette image n'a pas fonctionné. Essaie une autre photo."],
         "foto_bezig": ["Foto verkleinen…", "Resizing photo…", "Réduction de la photo…"],
+        "naam_geweigerd": ["Die naam kan niet. Kies er een zonder scheldwoorden.", "That name is not allowed. Pick one without slurs.", "Ce nom n'est pas autorisé. Choisis-en un sans insultes."],
+        "meld_knop": ["Deze speler melden", "Report this player", "Signaler ce joueur"],
+        "meld_klaar": ["Gemeld. Bij drie meldingen verdwijnt de foto uit het klassement.", "Reported. After three reports the photo disappears from the leaderboard.", "Signalé. Après trois signalements, la photo disparaît du classement."],
+        "meld_verborgen": ["Gemeld. Deze foto is nu voor iedereen verborgen.", "Reported. This photo is now hidden for everyone.", "Signalé. Cette photo est maintenant masquée pour tout le monde."],
+        "meld_account": ["Log in om iemand te kunnen melden.", "Sign in to report someone.", "Connecte-toi pour signaler quelqu'un."],
+        "meld_fout": ["Melden lukte niet.", "Reporting failed.", "Le signalement a échoué."],
+        "foto_regels": ["Geen naaktbeelden of aanstootgevende foto's.", "No nudity or offensive pictures.", "Pas de nudité ni d'images offensantes."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

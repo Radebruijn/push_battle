@@ -275,17 +275,21 @@
   /* eigen foto */
   .fotoRond { border-radius: 50%; object-fit: cover; display: block;
               background: rgba(255,255,255,.08); }
-  #accFoto { text-align: center; margin-bottom: 18px; }
+  #accProfiel { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 6px; }
+  #accProfiel #accFotoKnop { width: 88px; height: 88px; flex: none; margin: 0; }
+  .profielRechts { flex: 1; min-width: 0; }
+  .profielRechts .naamRij { margin-top: 6px; }
+  .profielRechts .instelLabel { text-align: left; }
   #accFotoKnop { width: 104px; height: 104px; border-radius: 50%; padding: 0; cursor: pointer;
                  border: 2px dashed rgba(255,255,255,.22); background: rgba(255,255,255,.05);
                  overflow: hidden; display: grid; place-items: center; margin: 0 auto 10px; }
   #accFotoKnop.heeft { border-style: solid; border-color: rgba(255,199,64,.55); }
   #accFotoKnop img, #accFotoKnop svg { width: 100%; height: 100%; }
   #accFotoKnop .plus { font-size: 34px; color: rgba(255,255,255,.45); line-height: 1; }
-  .fotoRij { display: flex; gap: 16px; justify-content: center; }
+  .fotoRij { display: flex; gap: 16px; margin-top: 4px; }
   .fotoRij .tekstKnop { margin: 0; }
   .fotoHint { font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.45;
-              max-width: 22rem; margin: 8px auto 0; }
+              margin: 8px 0 16px; }
   #klassementKnop { font-size: 21px; }
   #accountKnop.aan::after { content: ''; position: absolute; right: 7px; top: 7px;
     width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
@@ -363,6 +367,34 @@
   .qBalk i { display: block; height: 100%;
              background: linear-gradient(to right, #ffc740, #ff9d2e); }
 
+  #inventaris { position: fixed; inset: 0; z-index: 14; background: rgba(0,0,0,.96); display: none;
+                padding: 30px 22px; overflow-y: auto; }
+  #inventaris.aan { display: block; }
+  #inventaris h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
+                   color: rgba(255,255,255,.5); margin: 0 0 6px; text-align: center; }
+  .invRooster { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; }
+  .invVak { background: rgba(255,255,255,.05); border-radius: 12px; padding: 8px 4px 6px;
+            text-align: center; border: 1px solid transparent; color: inherit; font: inherit;
+            cursor: pointer; }
+  .invVak.aan { border-color: rgba(255,199,64,.7); background: rgba(255,199,64,.08); }
+  .invVak.dicht { opacity: .5; cursor: default; }
+  .invBeeld { height: 40px; display: grid; place-items: center; }
+  .invBeeld b { font-size: 22px; color: rgba(255,255,255,.35); }
+  .invVak span { display: block; font-size: 9px; margin-top: 3px; overflow: hidden;
+                 text-overflow: ellipsis; white-space: nowrap; }
+  .invDot { display: inline-block; border-radius: 50%; }
+  .invT { font-weight: 900; color: #ffc740; line-height: 1; }
+  #buit { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.8);
+          display: none; place-items: center; }
+  #buit.aan { display: grid; }
+  .buitKaart { background: #15161a; border-radius: 20px; padding: 28px 40px;
+               text-align: center; max-width: 82%; }
+  .buitGraad { font-size: 11px; font-weight: 900; letter-spacing: 2px; }
+  .buitBeeld { margin: 14px 0 10px; display: grid; place-items: center; }
+  .buitNaam { font-size: 20px; font-weight: 900; }
+  .buitStatus { margin-top: 8px; font-size: 12px; color: rgba(255,255,255,.6); }
+  .buitStatus b { color: #7dde7d; letter-spacing: 2px; }
+
   #account { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96); display: none;
              padding: 30px 22px; overflow-y: auto; }
   #account.aan { display: block; }
@@ -393,10 +425,10 @@
                  background: #ffc740; color: #000; }
   #naamOpslaan:disabled { background: rgba(255,255,255,.08); color: rgba(255,255,255,.35);
                           cursor: default; }
-  #accNaam input, #accFormulier input { width: 100%; margin-bottom: 10px; padding: 14px 16px; border-radius: 14px;
+  #accNaam input, #accProfiel input, #accFormulier input { width: 100%; margin-bottom: 10px; padding: 14px 16px; border-radius: 14px;
     border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: #fff;
     font: inherit; font-size: 16px; }
-  #accFormulier input::placeholder { color: rgba(255,255,255,.35); }
+  #accFormulier input::placeholder, #accProfiel input::placeholder { color: rgba(255,255,255,.35); }
   .pwEisen { font-size: 12px; line-height: 1.6; margin: 2px 0 8px; color: rgba(255,255,255,.45); }
   .pwEisen .kop { font-weight: 700; color: rgba(255,255,255,.6); }
   .pwEisen div { display: flex; gap: 7px; align-items: baseline; }
@@ -783,6 +815,7 @@
     <div class="spelerNaam" id="spelerNaam"></div>
     <div class="spelerRang" id="spelerRang"></div>
     <div class="accCijfers" id="spelerCijfers"></div>
+    <button class="tekstKnop" id="spelerMeld"></button>
     <button class="tekstKnop" id="spelerDicht"></button>
   </div>
 </div>
@@ -793,27 +826,41 @@
   <button class="tekstKnop" id="questsDicht"></button>
 </div>
 
+<div id="inventaris">
+  <h2 id="invKop"></h2>
+  <div id="invLijst"></div>
+  <button class="tekstKnop" id="invDicht"></button>
+</div>
+
+<div id="buit">
+  <div class="buitKaart" id="buitKaart"></div>
+</div>
+
 <div id="account">
   <h2 id="accountKop"></h2>
   <div class="accStatus" id="accStatus"></div>
 
-  <div id="accFoto">
+  <div id="accProfiel">
     <button id="accFotoKnop" aria-label="foto"><span class="plus">+</span></button>
-    <div class="fotoRij">
-      <button class="tekstKnop" id="fotoKies"></button>
-      <button class="tekstKnop" id="fotoWeg"></button>
+    <div class="profielRechts">
+      <div class="instelLabel" id="naamLabel"></div>
+      <div class="naamRij">
+        <input type="text" id="naamVeld" maxlength="24" autocomplete="nickname"
+               enterkeyhint="done" spellcheck="false">
+        <button id="naamOpslaan"></button>
+      </div>
+      <div class="fotoRij">
+        <button class="tekstKnop" id="fotoKies"></button>
+        <button class="tekstKnop" id="fotoWeg"></button>
+      </div>
     </div>
-    <div class="fotoHint" id="fotoHint"></div>
-    <input type="file" id="fotoInvoer" accept="image/*" hidden>
   </div>
+  <div class="fotoHint" id="fotoHint"></div>
+  <input type="file" id="fotoInvoer" accept="image/*" hidden>
 
   <div id="accNaam">
-    <div class="instelLabel" id="naamLabel"></div>
-    <div class="naamRij">
-      <input type="text" id="naamVeld" maxlength="24" autocomplete="nickname"
-             enterkeyhint="done" spellcheck="false">
-      <button id="naamOpslaan"></button>
-    </div>
+    <div class="instelLabel" id="naamLabel2" hidden></div>
+
     <div class="accPrive" id="naamPrive"></div>
   </div>
 
@@ -1017,6 +1064,7 @@
     <button class="klikTab aan" id="tabHelpers" data-tab="helpers"></button>
     <button class="klikTab" id="tabUpgrades" data-tab="upgrades"></button>
     <button class="klikTab" id="tabWinkel" data-tab="winkel"></button>
+    <button class="klikTab" id="tabCrates" data-tab="crates"></button>
   </div>
   <div class="klikLijst" id="klikLijst"></div>
 </div>
@@ -2808,6 +2856,12 @@ $('questKnop').addEventListener('click', e => {
 $('questsDicht').addEventListener('click', e => {
   e.stopPropagation(); $('quests').classList.remove('aan');
 });
+$('invDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('inventaris').classList.remove('aan');
+});
+$('buit').addEventListener('click', e => {
+  e.stopPropagation(); $('buit').classList.remove('aan');
+});
 $('accDicht').addEventListener('click', e => {
   e.stopPropagation(); $('account').classList.remove('aan');
 });
@@ -3062,11 +3116,153 @@ async function zetFoto(nieuw) {
 }
 
 /// Een rond fotootje, of het rangteken als iemand nog geen foto heeft.
-function avatar(foto, level, maat) {
-  return fotoOk(foto)
-    ? `<img class="fotoRond" src="${foto}" alt="" width="${maat}" height="${maat}"` +
-      ` style="width:${maat}px;height:${maat}px">`
-    : rangTeken(level, maat);
+/* ---------------- crates, cosmetica en de inventaris ----------------
+   Crates koop je met push-ups uit de clicker. Erin zitten titels, monster-
+   koppen als icoon en naamkleuren — puur om te laten zien, in het klassement
+   en op je spelerskaart. Dubbel getrokken = een deel van je push-ups terug.
+   Andermans keuzes komen als kale id's uit de server en worden alleen
+   gerenderd als ze in COSMETICA voorkomen. */
+const KRATTEN = [
+  { id: 'hout',   prijs: 35, kans: [70, 25, 5] },
+  { id: 'zilver', prijs: 50, kans: [45, 40, 15] },
+  { id: 'goud',   prijs: 75, kans: [15, 45, 40] },
+];
+const COSMETICA = [
+  // titels
+  { id: 'vroegevogel',    soort: 'titel', graad: 1 },
+  { id: 'doorzetter',     soort: 'titel', graad: 1 },
+  { id: 'vloerveger',     soort: 'titel', graad: 1 },
+  { id: 'nachtuil',       soort: 'titel', graad: 1 },
+  { id: 'orkenschrik',    soort: 'titel', graad: 2 },
+  { id: 'bossenjager',    soort: 'titel', graad: 2 },
+  { id: 'ijzerenborst',   soort: 'titel', graad: 2 },
+  { id: 'combokoning',    soort: 'titel', graad: 2 },
+  { id: 'demachine',      soort: 'titel', graad: 3 },
+  { id: 'onverwoestbaar', soort: 'titel', graad: 3 },
+  // monsterkoppen als icoon (arena-nummer bepaalt kop en kleur)
+  { id: 'kop1', soort: 'icoon', graad: 1, arena: 1 },
+  { id: 'kop2', soort: 'icoon', graad: 1, arena: 2 },
+  { id: 'kop3', soort: 'icoon', graad: 1, arena: 3 },
+  { id: 'kop4', soort: 'icoon', graad: 2, arena: 4 },
+  { id: 'kop5', soort: 'icoon', graad: 2, arena: 5 },
+  { id: 'kop6', soort: 'icoon', graad: 2, arena: 6 },
+  { id: 'kop7', soort: 'icoon', graad: 3, arena: 7 },
+  { id: 'kop8', soort: 'icoon', graad: 3, arena: 8 },
+  { id: 'kop9', soort: 'icoon', graad: 3, arena: 9 },
+  // naamkleuren
+  { id: 'goud',  soort: 'kleur', graad: 1, hex: '#ffc740' },
+  { id: 'gras',  soort: 'kleur', graad: 1, hex: '#63e063' },
+  { id: 'lucht', soort: 'kleur', graad: 1, hex: '#58b6ff' },
+  { id: 'roze',  soort: 'kleur', graad: 2, hex: '#ff7ad9' },
+  { id: 'paars', soort: 'kleur', graad: 2, hex: '#b06dff' },
+  { id: 'vuur',  soort: 'kleur', graad: 2, hex: '#ff9d2e' },
+  { id: 'bloed', soort: 'kleur', graad: 3, hex: '#f2263a' },
+  { id: 'ijs',   soort: 'kleur', graad: 3, hex: '#35f0d0' },
+];
+const COS_GRAADKLEUR = ['#c8cdd2', '#58b6ff', '#b06dff'];
+const cosVind = id => COSMETICA.find(c => c.id === id) || null;
+const kleurHex = id => { const c = id && cosVind(id); return c && c.soort === 'kleur' ? c.hex : null; };
+/// Titel van een speler, alleen als het een bestaand id is.
+const titelNaam = id => { const c = id && cosVind(id); return c && c.soort === 'titel' ? t('cos_' + id) : null; };
+
+function spullen() {
+  if (!Array.isArray(P.spullen)) P.spullen = [];
+  if (!P.getooid || typeof P.getooid !== 'object') P.getooid = {};
+  return P.spullen;
+}
+/// Wat je nu draagt van een soort — alleen geldig als je het ook echt bezit.
+function getooid(soort) {
+  spullen();
+  const id = P.getooid[soort];
+  const c = id && cosVind(id);
+  return c && c.soort === soort && P.spullen.includes(id) ? id : null;
+}
+
+function cosNaam(c) {
+  return c.soort === 'icoon' ? tt(arenaAt(c.arena).race) : t('cos_' + c.id);
+}
+function cosVisual(c, maat = 40) {
+  if (c.soort === 'icoon') {
+    const a = arenaAt(c.arena);
+    return `<svg viewBox="0 0 100 100" style="width:${maat}px;height:${maat}px">` +
+           `<path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>`;
+  }
+  if (c.soort === 'kleur') {
+    const d = Math.round(maat * 0.7);
+    return `<span class="invDot" style="width:${d}px;height:${d}px;background:${c.hex}"></span>`;
+  }
+  return `<span class="invT" style="font-size:${Math.round(maat * 0.55)}px">❝</span>`;
+}
+
+/// De trekking: eerst de graad (elke krat zijn eigen kansen), dan een item.
+function kratBuit(krat) {
+  const lot = Math.random() * 100;
+  let graad = 1, som = 0;
+  for (let i = 0; i < 3; i++) { som += krat.kans[i]; if (lot < som) { graad = i + 1; break; } }
+  const pool = COSMETICA.filter(c => c.graad === graad);
+  const item = pool[Math.floor(Math.random() * pool.length)];
+  let terug = 0;
+  if (spullen().includes(item.id)) {
+    terug = Math.ceil(krat.prijs * 0.4);
+    klikVerdien(terug);
+  } else spullen().push(item.id);
+  toonBuit(item, terug);
+}
+
+function toonBuit(item, terug) {
+  const g = COS_GRAADKLEUR[item.graad - 1];
+  $('buitKaart').innerHTML =
+    `<div class="buitGraad" style="color:${g}">${ontsmet(t('graad_' + item.graad).toUpperCase())}</div>` +
+    `<div class="buitBeeld">${cosVisual(item, 64)}</div>` +
+    `<div class="buitNaam">${ontsmet(cosNaam(item))}</div>` +
+    `<div class="buitStatus">${terug ? ontsmet(t('buit_dubbel', terug)) : `<b>${ontsmet(t('buit_nieuw'))}</b>`}</div>`;
+  $('buitKaart').style.boxShadow = `0 0 60px ${g}55`;
+  $('buit').classList.add('aan');
+}
+
+function renderInventaris() {
+  $('invKop').textContent = t('inv_titel').toUpperCase();
+  let html = '';
+  [['titel', 'inv_sec_titels'], ['icoon', 'inv_sec_iconen'], ['kleur', 'inv_sec_kleuren']]
+    .forEach(([soort, kop]) => {
+      html += `<div class="qKop">${ontsmet(t(kop))}</div><div class="invRooster">`;
+      COSMETICA.filter(c => c.soort === soort).forEach(c => {
+        if (spullen().includes(c.id)) {
+          const aan = getooid(soort) === c.id;
+          html += `<button class="invVak${aan ? ' aan' : ''}" data-id="${c.id}">` +
+            `<div class="invBeeld">${cosVisual(c, 34)}</div>` +
+            `<span style="color:${COS_GRAADKLEUR[c.graad - 1]}">${ontsmet(cosNaam(c))}</span></button>`;
+        } else {
+          html += `<button class="invVak dicht"><div class="invBeeld"><b>?</b></div>` +
+            `<span>${ontsmet(t('graad_' + c.graad))}</span></button>`;
+        }
+      });
+      html += `</div>`;
+    });
+  $('invLijst').innerHTML = html;
+  $('invDicht').textContent = t('close');
+  // Aantikken = dragen; nog een keer = weer afdoen.
+  $('invLijst').querySelectorAll('.invVak[data-id]').forEach(k => k.onclick = e => {
+    e.stopPropagation();
+    const c = cosVind(k.dataset.id);
+    P.getooid[c.soort] = getooid(c.soort) === c.id ? null : c.id;
+    save();
+    renderInventaris();
+  });
+}
+
+function avatar(foto, level, maat, icoonId) {
+  if (fotoOk(foto)) {
+    return `<img class="fotoRond" src="${foto}" alt="" width="${maat}" height="${maat}"` +
+      ` style="width:${maat}px;height:${maat}px">`;
+  }
+  const c = icoonId && cosVind(icoonId);
+  if (c && c.soort === 'icoon') {
+    const a = arenaAt(c.arena);
+    return `<svg class="lbBadge" viewBox="0 0 100 100" style="width:${maat}px;height:${maat}px">` +
+           `<path d="${a.icon}" fill="${rgbCss(a.rgb)}"/></svg>`;
+  }
+  return rangTeken(level, maat);
 }
 
 /// Zet je eigen foto op de knop rechtsboven en in het accountscherm.
@@ -3078,12 +3274,12 @@ function tekenFoto() {
   vak.classList.toggle('heeft', fotoOk(mijnFoto));
   vak.innerHTML = fotoOk(mijnFoto)
     ? `<img class="fotoRond" src="${mijnFoto}" alt="">`
-    : (P.naam || ingelogd() ? avatar('', playerLevel(), 96) : '<span class="plus">+</span>');
+    : '<span class="plus">+</span>';
   $('fotoKies').textContent = t('foto_kies');
   $('fotoWeg').textContent = t('foto_weg');
   $('fotoWeg').style.display = fotoOk(mijnFoto) ? 'block' : 'none';
   $('fotoHint').textContent = t('foto_hint') + ' ' +
-    (ingelogd() ? t('foto_prive') : t('foto_lokaal'));
+    (ingelogd() ? t('foto_prive') + ' ' + t('foto_regels') : t('foto_lokaal'));
 }
 
 async function kiesFoto(bron) {
@@ -3168,11 +3364,13 @@ function tekenKlassement() {
     const jij = ingelogd() && r.speler === sessie.id;
     const knop = document.createElement('button');
     knop.className = 'lbRij' + (jij ? ' jij' : '');
+    const hx = kleurHex(r.kleur), ttl = titelNaam(r.titel);
     knop.innerHTML =
       `<span class="lbPlek">${i + 1}</span>` +
-      avatar(r.foto, level, 34) +
-      `<span class="lbNaam">${ontsmet(r.naam)}${jij ? ` <small>${t('lb_you')}</small>` : ''}` +
-      `<small>${t('rank_' + rangVanLevel(level))}</small></span>` +
+      avatar(r.foto, level, 34, r.icoon) +
+      `<span class="lbNaam"><span${hx ? ` style="color:${hx}"` : ''}>${ontsmet(r.naam)}</span>` +
+      `${jij ? ` <small>${t('lb_you')}</small>` : ''}` +
+      `<small>${ttl ? ontsmet(ttl) + ' · ' : ''}${t('rank_' + rangVanLevel(level))}</small></span>` +
       `<span class="lbLevel" style="color:${RANG_ICONEN.colors[rangVanLevel(level) - 1]}">${level}</span>`;
     knop.onclick = e => {
       e.stopPropagation();
@@ -3198,12 +3396,37 @@ function ontsmet(tekst) {
   return d.innerHTML;
 }
 
+/// Wie er nu op de spelerskaart staat, zodat de meldknop weet om wie het gaat.
+let spelerNu = null;
+
+async function meldSpeler() {
+  if (!spelerNu) return;
+  if (!ingelogd()) { melding(t('meld_account'), 3500); return; }
+  try {
+    const a = await sbVraag('/rest/v1/rpc/meld_speler', {
+      method: 'POST', body: JSON.stringify({ p_doel: spelerNu.speler, p_reden: '' }),
+    });
+    if (!a.ok) throw new Error(a.status);
+    const uit = await a.json();
+    melding(uit.verborgen ? t('meld_verborgen') : t('meld_klaar'), 4500);
+    $('speler').classList.remove('aan');
+  } catch (e) { melding(t('meld_fout'), 3000); }
+}
+
+$('spelerMeld').addEventListener('click', e => { e.stopPropagation(); meldSpeler(); });
+
 function toonSpeler(r) {
+  spelerNu = r;
+  $('spelerMeld').textContent = t('meld_knop');
+  $('spelerMeld').style.display = ingelogd() && r.speler !== sessie?.id ? 'block' : 'none';
   const level = levelVanXp(r.xp), n = rangVanLevel(level);
+  const hx = kleurHex(r.kleur), ttl = titelNaam(r.titel);
   $('speler').classList.add('aan');
-  $('spelerBadge').innerHTML = avatar(r.foto, level, 74);
+  $('spelerBadge').innerHTML = avatar(r.foto, level, 74, r.icoon);
   $('spelerNaam').textContent = r.naam;
-  $('spelerRang').textContent = t('rank_level', t('rank_' + n), level);
+  $('spelerNaam').style.color = hx || '';
+  $('spelerRang').textContent =
+    (ttl ? ttl + ' · ' : '') + t('rank_level', t('rank_' + n), level);
   $('spelerRang').style.color = RANG_ICONEN.colors[n - 1];
   $('spelerCijfers').innerHTML = [
     [r.reps, t('stat_pushups')],
@@ -3231,9 +3454,30 @@ function werkNaamKnopBij() {
   $('naamOpslaan').disabled = nieuw === (P.naam || '');
 }
 
-function slaNaamOp() {
+/// De server houdt een lijst met scheldwoorden bij. Hij is er niet om jou te
+/// pesten maar om het klassement leefbaar te houden, en hij draait daar zodat
+/// niemand er met een aangepaste pagina omheen kan.
+async function naamMag(naam) {
+  try {
+    const a = await fetch(SB_URL + '/rest/v1/rpc/naam_mag', {
+      method: 'POST',
+      headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_naam: naam }),
+    });
+    if (!a.ok) return true;      // server onbereikbaar: hij keurt hem later toch
+    return (await a.json()) === true;
+  } catch (e) { return true; }
+}
+
+async function slaNaamOp() {
   const nieuw = $('naamVeld').value.trim().slice(0, 24);
   if (nieuw === (P.naam || '')) return;
+  if (nieuw && !(await naamMag(nieuw))) {
+    $('naamVeld').value = P.naam || '';
+    werkNaamKnopBij();
+    accMelding(t('naam_geweigerd'), true);
+    return;
+  }
   P.naam = nieuw;
   save();
   duwVoortgang(true);
@@ -3882,6 +4126,7 @@ function vertaalKlik() {
   $('tabHelpers').textContent = t('klik_helpers');
   $('tabUpgrades').textContent = t('klik_upgrades');
   $('tabWinkel').textContent = t('klik_winkel');
+  $('tabCrates').textContent = t('klik_crates');
 }
 
 function tekenKlik() {
@@ -3983,6 +4228,15 @@ function klikAanbod() {
                    koop: () => { klikStaat().techniek[tk.id] = techniekAantal(tk.id) + 1; } });
     });
     rijen.sort((a, b) => a.prijs - b.prijs);
+  } else if (klikTab === 'crates') {
+    rijen = KRATTEN.map(kr => ({
+      id: 'kr:' + kr.id,
+      titel: t('krat_' + kr.id),
+      uitleg: t('krat_' + kr.id + '_uit'),
+      extra: '',
+      prijs: kr.prijs,
+      koop: () => kratBuit(kr),
+    }));
   } else {
     rijen = KLIK_WINKEL.map(w => ({
       id: 'w:' + w.id,
@@ -4035,6 +4289,15 @@ function tekenKlikLijst(altijd = false) {
     uitleg.className = 'klikMelding';
     uitleg.textContent = t('klik_uitleg');
     lijst.appendChild(uitleg);
+  }
+  if (klikTab === 'crates') {
+    const knop = document.createElement('button');
+    knop.className = 'tekstKnop';
+    knop.textContent = t('inv_titel');
+    knop.onclick = e => {
+      e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
+    };
+    lijst.appendChild(knop);
   }
   klikPrijzenBij();
 }
@@ -4135,6 +4398,7 @@ vertaalVast();
 spawn();
 toonMenu();
 $('accountKnop').classList.toggle('aan', ingelogd());
+tekenFoto();
 if (ingelogd()) {
   bezig(t('loading_saved'));
   haalVoortgangOp().then(() => { klaar(); render(); renderMenu(); });
