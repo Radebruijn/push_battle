@@ -46,6 +46,19 @@ Het spel probeert eerst een houdingsmodel te downloaden dat de losse punten van 
 
 In beide gevallen zie je linksboven een camerabeeldje met de gevonden hoogte erin getekend, zodat je kunt controleren of hij je goed volgt.
 
+## Geluid
+
+Alle geluiden worden in de pagina zelf gemaakt met de Web Audio API — er wordt geen enkel geluidsbestand geladen, dus het spel blijft één bestand en start net zo snel.
+
+- **Elke push-up geeft een toon.** Blijf je in ritme, dan kruipt hij een trapje omhoog langs tien noten; laat je meer dan drie seconden zitten, dan begint hij weer onderaan. Dat werkt in de arena, het duel, online en in de clicker.
+- **Elke knop geeft hetzelfde korte klikje**, zodat het overal hetzelfde aanvoelt.
+- **Bij een kill, een verslagen boss, een levelstijging en een gewonnen duel** klinkt een klein loopje; verlies je, dan zakt het juist.
+- **Op de achtergrond loopt een rustige lus** in mineur: een bas eronder en af en toe een noot erboven. Hij stopt vanzelf als je naar een ander tabblad gaat.
+
+Bij de instellingen staan twee schuiven: **Geluid** voor de tonen en klikjes, **Muziek** voor de lus. Allebei van 0 tot 100; op nul wordt er letterlijk niets meer aangemaakt. De stand blijft op je apparaat staan.
+
+Browsers laten geluid pas toe nadat je iets hebt aangeraakt — dat is een regel van de browser, geen instelling. De eerste tik in het spel maakt de audio wakker.
+
 ## Talen
 
 Het spel spreekt Nederlands, Engels en Frans. De keuze staat bij de instellingen, achter het tandwiel. Bij de eerste start volgt hij de taal van je toestel; kies je zelf iets, dan onthoudt hij dat. Arenanamen, rassen, bossen en de sfeerzinnen zijn allemaal vertaald — alleen de namen van de minions blijven overal gelijk, want dat zijn eigennamen.
@@ -138,7 +151,9 @@ De knop **Vechten** brengt je in het gevecht; linksboven ga je weer terug naar h
 
 ## Spelmodi
 
-Linksboven in het menu zit een burgermenu (☰). Daar kies je tussen vier modi.
+Linksboven in het menu zit een burgermenu (☰). Bovenin staan de vier spelmodi als brede kaarten. Daaronder, achter een streep met het kopje **Meer**, staan drie kleinere vakjes in een andere vorm: **Opdrachten**, **Klassement** en **Instellingen**. Die zien er met opzet anders uit dan de spelmodi — je gaat er niet spelen, je kijkt of stelt er iets in. Op het vakje Opdrachten staat een badge met hoever je vandaag bent (*0/3*), die groen wordt als je alle drie gehaald hebt.
+
+De bovenbalk is daardoor leeg op twee knoppen na: het menu links en je account (met je foto) rechts.
 
 **Arena** is de eindeloze modus die hierboven beschreven staat: minions, bosses en arena's.
 

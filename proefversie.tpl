@@ -388,7 +388,10 @@
                  text-overflow: ellipsis; white-space: nowrap; }
   .invDot { display: inline-block; border-radius: 50%; }
   .invT { font-weight: 900; color: #ffc740; line-height: 1; }
-  /* De les ligt onder de cameravraag (14), zodat die gewoon werkt. */
+  /* De les ligt onder de cameravraag (14), zodat die gewoon werkt. Het
+     camerabeeldje (normaal 12) gaat tijdens de les achter het grijs, anders
+     hangt je eigen hoofd voor de uitleg. */
+  body.lesAan #cam { z-index: 9; }
   #les { position: fixed; inset: 0; z-index: 10; display: none; pointer-events: none; }
   #les.aan { display: block; }
   .lesBlok { position: fixed; background: rgba(0,0,0,.78); pointer-events: auto; }
@@ -463,7 +466,7 @@
   .instelWaarde { font-size: 26px; font-weight: 900; text-align: center; color: #ffc740; margin-top: 6px; }
   .instelUitleg { font-size: 12px; color: rgba(255,255,255,.45); text-align: center;
                   margin-top: 8px; line-height: 1.45; }
-  #diepte { width: 100%; margin: 16px 0 0; accent-color: #ffc740; height: 30px; }
+  #diepte, #geluid, #muziek { width: 100%; margin: 16px 0 0; accent-color: #ffc740; height: 30px; }
 
   #modes { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.92); display: none;
            padding: 60px 20px; }
@@ -1893,6 +1896,9 @@ function rep() {
     $('flash').style.opacity = .25;
     setTimeout(() => $('flash').style.opacity = 0, 110);
 
+    geluidKill();
+    if (wasBoss) geluidWin();
+    if (playerLevel() > before) setTimeout(geluidLevel, 260);
     let text = t('xp_gain', gained);
     if (wasBoss) text = t('boss_defeated') + '\n' + text;
     if (playerLevel() > before) text += '\n' + t('level_up', playerLevel());
@@ -1910,6 +1916,7 @@ function rep() {
 /// Eén ingang voor elke push-up. 'echt' is waar als de camera hem gezien heeft;
 /// een tik op het scherm is dat niet, en telt in de clicker dus niet mee.
 function pushup(echt = false) {
+  geluidPush();
   if ($('klik').classList.contains('aan')) {
     if (echt) { P.totalReps++; questRep(); klikRepBonus(); save(); }
     return;
@@ -2022,6 +2029,104 @@ $('cvZonder').addEventListener('click', e => {
   camBalkBijwerken();
   $('hint').textContent = t('hint_tap');
 });
+
+/* ---------------------------------------------------------------
+   Geluid. Alles wordt hier ter plekke gemaakt met de Web Audio API — geen
+   bestanden, want de pagina moet één bestand blijven. Een push-up geeft een
+   toon die oploopt zolang je in ritme blijft, knoppen geven een klikje, en op
+   de achtergrond kan een rustige lus meelopen. Allebei apart regelbaar bij de
+   instellingen; op nul staat alles stil.
+---------------------------------------------------------------- */
+let audio = null, muziekLus = null, muziekStap = 0, laatsteToon = 0, toonTrap = 0;
+let volEffect = Math.min(100, Math.max(0, +(localStorage.getItem('orbslayer.geluid') ?? 70)));
+let volMuziek = Math.min(100, Math.max(0, +(localStorage.getItem('orbslayer.muziek') ?? 30)));
+
+/// Browsers laten geluid pas toe na een echte aanraking; daarom wordt de
+/// audio pas bij de eerste tik wakker gemaakt.
+function audioAan() {
+  try {
+    if (!audio) {
+      const Bouw = window.AudioContext || window.webkitAudioContext;
+      if (!Bouw) return null;
+      audio = new Bouw();
+    }
+    if (audio.state === 'suspended') audio.resume();
+    return audio;
+  } catch (e) { return null; }
+}
+
+/// Eén korte toon met een zachte in- en uitloop, zodat het niet klikt.
+function toon(hz, duur = 0.12, golf = 'triangle', luid = 1, wacht = 0) {
+  const ac = audioAan();
+  if (!ac || volEffect <= 0) return;
+  const t0 = ac.currentTime + wacht;
+  const bron = ac.createOscillator(), knop = ac.createGain();
+  bron.type = golf;
+  bron.frequency.setValueAtTime(hz, t0);
+  const top = 0.16 * luid * (volEffect / 100);
+  knop.gain.setValueAtTime(0.0001, t0);
+  knop.gain.exponentialRampToValueAtTime(top, t0 + 0.01);
+  knop.gain.exponentialRampToValueAtTime(0.0001, t0 + duur);
+  bron.connect(knop).connect(ac.destination);
+  bron.start(t0);
+  bron.stop(t0 + duur + 0.03);
+}
+
+/// De ladder waarlangs de push-uptoon omhoog kruipt zolang je doorgaat.
+const TOONLADDER = [294, 330, 370, 392, 440, 494, 554, 587, 659, 740];
+function geluidPush() {
+  const nu = Date.now();
+  toonTrap = (nu - laatsteToon <= COMBO_WINDOW) ? Math.min(toonTrap + 1, TOONLADDER.length - 1) : 0;
+  laatsteToon = nu;
+  toon(TOONLADDER[toonTrap], 0.13, 'triangle', 1);
+}
+const geluidTik = () => toon(760, 0.045, 'square', 0.3);
+const geluidKill = () => [523, 659, 784].forEach((hz, i) => toon(hz, 0.15, 'triangle', 0.85, i * 0.06));
+const geluidWin = () => [523, 659, 784, 1047].forEach((hz, i) => toon(hz, 0.22, 'triangle', 1, i * 0.08));
+const geluidVerlies = () => [330, 262, 196].forEach((hz, i) => toon(hz, 0.28, 'sawtooth', 0.5, i * 0.1));
+const geluidLevel = () => [659, 784, 988, 1319].forEach((hz, i) => toon(hz, 0.26, 'sine', 1, i * 0.07));
+
+/// Een trage lus in mineur: bas eronder, af en toe een noot erboven.
+const MUZIEK_BAS = [110, 110, 98, 98, 87, 87, 98, 98];
+const MUZIEK_TOP = [0, 330, 0, 392, 0, 294, 0, 440, 0, 330, 0, 262, 0, 392, 0, 0];
+function muziekTik() {
+  const ac = audioAan();
+  if (!ac || volMuziek <= 0) return;
+  const t0 = ac.currentTime;
+  const luid = volMuziek / 100;
+  const speel = (hz, duur, golf, sterkte) => {
+    const bron = ac.createOscillator(), knop = ac.createGain(), zeef = ac.createBiquadFilter();
+    zeef.type = 'lowpass';
+    zeef.frequency.setValueAtTime(900, t0);
+    bron.type = golf;
+    bron.frequency.setValueAtTime(hz, t0);
+    knop.gain.setValueAtTime(0.0001, t0);
+    knop.gain.exponentialRampToValueAtTime(sterkte * luid, t0 + 0.08);
+    knop.gain.exponentialRampToValueAtTime(0.0001, t0 + duur);
+    bron.connect(zeef).connect(knop).connect(ac.destination);
+    bron.start(t0);
+    bron.stop(t0 + duur + 0.05);
+  };
+  if (muziekStap % 2 === 0) speel(MUZIEK_BAS[(muziekStap / 2) % MUZIEK_BAS.length], 0.9, 'triangle', 0.05);
+  const boven = MUZIEK_TOP[muziekStap % MUZIEK_TOP.length];
+  if (boven) speel(boven, 1.1, 'sine', 0.028);
+  muziekStap++;
+}
+
+function muziekBij() {
+  clearInterval(muziekLus);
+  muziekLus = null;
+  if (volMuziek > 0 && !document.hidden) muziekLus = setInterval(muziekTik, 460);
+}
+document.addEventListener('visibilitychange', muziekBij);
+
+// Elke knop in het spel geeft hetzelfde klikje; zo klinkt overal hetzelfde.
+document.addEventListener('click', e => {
+  if (e.target.closest('button')) geluidTik();
+}, true);
+// De eerste aanraking maakt de audio wakker en start zo nodig de muziek.
+['pointerdown', 'keydown'].forEach(soort =>
+  window.addEventListener(soort, () => { audioAan(); muziekBij(); }, { once: true }));
 
 function melding(tekst, duur = 1900) {
   const el = $('melding');
@@ -2534,6 +2639,15 @@ function toonModi() {
   vul('modeDuel', MODE_ICONEN.duel, t('mode_duel'), t('mode_duel_sub'), false);
   vul('modeOnline', MODE_ICONEN.online, t('mode_online'), t('mode_online_sub'), false);
   vul('modeKlik', MODE_ICONEN.klik, t('mode_klik'), t('mode_klik_sub'), false);
+  $('menuMeerKop').textContent = t('menu_meer').toUpperCase();
+  $('extraQuests').textContent = t('quests_titel');
+  $('extraKlassement').textContent = t('leaderboard');
+  $('extraInstel').textContent = t('settings');
+  // Op de opdrachtenkaart staat meteen hoever je vandaag bent.
+  const q = questStaat(), dag = dagQuests();
+  const af = dag.filter(x => q.dagKlaar.includes(x.id)).length;
+  $('questBadge').textContent = af + '/' + dag.length;
+  $('questBadge').classList.toggle('af', af === dag.length);
   $('modesDicht').textContent = t('cancel');
 }
 
@@ -2647,6 +2761,7 @@ function eindigDuel() {
   if (duelJij > (P.duelBest[duelNiveau] || 0)) P.duelBest[duelNiveau] = duelJij;
   save();
 
+  (gewonnen ? geluidWin : geluidVerlies)();
   $('duelUitKop').textContent = gewonnen ? t('duel_win') : t('duel_lose');
   $('duelUitKop').style.color = gewonnen ? '#ffc740' : '#f2263a';
   $('duelUitScore').textContent = t('duel_score', duelJij, doel);
@@ -2678,6 +2793,13 @@ function toonInstellingen() {
   $('kalibreerKnop').textContent = t('calibrate_now');
   $('rondleidingKnop').textContent = t('tour_again');
   $('instelDicht').textContent = t('close');
+  $('geluidLabel').textContent = t('geluid_label').toUpperCase();
+  $('muziekLabel').textContent = t('muziek_label').toUpperCase();
+  $('geluidUitleg').textContent = t('geluid_uitleg');
+  $('muziekUitleg').textContent = t('muziek_uitleg');
+  $('geluid').value = volEffect;
+  $('muziek').value = volMuziek;
+  werkGeluidBij();
   $('diepte').value = Math.round(DIEPTE * 100);
   werkDiepteBij();
 }
@@ -2690,6 +2812,19 @@ function werkDiepteBij() {
 }
 
 $('tandwiel').addEventListener('click', e => { e.stopPropagation(); toonInstellingen(); });
+/// De schuiven voor geluid en muziek. Op nul is het echt stil.
+function werkGeluidBij() {
+  volEffect = +$('geluid').value;
+  volMuziek = +$('muziek').value;
+  localStorage.setItem('orbslayer.geluid', volEffect);
+  localStorage.setItem('orbslayer.muziek', volMuziek);
+  $('geluidWaarde').textContent = volEffect ? volEffect + '%' : t('geluid_uit');
+  $('muziekWaarde').textContent = volMuziek ? volMuziek + '%' : t('geluid_uit');
+  muziekBij();
+}
+$('geluid').addEventListener('input', () => { werkGeluidBij(); });
+$('geluid').addEventListener('change', () => toon(660, 0.12, 'triangle', 1));
+$('muziek').addEventListener('input', werkGeluidBij);
 $('diepte').addEventListener('input', werkDiepteBij);
 $('instelDicht').addEventListener('click', e => {
   e.stopPropagation(); $('instel').classList.remove('aan');
@@ -3117,6 +3252,7 @@ const LES_STAPPEN = [
 
 function lesStart() {
   lesStap = 1;
+  document.body.classList.add('lesAan');
   $('les').classList.add('aan');
   tekenLes();
   clearInterval(lesTimer);
@@ -3168,6 +3304,7 @@ function lesVolgende() {
 function lesKlaar() {
   lesStap = 0;
   clearInterval(lesTimer);
+  document.body.classList.remove('lesAan');
   $('les').classList.remove('aan');
   sessionStorage.setItem('orbslayer.rondleiding', 'klaar');
 }
@@ -3942,6 +4079,7 @@ function olEinde(reden) {
   if (gewonnen) { P.onlineWon = (P.onlineWon || 0) + 1; tikStreak(); questTel('duel'); }
   save();
 
+  (gewonnen ? geluidWin : geluidVerlies)();
   $('oduUitKop').textContent = afgehaakt ? t('ol_win_by_leave')
                              : gelijk ? t('ol_draw')
                              : gewonnen ? t('duel_win') : t('duel_lose');
