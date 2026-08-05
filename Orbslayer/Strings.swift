@@ -479,7 +479,7 @@ enum Strings {
         "tour_step": ["{0} van {1}", "{0} of {1}", "{0} sur {1}"],
         "tour1_kop": ["Welkom", "Welcome", "Bienvenue"],
         "tour1_tekst": ["Push Battle maakt van push-ups een gevecht. Elke herhaling die je doet is een klap tegen het monster voor je.", "Push Battle turns push-ups into a fight. Every rep you do is a hit against the monster in front of you.", "Push Battle transforme les pompes en combat. Chaque répétition frappe le monstre devant toi."],
-        "tour2_kop": ["Kalibreer je telefoon", "Calibrate your phone", "Calibre ton téléphone"],
+        "tour2_kop": ["Positie van je telefoon", "Position your phone", "Position de ton téléphone"],
         "tour2_tekst": ["Zet je telefoon rechtop voor je op de grond, zodat de camera je van de voorkant ziet. Tijdens het trainen hoef je niets aan te raken.", "Place your phone upright on the floor in front of you, so the camera sees you from the front. You never have to touch it while training.", "Pose ton téléphone debout au sol devant toi, pour que la caméra te voie de face. Tu n'as rien à toucher pendant l'entraînement."],
         "tour3_kop": ["Zo wordt geteld", "How counting works", "Comment ça compte"],
         "tour3_tekst": ["De balk rechts is de hoogte van je hoofd. Zak onder het onderste streepje en kom weer boven het bovenste: dat is één push-up.", "The bar on the right is the height of your head. Drop below the bottom mark and come back above the top one: that is one push-up.", "La barre à droite indique la hauteur de ta tête. Descends sous le repère bas puis remonte au-dessus du haut : c'est une pompe."],
