@@ -255,6 +255,26 @@ Woede is dus geen tikwedstrijd meer maar een oefening: één minuut, alles telt 
 
 Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wordt er alleen lokaal bewaard; de server krijgt je stand als je iets koopt of het scherm verlaat. Wordt de balans omgegooid, dan gaat `KLIK_VERSIE` omhoog en begint de clicker opnieuw — je vertelt dat één keer met een melding.
 
+## Crates
+
+In het clickerscherm zit een tabblad **Crates** met drie kratten, elk voor één soort:
+
+| Krat | Wat erin zit | Prijs |
+|---|---|---|
+| Koppenkrat | een monsterkop om naast je naam te dragen | 50 |
+| Titelkrat | een titel onder je naam | 45 |
+| Kleurenkrat | een kleur voor je naam | 45 |
+
+Je weet dus altijd wélk soort je koopt; alleen de zeldzaamheid is gokken: 55 procent gewoon, 33 procent zeldzaam, 12 procent episch.
+
+**Het vraagteken rechtsboven op elke krat** laat precies zien wat erin zit: per zeldzaamheid het percentage met een balkje, alle stukken die je kunt krijgen met hun tekening en naam, hoeveel je er al van hebt, en wat je terugkrijgt als je iets dubbel trekt.
+
+**Openen is een rolletje.** Een band met van alles uit die krat schuift voorbij, remt af en stopt op jouw stuk, met een tikje bij elke doorloop. Daarna klapt de kaart open met de zeldzaamheid, het stuk en of het nieuw was. Het lot ligt al vast voordat de band begint — de animatie is show, geen loterij.
+
+Wat je wint hoort bij de oefening waarin je het won. De crates zitten in alle drie de werelden, maar elk met een eigen kast: je push-uptitels gelden niet bij je squats, en in een nieuwe wereld begin je met niets.
+
+Wat je draagt is te zien in het klassement en op je spelerskaart: de kop vervangt je rangteken, de titel staat onder je naam en de kleur kleurt je naam. Ook dat is per oefening — in het squatklassement zie je alleen wat je bij je squats draagt.
+
 ## Iconen
 
 Vijanden heten naar wat ze zijn: in Orkenrijk vecht je tegen een Ork, in Spinnenkuil tegen een Spin, en de boss van een arena is de Grote variant daarvan. Elk soort heeft een eigen silhouet: een ork met slagtanden, een schedel, een spin, een vleermuis, een bliksemschicht in een ring, een oog in de leegte. Dat icoon is de vijand die je slaat — hij ademt, krimpt bij elke klap en verkleurt van de arenakleur naar bloedrood naarmate hij doodgaat. In het menu zie je dezelfde iconen klein terug op de kaartjes van komende arena's.
