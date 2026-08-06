@@ -1870,6 +1870,66 @@
       "nog niet",
       "not yet",
       "pas encore"
+    ],
+    "sport_pushup": [
+      "Push-ups",
+      "Push-ups",
+      "Pompes"
+    ],
+    "sport_situp": [
+      "Sit-ups",
+      "Sit-ups",
+      "Abdos"
+    ],
+    "sport_squat": [
+      "Squats",
+      "Squats",
+      "Squats"
+    ],
+    "sport_kop": [
+      "Oefening",
+      "Exercise",
+      "Exercice"
+    ],
+    "sport_gewisseld": [
+      "Je bent nu bij {0}. Deze wereld heeft zijn eigen voortgang.",
+      "You are now in {0}. This world has its own progress.",
+      "Te voilà dans {0}. Ce monde a sa propre progression."
+    ],
+    "stat_situps": [
+      "sit-ups",
+      "sit-ups",
+      "abdos"
+    ],
+    "stat_squats": [
+      "squats",
+      "squats",
+      "squats"
+    ],
+    "acc_kies_sport": [
+      "Welke oefening wil je zien?",
+      "Which exercise do you want to see?",
+      "Quel exercice veux-tu voir ?"
+    ],
+    "cal_boven_situp": [
+      "Ga plat liggen",
+      "Lie down flat",
+      "Allonge-toi à plat"
+    ],
+    "cal_beneden_situp": [
+      "Kom helemaal omhoog",
+      "Come all the way up",
+      "Remonte complètement"
+    ],
+    "cal_boven_squat": [
+      "Sta rechtop",
+      "Stand up straight",
+      "Tiens-toi droit"
+    ],
+    "cal_beneden_squat": [
+      "Zak door je knieën",
+      "Squat all the way down",
+      "Descends en flexion"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

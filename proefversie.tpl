@@ -260,6 +260,15 @@
 
   /* burgermenu en spelmodi */
   .mBalk { display: flex; align-items: center; gap: 8px; padding: 0 12px 6px; }
+  /* De drie oefeningen bovenaan. Elke knop is een eigen wereld: eigen
+     voortgang, eigen klassement, eigen opdrachten. */
+  .sportKiezer { display: flex; gap: 6px; padding: 0 12px 10px; }
+  .sportKnop { flex: 1; padding: 9px 0; border-radius: 12px; cursor: pointer;
+               border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05);
+               color: rgba(255,255,255,.55); font: inherit; font-size: 12px;
+               font-weight: 800; letter-spacing: 1px; }
+  .sportKnop.aan { background: rgba(255,199,64,.16); border-color: rgba(255,199,64,.5);
+                   color: #ffc740; }
   #burger, #accountKnop {
     flex: none; background: rgba(255,255,255,.07); border: 0; border-radius: 14px;
     color: rgba(255,255,255,.85); line-height: 1; cursor: pointer; width: 50px; height: 46px; }
@@ -416,6 +425,8 @@
                 margin: 0 0 14px; text-align: center; }
   .accStatus { font-size: 13px; color: rgba(255,255,255,.6); text-align: center;
                line-height: 1.45; margin-bottom: 20px; }
+  .accSportKop { text-align: left; margin: 4px 0 8px; }
+  .accSportRij { padding: 0 0 12px; }
   .accCijfers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 22px; }
   .accCijfer { background: rgba(255,255,255,.05); border-radius: 14px; padding: 12px 6px; text-align: center; }
   .accCijfer b { display: block; font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; }
@@ -732,6 +743,7 @@
       <div style="flex:1"></div>
       <button id="accountKnop" aria-label="account">👤</button>
     </div>
+    <div class="sportKiezer" id="sportKiezer"></div>
     <h1 class="mTitel">PUSH BATTLE</h1>
     <div class="mRang" id="mRang"></div>
     <div class="mXp">
@@ -953,6 +965,8 @@
     <div class="accPrive" id="naamPrive"></div>
   </div>
 
+  <div class="instelLabel accSportKop" id="accSportKop"></div>
+  <div class="sportKiezer accSportRij" id="accSportRij"></div>
   <div class="accCijfers" id="accCijfers"></div>
   <button class="accKnopBreed" id="invOpen"></button>
 
@@ -1262,13 +1276,37 @@ if (!TALEN.includes(TAAL)) {
   TAAL = TALEN.includes(stel) ? stel : 'en';
 }
 
+/// De naam van de oefening waar je nu in zit, enkelvoud en meervoud, per taal.
+/// Alle teksten zijn geschreven met 'push-up' erin; zit je in een andere
+/// wereld, dan wordt dat woord overal vervangen. Zo hoeft geen enkele zin
+/// drie keer te bestaan.
+var SPORT = 'pushup';
+const OEFENWOORD = {
+  pushup: { nl: ['push-up', 'push-ups'], en: ['push-up', 'push-ups'], fr: ['pompe', 'pompes'] },
+  situp:  { nl: ['sit-up', 'sit-ups'],   en: ['sit-up', 'sit-ups'],   fr: ['abdo', 'abdos'] },
+  squat:  { nl: ['squat', 'squats'],     en: ['squat', 'squats'],     fr: ['squat', 'squats'] },
+};
+
+/// De naam van een oefening, zonder woordwissel — anders zou 'Push-ups' in de
+/// sit-upwereld ineens 'Sit-ups' heten op elke knop.
+const sportNaam = sp => (TEKSTEN['sport_' + sp] || [])[TALEN.indexOf(TAAL)] || sp;
+
+function oefenWoorden(tekst) {
+  if (SPORT === 'pushup' || !tekst) return tekst;
+  const nu = OEFENWOORD[SPORT][TAAL] || OEFENWOORD[SPORT].en;
+  const oud = OEFENWOORD.pushup[TAAL] || OEFENWOORD.pushup.en;
+  const wissel = (t, van, naar) => t.replace(new RegExp(van, 'gi'),
+    m => (m[0] === m[0].toUpperCase() ? naar[0].toUpperCase() + naar.slice(1) : naar));
+  return wissel(wissel(tekst, oud[1], nu[1]), oud[0], nu[0]);
+}
+
 /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
 function t(sleutel, ...args) {
   const rij = TEKSTEN[sleutel];
   if (!rij) return sleutel;
   let uit = rij[TALEN.indexOf(TAAL)] ?? rij[0];
   args.forEach((a, i) => { uit = uit.replaceAll('{' + i + '}', a); });
-  return uit;
+  return oefenWoorden(uit);
 }
 /// Arenatekst in de gekozen taal (name/race/minion/boss/intro zijn {nl,en,fr}).
 const tt = veld => (typeof veld === 'string' ? veld : (veld[TAAL] ?? veld.en));
@@ -1301,6 +1339,7 @@ function vertaalVast() {
   if ($('instel').classList.contains('aan')) toonInstellingen();
   if ($('account').classList.contains('aan')) renderAccount();
   if ($('cameraVraag').classList.contains('aan')) toonCameraVraag();
+  tekenSportKiezer();
   if ($('olLobby').classList.contains('aan')) tekenLobby();
   if ($('klik').classList.contains('aan')) { vertaalKlik(); tekenKlik(); tekenKlikLijst(true); }
   if ($('rondleiding').classList.contains('aan')) tekenRondleiding();
@@ -1333,8 +1372,35 @@ function arenaAt(index) {
 
 const DEFAULTS = { totalReps:0, totalKills:0, bossKills:0, totalXP:0, arenaIndex:1, killsThisArena:0,
                    savedMinionHP:null, streak:0, lastKillDay:null,
-                   duelsWon:0, duelBest:{}, duelLevel:50, naam:'', onlineWon:0 };
-let P = { ...DEFAULTS, ...JSON.parse(localStorage.getItem('orbslayer.proto') || '{}') };
+                   duelsWon:0, duelBest:{}, duelLevel:50, onlineWon:0 };
+/* ---------------------------------------------------------------
+   Drie oefeningen, drie werelden. Push-ups, sit-ups en squats hebben elk
+   hun eigen voortgang, klassement, opdrachten en clicker; er gaat niets van
+   de een naar de ander. In de opslag staat daarom niet één profiel maar een
+   kastje met drie laden, plus je naam die je overal houdt.
+---------------------------------------------------------------- */
+const SPORTEN = ['pushup', 'situp', 'squat'];
+
+function leesOpslag() {
+  let d = {};
+  try { d = JSON.parse(localStorage.getItem('orbslayer.proto') || '{}') || {}; } catch (e) { d = {}; }
+  if (!d.werelden) {
+    // Wie al speelde had één plat profiel; dat waren push-ups.
+    const oud = Object.keys(d).length ? d : null;
+    d = { actief: 'pushup', naam: (oud && oud.naam) || '', werelden: { pushup: oud || {} } };
+  }
+  d.werelden = d.werelden || {};
+  SPORTEN.forEach(sp => { d.werelden[sp] = d.werelden[sp] || {}; });
+  if (!SPORTEN.includes(d.actief)) d.actief = 'pushup';
+  d.naam = d.naam || '';
+  return d;
+}
+
+let ALLES = leesOpslag();
+SPORT = ALLES.actief;
+let P = { ...DEFAULTS, ...ALLES.werelden[SPORT] };
+
+
 let enemy, combo = 0, lastRep = 0, sessionReps = 0;
 /// Terugbezoek aan een al veroverde arena: je vecht daar echt (XP en kills
 /// tellen), maar je voorste voortgang blijft staan en de trofee kreeg je al.
@@ -1363,10 +1429,17 @@ function spawn() {
   }
 }
 
+/// Zet de huidige wereld terug in het kastje en schrijf het geheel weg.
+function bewaarAlles() {
+  ALLES.actief = SPORT;
+  ALLES.werelden[SPORT] = P;
+  localStorage.setItem('orbslayer.proto', JSON.stringify(ALLES));
+}
+
 function save() {
   if (bezoek === null) P.savedMinionHP = (!enemy.boss && enemy.hp < enemy.max) ? enemy.hp : null;
   else bezoekHP = (!enemy.boss && enemy.hp < enemy.max) ? enemy.hp : null;
-  localStorage.setItem('orbslayer.proto', JSON.stringify(P));
+  bewaarAlles();
   if (typeof duwVoortgang === 'function') duwVoortgang();
 }
 
@@ -1560,7 +1633,12 @@ function render() {
 }
 
 // Kalibratie: gezichtshoogte bij gestrekte armen (top) en onderin (bottom).
-let CAL = JSON.parse(localStorage.getItem('orbslayer.cal') || 'null') || { top: 0.75, bottom: 0.25 };
+/// De ijking hoort bij de oefening: liggend voor push-ups en sit-ups, staand
+/// voor squats. Elke wereld onthoudt dus zijn eigen boven en beneden.
+const leesCal = () => JSON.parse(localStorage.getItem('orbslayer.cal.' + SPORT)
+                                || localStorage.getItem('orbslayer.cal') || 'null')
+                      || { top: 0.75, bottom: 0.25 };
+let CAL = leesCal();
 /// Hoeveel van je gekalibreerde bereik je moet afleggen voordat een push-up
 /// telt. 0.6 komt overeen met de oude vaste drempels van 80% naar 20%.
 let DIEPTE = parseFloat(localStorage.getItem('orbslayer.diepte'));
@@ -1744,6 +1822,41 @@ function camBalkBijwerken() {
   const inDuel = $('duel').classList.contains('aan') || $('duelSetup').classList.contains('aan');
   const inOnline = $('odu').classList.contains('aan');
   $('cambalk').classList.toggle('aan', inGevecht || inDuel || inOnline);
+}
+
+/// Overstappen naar een andere oefening: de huidige wereld gaat het kastje in,
+/// de nieuwe komt eruit. Er wordt niets omgerekend of meegenomen.
+function wisselSport(nieuweSport) {
+  if (!SPORTEN.includes(nieuweSport) || nieuweSport === SPORT) return;
+  bewaarAlles();
+  SPORT = nieuweSport;
+  ALLES.actief = SPORT;
+  P = { ...DEFAULTS, ...ALLES.werelden[SPORT] };
+  bezoek = null; bezoekKills = 0; bezoekHP = null;
+  combo = 0; sessionReps = 0;
+  CAL = leesCal();
+  updateMarks();
+  spawn();
+  bewaarAlles();
+  if (typeof duwVoortgang === 'function') duwVoortgang();
+  vertaalVast();
+  tekenSportKiezer();
+  render();
+  renderMenu();
+  melding(t('sport_gewisseld', sportNaam(SPORT)), 3000);
+}
+
+/// De drie knoppen bovenaan het menu.
+function tekenSportKiezer() {
+  const rij = $('sportKiezer');
+  rij.innerHTML = '';
+  SPORTEN.forEach(sp => {
+    const knop = document.createElement('button');
+    knop.className = 'sportKnop' + (sp === SPORT ? ' aan' : '');
+    knop.textContent = sportNaam(sp);
+    knop.onclick = e => { e.stopPropagation(); wisselSport(sp); };
+    rij.appendChild(knop);
+  });
 }
 
 function toonMenu() {
@@ -2222,7 +2335,7 @@ async function startCamera() {
   camState(t('cam_searching'));
   requestAnimationFrame(trackLoop);
 
-  if (!localStorage.getItem('orbslayer.cal')) startCalibration();
+  if (!localStorage.getItem('orbslayer.cal.' + SPORT) && !localStorage.getItem('orbslayer.cal')) startCalibration();
   return true;
 }
 
@@ -2324,11 +2437,18 @@ $('calBtn').addEventListener('click', e => { e.stopPropagation(); startCalibrati
 /* Kalibratie in twee stappen, net als CalibrationView.swift */
 let calStep = 0, calValue = 0.5, calTop = null, calTimer = null;
 
+/// Boven en beneden betekenen per oefening iets anders; de meting blijft
+/// hetzelfde (de hoogte van je hoofd), alleen de uitleg verschilt.
+function calTekst(stap) {
+  const sleutel = 'cal_' + (stap === 0 ? 'boven' : 'beneden') + '_' + SPORT;
+  return TEKSTEN[sleutel] ? (TEKSTEN[sleutel][TALEN.indexOf(TAAL)] || '') : '';
+}
+
 function startCalibration() {
   if (!cameraOn) { $('hint').textContent = t('cam_start'); return; }
   calStep = 1; calTop = null;
   $('calStep').textContent = t('cal_step', 1);
-  $('calTitle').textContent = t('cal_title_up');
+  $('calTitle').textContent = calTekst(0) || t('cal_title_up');
   $('calText').textContent = t('cal_text_up');
   $('calCount').textContent = '';
   $('calib').classList.add('on');
@@ -2339,14 +2459,14 @@ function calCapture() {
     calTop = calValue;
     calStep = 2;
     $('calStep').textContent = t('cal_step', 2);
-    $('calTitle').textContent = t('cal_title_down');
+    $('calTitle').textContent = calTekst(1) || t('cal_title_down');
     $('calText').textContent = t('cal_text_down');
     $('calCount').textContent = '';
   } else {
     const bottom = calValue;
     if (calTop - bottom > 0.05) {
       CAL = { top: calTop, bottom };
-      localStorage.setItem('orbslayer.cal', JSON.stringify(CAL));
+      localStorage.setItem('orbslayer.cal.' + SPORT, JSON.stringify(CAL));
       updateMarks();
     } else {
       melding(t('cal_too_small'), 5000);
@@ -2791,11 +2911,26 @@ async function duwVoortgang(meteen = false) {
 }
 
 function toonAccount() {
+  accSport = SPORT;
   $('account').classList.add('aan');
   renderAccount();
 }
 
 let uitlogTimer = null;
+
+/// Welke oefening je op het accountscherm bekijkt. Dat hoeft niet de wereld
+/// te zijn waarin je speelt: je kunt gewoon even bij je squats kijken.
+let accSport = SPORT;
+
+const wereldVan = sp => (sp === SPORT ? P : { ...DEFAULTS, ...(ALLES.werelden[sp] || {}) });
+
+/// Streak van een wereld die niet de huidige hoeft te zijn.
+function streakVan(w) {
+  if (!w.lastKillDay) return 0;
+  const laatst = dayKey(w.lastKillDay);
+  return (laatst === dayKey(Date.now()) || laatst === dayKey(Date.now() - 864e5))
+    ? (w.streak || 0) : 0;
+}
 
 function renderAccount() {
   $('accountKop').textContent = t('account').toUpperCase();
@@ -2803,22 +2938,34 @@ function renderAccount() {
     ? t('signed_in_as', sessie.email) + ' · ' + t('synced')
     : t('not_signed_in');
 
-  const [cur, need] = levelProg();
+  // Drie tabbladen: elke oefening heeft zijn eigen cijfers en die staan los.
+  if (!SPORTEN.includes(accSport)) accSport = SPORT;
+  $('accSportKop').textContent = t('acc_kies_sport');
+  $('accSportRij').innerHTML = '';
+  SPORTEN.forEach(sp => {
+    const knop = document.createElement('button');
+    knop.className = 'sportKnop' + (sp === accSport ? ' aan' : '');
+    knop.textContent = sportNaam(sp);
+    knop.onclick = e => { e.stopPropagation(); accSport = sp; renderAccount(); };
+    $('accSportRij').appendChild(knop);
+  });
+
+  const w = wereldVan(accSport);
   $('accCijfers').innerHTML = [
-    [P.totalReps, t('stat_pushups')],
-    [P.totalKills, t('stat_kills')],
-    [P.bossKills, t('stat_arenas')],
-    [(P.duelsWon || 0) + (P.onlineWon || 0), t('stat_duels')],
-    [effStreak(), t('stat_streak')],
-    [playerLevel(), t('stat_level')],
-  ].map(([w, l]) => `<div class="accCijfer"><b>${w}</b><span>${l}</span></div>`).join('');
+    [w.totalReps || 0, sportNaam(accSport).toLowerCase()],
+    [w.bossKills || 0, t('stat_arenas')],
+    [(w.duelsWon || 0) + (w.onlineWon || 0), t('stat_duels')],
+    [streakVan(w), t('stat_streak')],
+    [levelVanXp(w.totalXP || 0), t('stat_level')],
+    [w.totalXP || 0, 'XP'],
+  ].map(([g, l]) => `<div class="accCijfer"><b>${g}</b><span>${l}</span></div>`).join('');
 
   $('invOpen').textContent = t('inv_titel');
 
   tekenFoto();
   $('naamLabel').textContent = t('name_label').toUpperCase();
   $('naamVeld').placeholder = t('name_hint');
-  $('naamVeld').value = P.naam || '';
+  $('naamVeld').value = ALLES.naam || '';
   $('naamPrive').textContent = ingelogd() ? t('name_private') : t('name_local');
   $('naamOpslaan').textContent = t('name_save');
   werkNaamKnopBij();
@@ -3462,7 +3609,7 @@ async function toonKlassement() {
       method: 'POST',
       headers: { apikey: SB_KEY, 'Content-Type': 'application/json',
                  ...(sessie?.access_token ? { Authorization: 'Bearer ' + sessie.access_token } : {}) },
-      body: JSON.stringify({ limiet: 50 }),
+      body: JSON.stringify({ limiet: 50, sport: SPORT }),
     });
     if (!a.ok) throw new Error(a.status);
     klassementRijen = await a.json();
@@ -3572,7 +3719,7 @@ $('spelerDicht').addEventListener('click', e => {
    gewoon mee naar je andere apparaten. */
 function werkNaamKnopBij() {
   const nieuw = $('naamVeld').value.trim();
-  $('naamOpslaan').disabled = nieuw === (P.naam || '');
+  $('naamOpslaan').disabled = nieuw === (ALLES.naam || '');
 }
 
 /// De server houdt een lijst met scheldwoorden bij. Hij is er niet om jou te
@@ -3592,14 +3739,14 @@ async function naamMag(naam) {
 
 async function slaNaamOp() {
   const nieuw = $('naamVeld').value.trim().slice(0, 24);
-  if (nieuw === (P.naam || '')) return;
+  if (nieuw === (ALLES.naam || '')) return;
   if (nieuw && !(await naamMag(nieuw))) {
-    $('naamVeld').value = P.naam || '';
+    $('naamVeld').value = ALLES.naam || '';
     werkNaamKnopBij();
     accMelding(t('naam_geweigerd'), true);
     return;
   }
-  P.naam = nieuw;
+  ALLES.naam = nieuw;
   save();
   duwVoortgang(true);
   werkNaamKnopBij();
@@ -3648,7 +3795,7 @@ async function olRpc(naam, args = {}) {
   return d;
 }
 /// Wie je bent voor de anderen: dezelfde naam als in het klassement.
-const olIk = () => ({ p_naam: P.naam || '', p_niveau: playerLevel() });
+const olIk = () => ({ p_naam: ALLES.naam || '', p_niveau: playerLevel(), p_sport: SPORT });
 
 /* -- het beginscherm -- */
 
@@ -3673,7 +3820,7 @@ function tekenLobby() {
   $('olNaarAccount').textContent = t('ol_open_account');
   $('olNaamKop').textContent = t('ol_name_label').toUpperCase();
   $('olNaamVeld').placeholder = t('name_hint');
-  $('olNaamVeld').value = P.naam || '';
+  $('olNaamVeld').value = ALLES.naam || '';
   $('olNaamOk').textContent = t('name_save');
   $('olZoek').textContent = t('ol_find');
   $('olVriendKnop').textContent = t('ol_friend');
@@ -3705,8 +3852,8 @@ async function olHallo() {
 /// De naam is dezelfde als in het klassement, dus hij reist met je voortgang mee.
 function olBewaarNaam() {
   const nieuw = $('olNaamVeld').value.trim().slice(0, 24);
-  if (nieuw === (P.naam || '')) return;
-  P.naam = nieuw;
+  if (nieuw === (ALLES.naam || '')) return;
+  ALLES.naam = nieuw;
   save();
   duwVoortgang(true);
   melding(t('name_saved'));
@@ -4201,7 +4348,7 @@ function klikBewaar(meteen = false) {
   if (meteen) { klikBewaardOp = Date.now(); save(); return; }
   if (Date.now() - klikBewaardOp < 2000) return;
   klikBewaardOp = Date.now();
-  localStorage.setItem('orbslayer.proto', JSON.stringify(P));
+  bewaarAlles();
 }
 
 /* -- het scherm -- */

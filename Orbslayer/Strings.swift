@@ -398,6 +398,18 @@ enum Tk: String {
     case les8
     case les9
     case trofee_nog
+    case sport_pushup
+    case sport_situp
+    case sport_squat
+    case sport_kop
+    case sport_gewisseld
+    case stat_situps
+    case stat_squats
+    case acc_kies_sport
+    case cal_boven_situp
+    case cal_beneden_situp
+    case cal_boven_squat
+    case cal_beneden_squat
 }
 
 enum Strings {
@@ -776,6 +788,18 @@ enum Strings {
         "les8": ["De clicker: elke echte push-up is een munt. Koop er helpers, techniek en crates van.", "The clicker: every real push-up is a coin. Spend them on helpers, technique and crates.", "Le clicker : chaque vraie pompe est une pièce. Achète des aides, de la technique et des caisses."],
         "les9": ["En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Dat is alles — trainen maar!", "And these are your quests: three a day and two a week, with XP and push-ups as rewards. That's everything — get training!", "Et voici tes missions : trois par jour et deux par semaine, avec XP et pompes en récompense. C'est tout — à toi de jouer !"],
         "trofee_nog": ["nog niet", "not yet", "pas encore"],
+        "sport_pushup": ["Push-ups", "Push-ups", "Pompes"],
+        "sport_situp": ["Sit-ups", "Sit-ups", "Abdos"],
+        "sport_squat": ["Squats", "Squats", "Squats"],
+        "sport_kop": ["Oefening", "Exercise", "Exercice"],
+        "sport_gewisseld": ["Je bent nu bij {0}. Deze wereld heeft zijn eigen voortgang.", "You are now in {0}. This world has its own progress.", "Te voilà dans {0}. Ce monde a sa propre progression."],
+        "stat_situps": ["sit-ups", "sit-ups", "abdos"],
+        "stat_squats": ["squats", "squats", "squats"],
+        "acc_kies_sport": ["Welke oefening wil je zien?", "Which exercise do you want to see?", "Quel exercice veux-tu voir ?"],
+        "cal_boven_situp": ["Ga plat liggen", "Lie down flat", "Allonge-toi à plat"],
+        "cal_beneden_situp": ["Kom helemaal omhoog", "Come all the way up", "Remonte complètement"],
+        "cal_boven_squat": ["Sta rechtop", "Stand up straight", "Tiens-toi droit"],
+        "cal_beneden_squat": ["Zak door je knieën", "Squat all the way down", "Descends en flexion"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
