@@ -2891,6 +2891,25 @@ function logUit() {
 
 /// Haalt de voortgang van de server en houdt de verste vooruitgang aan,
 /// zodat je nooit iets kwijtraakt door in te loggen.
+/// Voegt de voortgang van de server samen met die van dit apparaat. Per
+/// oefening wint de verste stand, zodat je nooit iets kwijtraakt door in te
+/// loggen. Een profiel van vóór de drie werelden is één platte push-upwereld.
+function voegServerSamen(server) {
+  const van = server.werelden
+    ? server
+    : { naam: server.naam || '', werelden: { pushup: server } };
+  if (!ALLES.naam && van.naam) ALLES.naam = van.naam;
+  SPORTEN.forEach(sp => {
+    const ginds = van.werelden[sp];
+    if (!ginds) return;
+    const hier = ALLES.werelden[sp] || {};
+    if ((ginds.totalReps ?? 0) > (hier.totalReps ?? 0)) ALLES.werelden[sp] = ginds;
+  });
+  P = { ...DEFAULTS, ...ALLES.werelden[SPORT] };
+  bewaarAlles();
+  spawn();
+}
+
 async function haalVoortgangOp() {
   if (!ingelogd()) return;
   const a = await sbVraag('/rest/v1/progress?select=profile,foto&user_id=eq.' + sessie.id);
@@ -2901,10 +2920,7 @@ async function haalVoortgangOp() {
   // dan sturen we die van hier alsnog op.
   if (fotoOk(rijen[0]?.foto)) { mijnFoto = rijen[0].foto; localStorage.setItem('orbslayer.foto', mijnFoto); tekenFoto(); }
   else if (fotoOk(mijnFoto)) await zetFoto(mijnFoto);
-  if (opServer && (opServer.totalReps ?? 0) > (P.totalReps ?? 0)) {
-    P = { ...DEFAULTS, ...opServer };
-    spawn();
-  }
+  if (opServer) voegServerSamen(opServer);
   await duwVoortgang(true);
 }
 
@@ -2915,11 +2931,16 @@ async function duwVoortgang(meteen = false) {
     duwTimer = setTimeout(() => duwVoortgang(true), 2000);
     return;
   }
+  // Alle drie de werelden gaan mee. Stuurden we alleen de huidige, dan bleven
+  // de klassementen van de andere twee voor altijd leeg.
+  ALLES.actief = SPORT;
+  ALLES.werelden[SPORT] = P;
   try {
     await sbVraag('/rest/v1/progress', {
       method: 'POST',
       headers: { Prefer: 'resolution=merge-duplicates' },
-      body: JSON.stringify([{ user_id: sessie.id, profile: P, updated_at: new Date().toISOString() }]),
+      body: JSON.stringify([{ user_id: sessie.id, profile: ALLES,
+                              updated_at: new Date().toISOString() }]),
     });
   } catch (e) { /* offline: het staat nog gewoon in deze browser */ }
 }
