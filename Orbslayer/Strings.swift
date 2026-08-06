@@ -267,12 +267,6 @@ enum Tk: String {
     case inv_sec_titels
     case inv_sec_iconen
     case inv_sec_kleuren
-    case krat_hout
-    case krat_hout_uit
-    case krat_zilver
-    case krat_zilver_uit
-    case krat_goud
-    case krat_goud_uit
     case graad_1
     case graad_2
     case graad_3
@@ -413,6 +407,18 @@ enum Tk: String {
     case les10
     case cal_voor
     case cal_nodig
+    case krat_icoon
+    case krat_icoon_uit
+    case krat_titel
+    case krat_titel_uit
+    case krat_kleur
+    case krat_kleur_uit
+    case kans_kop
+    case kans_regel
+    case kans_bezit
+    case kans_dubbel
+    case krat_rollen
+    case krat_apart
 }
 
 enum Strings {
@@ -660,12 +666,6 @@ enum Strings {
         "inv_sec_titels": ["Titels", "Titles", "Titres"],
         "inv_sec_iconen": ["Iconen", "Icons", "Icônes"],
         "inv_sec_kleuren": ["Naamkleuren", "Name colors", "Couleurs de nom"],
-        "krat_hout": ["Houten krat", "Wooden crate", "Caisse en bois"],
-        "krat_hout_uit": ["Meestal iets gewoons, soms iets zeldzaams.", "Usually something common, sometimes rare.", "Souvent un objet commun, parfois rare."],
-        "krat_zilver": ["Zilveren krat", "Silver crate", "Caisse en argent"],
-        "krat_zilver_uit": ["Goede kans op iets zeldzaams.", "A good chance of something rare.", "Bonne chance d'objet rare."],
-        "krat_goud": ["Gouden krat", "Golden crate", "Caisse en or"],
-        "krat_goud_uit": ["Grote kans op zeldzaam of episch.", "A big chance of rare or epic.", "Grande chance de rare ou épique."],
         "graad_1": ["Gewoon", "Common", "Commun"],
         "graad_2": ["Zeldzaam", "Rare", "Rare"],
         "graad_3": ["Episch", "Epic", "Épique"],
@@ -806,6 +806,18 @@ enum Strings {
         "les10": ["Bovenaan wissel je van oefening. Push-ups, sit-ups en squats zijn drie aparte werelden met eigen voortgang — en je ijkt ze allemaal één keer apart.", "At the top you switch exercise. Push-ups, sit-ups and squats are three separate worlds with their own progress — and you calibrate each of them once.", "En haut, tu changes d'exercice. Pompes, abdos et squats sont trois mondes séparés avec leur propre progression — et tu calibres chacun une fois."],
         "cal_voor": ["Kalibreren voor {0}", "Calibrate for {0}", "Calibrer pour {0}"],
         "cal_nodig": ["Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.", "This exercise has not been calibrated yet. Do it once and it will remember.", "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."],
+        "krat_icoon": ["Koppenkrat", "Head Crate", "Caisse à Têtes"],
+        "krat_icoon_uit": ["Een monsterkop om naast je naam te dragen.", "A monster head to wear next to your name.", "Une tête de monstre à porter à côté de ton nom."],
+        "krat_titel": ["Titelkrat", "Title Crate", "Caisse à Titres"],
+        "krat_titel_uit": ["Een titel die onder je naam komt te staan.", "A title that appears under your name.", "Un titre qui s'affiche sous ton nom."],
+        "krat_kleur": ["Kleurenkrat", "Colour Crate", "Caisse à Couleurs"],
+        "krat_kleur_uit": ["Een kleur voor je naam in het klassement.", "A colour for your name in the leaderboard.", "Une couleur pour ton nom au classement."],
+        "kans_kop": ["Wat zit erin?", "What's inside?", "Qu'y a-t-il dedans ?"],
+        "kans_regel": ["{0}% kans · {1} stuks", "{0}% chance · {1} items", "{0} % de chance · {1} objets"],
+        "kans_bezit": ["je hebt er {0} van de {1}", "you own {0} of {1}", "tu en as {0} sur {1}"],
+        "kans_dubbel": ["Heb je hem al, dan krijg je {0} push-ups terug.", "If you already own it you get {0} push-ups back.", "Si tu l'as déjà, tu récupères {0} pompes."],
+        "krat_rollen": ["Rollen…", "Rolling…", "Ça tourne…"],
+        "krat_apart": ["Wat je hier wint hoort bij deze oefening en gaat niet mee naar de andere.", "What you win here belongs to this exercise and does not carry over.", "Ce que tu gagnes ici appartient à cet exercice et ne suit pas ailleurs."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

@@ -407,6 +407,44 @@
   #lesTekst { font-size: 14px; line-height: 1.5; }
   #lesKnop { margin-top: 12px; }
   #lesSkip { margin-top: 4px; }
+  /* De rollende band bij het openen van een krat */
+  #rol { position: fixed; inset: 0; z-index: 29; background: rgba(0,0,0,.88);
+         display: none; place-items: center; align-content: center; }
+  #rol.aan { display: grid; }
+  .rolTitel { font-size: 12px; font-weight: 900; letter-spacing: 3px;
+              color: rgba(255,255,255,.5); text-align: center; margin-bottom: 16px; }
+  .rolVenster { position: relative; width: min(92vw, 460px); height: 92px;
+                overflow: hidden; border-radius: 16px;
+                background: linear-gradient(90deg, #0d0d10, #191a20 50%, #0d0d10);
+                border: 1px solid rgba(255,255,255,.1); }
+  .rolBand { position: absolute; left: 0; top: 8px; display: flex; gap: 10px; will-change: transform; }
+  .rolVak { flex: none; width: 66px; height: 76px; border-radius: 12px;
+            background: rgba(255,255,255,.05); border: 2px solid rgba(255,255,255,.1);
+            display: grid; place-items: center; }
+  .rolWijzer { position: absolute; left: 50%; top: 0; bottom: 0; width: 3px;
+               margin-left: -1.5px; background: #ffc740;
+               box-shadow: 0 0 14px rgba(255,199,64,.9); }
+
+  /* Het kansenscherm achter het vraagteken op een krat */
+  #kansen { position: fixed; inset: 0; z-index: 31; background: rgba(0,0,0,.96);
+            display: none; padding: 30px 22px; overflow-y: auto; }
+  #kansen.aan { display: block; }
+  #kansen h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+               color: rgba(255,255,255,.5); margin: 0 0 18px; padding: 8px 46px 0; }
+  .kansBlok { margin-bottom: 20px; }
+  .kansKop { display: flex; justify-content: space-between; align-items: baseline;
+             font-size: 14px; font-weight: 900; margin-bottom: 8px; }
+  .kansBalk { height: 8px; border-radius: 99px; background: rgba(255,255,255,.08);
+              overflow: hidden; margin-bottom: 10px; }
+  .kansBalk i { display: block; height: 100%; border-radius: 99px; }
+  .kansRooster { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+                 gap: 8px; }
+  .kansVak { background: rgba(255,255,255,.05); border-radius: 12px; padding: 10px 4px;
+             text-align: center; }
+  .kansVak.heb { outline: 2px solid rgba(255,199,64,.5); }
+  .kansVak span { display: block; font-size: 9px; color: rgba(255,255,255,.5); margin-top: 4px; }
+  .kansVoet { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.5; margin-top: 6px; }
+
   #buit { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.8);
           display: none; place-items: center; }
   #buit.aan { display: grid; }
@@ -679,7 +717,11 @@
   .klikTab.aan { background: rgba(255,199,64,.16); color: #ffc740; }
   .klikLijst { flex: 1; overflow-y: auto; padding: 0 12px 20px;
                -webkit-overflow-scrolling: touch; }
-  .klikItem { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  .kratVraag { position: absolute; right: 8px; top: 8px; width: 24px; height: 24px;
+               border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+               background: rgba(255,255,255,.1); color: rgba(255,255,255,.75);
+               font-size: 13px; font-weight: 900; }
+  .klikItem { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
               background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.07);
               border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; color: inherit;
               font: inherit; cursor: pointer; opacity: .45; }
@@ -921,6 +963,20 @@
 
 <div id="buit">
   <div class="buitKaart" id="buitKaart"></div>
+</div>
+
+<div id="rol">
+  <div class="rolTitel" id="rolTitel"></div>
+  <div class="rolVenster" id="rolVenster">
+    <div class="rolBand" id="rolBand"></div>
+    <div class="rolWijzer"></div>
+  </div>
+</div>
+
+<div id="kansen">
+  <button class="sluitKruis links" id="kansenDicht" aria-label="sluiten">✕</button>
+  <h2 id="kansenKop"></h2>
+  <div id="kansenLijst"></div>
 </div>
 
 <div id="les">
@@ -3035,6 +3091,9 @@ $('invDicht').addEventListener('click', e => {
 $('invOpen').addEventListener('click', e => {
   e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
 });
+$('kansenDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('kansen').classList.remove('aan');
+});
 $('buit').addEventListener('click', e => {
   e.stopPropagation(); $('buit').classList.remove('aan');
 });
@@ -3407,10 +3466,13 @@ async function zetFoto(nieuw) {
    en op je spelerskaart. Dubbel getrokken = een deel van je push-ups terug.
    Andermans keuzes komen als kale id's uit de server en worden alleen
    gerenderd als ze in COSMETICA voorkomen. */
+/* Drie kratten, elk voor één soort. Zo weet je waarvoor je betaalt: een
+   koppenkrat geeft altijd een kop, een kleurenkrat altijd een kleur. Welke
+   graad je krijgt is wél gokken, en die kansen staan op het vraagteken. */
 const KRATTEN = [
-  { id: 'hout',   prijs: 35, kans: [70, 25, 5] },
-  { id: 'zilver', prijs: 50, kans: [45, 40, 15] },
-  { id: 'goud',   prijs: 75, kans: [15, 45, 40] },
+  { id: 'icoon', soort: 'icoon', prijs: 50, kans: [55, 33, 12] },
+  { id: 'titel', soort: 'titel', prijs: 45, kans: [55, 33, 12] },
+  { id: 'kleur', soort: 'kleur', prijs: 45, kans: [55, 33, 12] },
 ];
 const COSMETICA = [
   // titels
@@ -3479,19 +3541,87 @@ function cosVisual(c, maat = 40) {
   return `<span class="invT" style="font-size:${Math.round(maat * 0.55)}px">❝</span>`;
 }
 
-/// De trekking: eerst de graad (elke krat zijn eigen kansen), dan een item.
+/// Alles wat in deze krat kan zitten, met graad.
+const kratPool = (krat, graad) =>
+  COSMETICA.filter(c => c.soort === krat.soort && (!graad || c.graad === graad));
+
+/// De trekking: eerst de graad, dan een stuk uit die graad van deze soort.
 function kratBuit(krat) {
   const lot = Math.random() * 100;
   let graad = 1, som = 0;
   for (let i = 0; i < 3; i++) { som += krat.kans[i]; if (lot < som) { graad = i + 1; break; } }
-  const pool = COSMETICA.filter(c => c.graad === graad);
+  let pool = kratPool(krat, graad);
+  if (!pool.length) pool = kratPool(krat);
   const item = pool[Math.floor(Math.random() * pool.length)];
   let terug = 0;
   if (spullen().includes(item.id)) {
     terug = Math.ceil(krat.prijs * 0.4);
     klikVerdien(terug);
   } else spullen().push(item.id);
-  toonBuit(item, terug);
+  rolNaarBuit(krat, item, terug);
+}
+
+/* De rol: een lange band met van alles uit deze krat schuift voorbij en remt
+   af op jouw stuk. Puur show — het lot is al getrokken voor de band begint. */
+const ROL_VAKKEN = 44, ROL_WINNAAR = 38;
+
+function rolNaarBuit(krat, item, terug) {
+  const pool = kratPool(krat);
+  const band = $('rolBand');
+  const vakken = [];
+  for (let i = 0; i < ROL_VAKKEN; i++) {
+    const c = i === ROL_WINNAAR ? item : pool[Math.floor(Math.random() * pool.length)];
+    vakken.push(`<div class="rolVak" style="border-color:${COS_GRAADKLEUR[c.graad - 1]}44">` +
+                `${cosVisual(c, 46)}</div>`);
+  }
+  band.innerHTML = vakken.join('');
+  band.style.transition = 'none';
+  band.style.transform = 'translateX(0)';
+  $('rolTitel').textContent = t('krat_rollen');
+  $('rol').classList.add('aan');
+  // Even wachten tot de browser de beginstand heeft getekend, anders slaat hij
+  // de hele animatie over.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const vak = band.firstChild ? band.firstChild.getBoundingClientRect().width + 10 : 76;
+    const doel = ROL_WINNAAR * vak - ($('rolVenster').clientWidth / 2 - vak / 2)
+                 + (Math.random() * 20 - 10);
+    band.style.transition = 'transform 3.4s cubic-bezier(.12,.72,.12,1)';
+    band.style.transform = `translateX(${-doel}px)`;
+    let tik = 0;
+    const kloppen = setInterval(() => { toon(520 + (tik++ % 3) * 60, 0.03, 'square', 0.25); }, 110);
+    setTimeout(() => {
+      clearInterval(kloppen);
+      $('rol').classList.remove('aan');
+      toonBuit(item, terug);
+    }, 3600);
+  }));
+}
+
+/// Alles wat er in een krat kan zitten, met de kans per graad en wat je er al
+/// van hebt. Zo koop je nooit iets waarvan je niet weet wat erin zit.
+function toonKansen(id) {
+  const kr = KRATTEN.find(k => k.id === id);
+  if (!kr) return;
+  $('kansenKop').textContent = (t('kans_kop') + ' · ' + t('krat_' + kr.id)).toUpperCase();
+  let html = '';
+  [1, 2, 3].forEach(graad => {
+    const pool = kratPool(kr, graad);
+    if (!pool.length) return;
+    const kleur = COS_GRAADKLEUR[graad - 1];
+    const heb = pool.filter(c => spullen().includes(c.id)).length;
+    html += `<div class="kansBlok">` +
+      `<div class="kansKop"><span style="color:${kleur}">${ontsmet(t('graad_' + graad))}</span>` +
+      `<span>${ontsmet(t('kans_regel', kr.kans[graad - 1], pool.length))}</span></div>` +
+      `<div class="kansBalk"><i style="width:${kr.kans[graad - 1]}%;background:${kleur}"></i></div>` +
+      `<div class="kansRooster">` +
+      pool.map(c => `<div class="kansVak${spullen().includes(c.id) ? ' heb' : ''}">` +
+                    `${cosVisual(c, 34)}<span>${ontsmet(cosNaam(c))}</span></div>`).join('') +
+      `</div><div class="kansVoet">${ontsmet(t('kans_bezit', heb, pool.length))}</div></div>`;
+  });
+  html += `<div class="kansVoet">${ontsmet(t('kans_dubbel', Math.ceil(kr.prijs * 0.4)))}<br>` +
+          `${ontsmet(t('krat_apart'))}</div>`;
+  $('kansenLijst').innerHTML = html;
+  $('kansen').classList.add('aan');
 }
 
 function toonBuit(item, terug) {
@@ -4540,6 +4670,7 @@ function klikAanbod() {
       uitleg: t('krat_' + kr.id + '_uit'),
       extra: '',
       prijs: kr.prijs,
+      vraag: kr.id,
       koop: () => kratBuit(kr),
     }));
   } else {
@@ -4587,6 +4718,14 @@ function tekenKlikLijst(altijd = false) {
       `<span class="klikPrijs"><b>${getal(rij.prijs)}</b>` +
       (rij.extra ? `<small>${ontsmet(rij.extra)}</small>` : '') + '</span>';
     knop.onclick = e => { e.stopPropagation(); koop(rij); };
+    // Het vraagteken in de hoek van een krat opent de kansen.
+    if (rij.vraag) {
+      const vraag = document.createElement('span');
+      vraag.className = 'kratVraag';
+      vraag.textContent = '?';
+      vraag.onclick = e => { e.stopPropagation(); toonKansen(rij.vraag); };
+      knop.appendChild(vraag);
+    }
     lijst.appendChild(knop);
   });
   if (klikTab === 'helpers') {

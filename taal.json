@@ -1216,36 +1216,6 @@
       "Name colors",
       "Couleurs de nom"
     ],
-    "krat_hout": [
-      "Houten krat",
-      "Wooden crate",
-      "Caisse en bois"
-    ],
-    "krat_hout_uit": [
-      "Meestal iets gewoons, soms iets zeldzaams.",
-      "Usually something common, sometimes rare.",
-      "Souvent un objet commun, parfois rare."
-    ],
-    "krat_zilver": [
-      "Zilveren krat",
-      "Silver crate",
-      "Caisse en argent"
-    ],
-    "krat_zilver_uit": [
-      "Goede kans op iets zeldzaams.",
-      "A good chance of something rare.",
-      "Bonne chance d'objet rare."
-    ],
-    "krat_goud": [
-      "Gouden krat",
-      "Golden crate",
-      "Caisse en or"
-    ],
-    "krat_goud_uit": [
-      "Grote kans op zeldzaam of episch.",
-      "A big chance of rare or epic.",
-      "Grande chance de rare ou épique."
-    ],
     "graad_1": [
       "Gewoon",
       "Common",
@@ -1945,6 +1915,66 @@
       "Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.",
       "This exercise has not been calibrated yet. Do it once and it will remember.",
       "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."
+    ],
+    "krat_icoon": [
+      "Koppenkrat",
+      "Head Crate",
+      "Caisse à Têtes"
+    ],
+    "krat_icoon_uit": [
+      "Een monsterkop om naast je naam te dragen.",
+      "A monster head to wear next to your name.",
+      "Une tête de monstre à porter à côté de ton nom."
+    ],
+    "krat_titel": [
+      "Titelkrat",
+      "Title Crate",
+      "Caisse à Titres"
+    ],
+    "krat_titel_uit": [
+      "Een titel die onder je naam komt te staan.",
+      "A title that appears under your name.",
+      "Un titre qui s'affiche sous ton nom."
+    ],
+    "krat_kleur": [
+      "Kleurenkrat",
+      "Colour Crate",
+      "Caisse à Couleurs"
+    ],
+    "krat_kleur_uit": [
+      "Een kleur voor je naam in het klassement.",
+      "A colour for your name in the leaderboard.",
+      "Une couleur pour ton nom au classement."
+    ],
+    "kans_kop": [
+      "Wat zit erin?",
+      "What's inside?",
+      "Qu'y a-t-il dedans ?"
+    ],
+    "kans_regel": [
+      "{0}% kans · {1} stuks",
+      "{0}% chance · {1} items",
+      "{0} % de chance · {1} objets"
+    ],
+    "kans_bezit": [
+      "je hebt er {0} van de {1}",
+      "you own {0} of {1}",
+      "tu en as {0} sur {1}"
+    ],
+    "kans_dubbel": [
+      "Heb je hem al, dan krijg je {0} push-ups terug.",
+      "If you already own it you get {0} push-ups back.",
+      "Si tu l'as déjà, tu récupères {0} pompes."
+    ],
+    "krat_rollen": [
+      "Rollen…",
+      "Rolling…",
+      "Ça tourne…"
+    ],
+    "krat_apart": [
+      "Wat je hier wint hoort bij deze oefening en gaat niet mee naar de andere.",
+      "What you win here belongs to this exercise and does not carry over.",
+      "Ce que tu gagnes ici appartient à cet exercice et ne suit pas ailleurs."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",
