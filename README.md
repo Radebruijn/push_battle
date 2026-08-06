@@ -73,6 +73,18 @@ Dat schrijft `Orbslayer/Strings.swift` voor de app en zet dezelfde teksten in de
 
 Het aantal werelden staat nergens hard in een zin. In `taal.json` staat `{AANTAL_ARENAS}` en in `proefversie.tpl` staat `__AANTAL_ARENAS__`; de bouwscripts tellen de arena's in `Orbslayer/Arena.swift` en vullen het telwoord in, voluit en in de juiste taal (`telwoord.py`). Ook de zinnen hierover in `APPSTORE.md` en dit bestand worden bij het bouwen bijgewerkt, inclusief de naam van de eerste en laatste wereld. Komt er dus een arena bij of gaat er een af, dan klopt na één keer bouwen elke tekst weer.
 
+## Drie oefeningen
+
+Bovenaan het menu staan drie knoppen: **Push-ups**, **Sit-ups** en **Squats**. Elk is een eigen wereld met een eigen voortgang, eigen arena's, eigen opdrachten, een eigen clicker en een eigen klassement. Er gaat niets van de een naar de ander: je push-ups maken je squats geen stap sterker, en andersom ook niet.
+
+In de opslag staat daarom geen plat profiel meer maar `{naam, actief, werelden}`. Wie al speelde raakt niets kwijt — dat oude profiel wordt de push-upwereld. Je naam en je foto horen bij jou en gelden in alle drie de werelden.
+
+Alle teksten zijn geschreven met *push-up* erin. Zit je in een andere wereld, dan wordt dat woord overal vervangen, ook in de opdrachten, de clicker en de tips. Eén functie doet dat, dus geen enkele zin hoeft drie keer te bestaan.
+
+De camera meet in alle drie de gevallen hetzelfde: de hoogte van je hoofd. Alleen de ijking verschilt, en die wordt per oefening onthouden — *strek je armen* bij push-ups, *ga plat liggen* bij sit-ups, *sta rechtop* bij squats.
+
+Op het accountscherm kies je met drie tabbladen welke oefening je bekijkt. Je ziet dan de cijfers van die wereld: herhalingen, uitgespeelde arena's, gewonnen duels, streak, level en XP.
+
 ## Account en voortgang
 
 Zonder account speel je gewoon door; je voortgang staat dan in de browser waarin je speelt. Log je in met de knop rechtsboven, dan gaat alles mee naar elk apparaat waarop je inlogt — je telefoon en je laptop delen dezelfde voortgang.
