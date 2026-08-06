@@ -1019,6 +1019,7 @@
   <div class="instelLabel" id="taalLabel" style="margin-top:26px"></div>
   <div class="taalRij" id="taalRij"></div>
   <button class="grotKnop" id="kalibreerKnop" style="margin-top:30px"></button>
+  <div class="instelUitleg" id="kalibreerUitleg"></div>
   <button class="tekstKnop" id="rondleidingKnop"></button>
   <button class="tekstKnop" id="instelDicht"></button>
 </div>
@@ -1634,9 +1635,20 @@ function render() {
 
 // Kalibratie: gezichtshoogte bij gestrekte armen (top) en onderin (bottom).
 /// De ijking hoort bij de oefening: liggend voor push-ups en sit-ups, staand
-/// voor squats. Elke wereld onthoudt dus zijn eigen boven en beneden.
-const leesCal = () => JSON.parse(localStorage.getItem('orbslayer.cal.' + SPORT)
-                                || localStorage.getItem('orbslayer.cal') || 'null')
+/// voor squats. Elke wereld onthoudt zijn eigen boven en beneden, dus je ijkt
+/// drie keer — maar ook maar één keer per oefening.
+(function verhuisOudeIjking() {
+  // Wie al geijkt had voor er drie oefeningen waren: dat waren push-ups.
+  const oud = localStorage.getItem('orbslayer.cal');
+  if (!oud) return;
+  if (!localStorage.getItem('orbslayer.cal.pushup')) {
+    localStorage.setItem('orbslayer.cal.pushup', oud);
+  }
+  localStorage.removeItem('orbslayer.cal');
+})();
+
+const isGeijkt = sp => !!localStorage.getItem('orbslayer.cal.' + (sp || SPORT));
+const leesCal = () => JSON.parse(localStorage.getItem('orbslayer.cal.' + SPORT) || 'null')
                       || { top: 0.75, bottom: 0.25 };
 let CAL = leesCal();
 /// Hoeveel van je gekalibreerde bereik je moet afleggen voordat een push-up
@@ -1836,6 +1848,7 @@ function wisselSport(nieuweSport) {
   combo = 0; sessionReps = 0;
   CAL = leesCal();
   updateMarks();
+  if (cameraOn && !isGeijkt()) melding(t('cal_nodig'), 5000);
   spawn();
   bewaarAlles();
   if (typeof duwVoortgang === 'function') duwVoortgang();
@@ -2335,7 +2348,7 @@ async function startCamera() {
   camState(t('cam_searching'));
   requestAnimationFrame(trackLoop);
 
-  if (!localStorage.getItem('orbslayer.cal.' + SPORT) && !localStorage.getItem('orbslayer.cal')) startCalibration();
+  if (!isGeijkt()) startCalibration();
   return true;
 }
 
@@ -2697,7 +2710,8 @@ function toonInstellingen() {
   $('taalLabel').textContent = t('language').toUpperCase();
   $('diepteLabel').textContent = t('depth').toUpperCase();
   $('diepteUitleg').textContent = t('depth_hint');
-  $('kalibreerKnop').textContent = t('calibrate_now');
+  $('kalibreerKnop').textContent = t('cal_voor', sportNaam(SPORT));
+  $('kalibreerUitleg').textContent = isGeijkt() ? '' : t('cal_nodig');
   $('rondleidingKnop').textContent = t('tour_again');
   $('instelDicht').textContent = t('close');
   $('geluidLabel').textContent = t('geluid_label').toUpperCase();
@@ -3202,6 +3216,7 @@ const LES_STAPPEN = [
   { doel: 'modeKlik',   tekst: 'les8', knop: true, dood: true },
   { doel: 'questKnop',  tekst: 'les9', knop: true, dood: true,
     bij: () => $('modes').classList.remove('aan') },
+  { doel: 'sportKiezer', tekst: 'les10', knop: true, dood: true },
 ];
 
 function lesStart() {

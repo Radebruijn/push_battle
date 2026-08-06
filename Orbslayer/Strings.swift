@@ -410,6 +410,9 @@ enum Tk: String {
     case cal_beneden_situp
     case cal_boven_squat
     case cal_beneden_squat
+    case les10
+    case cal_voor
+    case cal_nodig
 }
 
 enum Strings {
@@ -800,6 +803,9 @@ enum Strings {
         "cal_beneden_situp": ["Kom helemaal omhoog", "Come all the way up", "Remonte complètement"],
         "cal_boven_squat": ["Sta rechtop", "Stand up straight", "Tiens-toi droit"],
         "cal_beneden_squat": ["Zak door je knieën", "Squat all the way down", "Descends en flexion"],
+        "les10": ["Bovenaan wissel je van oefening. Push-ups, sit-ups en squats zijn drie aparte werelden met eigen voortgang — en je ijkt ze allemaal één keer apart.", "At the top you switch exercise. Push-ups, sit-ups and squats are three separate worlds with their own progress — and you calibrate each of them once.", "En haut, tu changes d'exercice. Pompes, abdos et squats sont trois mondes séparés avec leur propre progression — et tu calibres chacun une fois."],
+        "cal_voor": ["Kalibreren voor {0}", "Calibrate for {0}", "Calibrer pour {0}"],
+        "cal_nodig": ["Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.", "This exercise has not been calibrated yet. Do it once and it will remember.", "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

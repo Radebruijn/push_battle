@@ -1930,6 +1930,21 @@
       "Zak door je knieën",
       "Squat all the way down",
       "Descends en flexion"
+    ],
+    "les10": [
+      "Bovenaan wissel je van oefening. Push-ups, sit-ups en squats zijn drie aparte werelden met eigen voortgang — en je ijkt ze allemaal één keer apart.",
+      "At the top you switch exercise. Push-ups, sit-ups and squats are three separate worlds with their own progress — and you calibrate each of them once.",
+      "En haut, tu changes d'exercice. Pompes, abdos et squats sont trois mondes séparés avec leur propre progression — et tu calibres chacun une fois."
+    ],
+    "cal_voor": [
+      "Kalibreren voor {0}",
+      "Calibrate for {0}",
+      "Calibrer pour {0}"
+    ],
+    "cal_nodig": [
+      "Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.",
+      "This exercise has not been calibrated yet. Do it once and it will remember.",
+      "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

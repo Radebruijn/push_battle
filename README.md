@@ -81,7 +81,9 @@ In de opslag staat daarom geen plat profiel meer maar `{naam, actief, werelden}`
 
 Alle teksten zijn geschreven met *push-up* erin. Zit je in een andere wereld, dan wordt dat woord overal vervangen, ook in de opdrachten, de clicker en de tips. Eén functie doet dat, dus geen enkele zin hoeft drie keer te bestaan.
 
-De camera meet in alle drie de gevallen hetzelfde: de hoogte van je hoofd. Alleen de ijking verschilt, en die wordt per oefening onthouden — *strek je armen* bij push-ups, *ga plat liggen* bij sit-ups, *sta rechtop* bij squats.
+De camera meet in alle drie de gevallen hetzelfde: de hoogte van je hoofd. Alleen de ijking verschilt, en **elke oefening heeft zijn eigen ijking** — *strek je armen* bij push-ups, *ga plat liggen* bij sit-ups, *sta rechtop* bij squats. Je ijkt dus drie keer, maar ook maar één keer per oefening: wissel je heen en weer, dan pakt hij gewoon weer de goede. Op de knop bij de instellingen staat voor welke oefening je ijkt, en zolang een oefening nog niet geijkt is, staat dat eronder. Wie al geijkt had voordat de drie werelden bestonden, houdt die ijking bij de push-ups.
+
+De laatste stap van de tutorial wijst de drie knoppen bovenaan aan en vertelt dit ook.
 
 Op het accountscherm kies je met drie tabbladen welke oefening je bekijkt. Je ziet dan de cijfers van die wereld: herhalingen, uitgespeelde arena's, gewonnen duels, streak, level en XP.
 
