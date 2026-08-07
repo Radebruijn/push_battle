@@ -295,6 +295,8 @@ Het spel zoekt het tempo er zelf bij. Het maakt van de eerste minuut een luidhei
 
 Eén push-up duurt geen tel maar een hele maat: het spel kiest 2, 4, 8 of 16 tellen per herhaling zodat je tussen de achttien en tweeënveertig keer per minuut zakt. Op 140 BPM is dat vier tellen, dus 35 push-ups per minuut. Hoeveel herhalingen een nummer telt volgt uit de lengte, met een dak op veertig. Zit het tempo een octaaf ernaast, dan zet je het met **½** of **2×** goed; met **✕** gooi je een nummer weg.
 
+Terwijl het nummer klaargezet wordt zie je geen draaiend ringetje maar een balk. Die kruipt naar **99 procent** en blijft daar staan: na een halve seconde zit hij op zestig, na twee seconden op zesennegentig, en dat laatste procentje krijg je pas als het werk echt af is. De stand hangt aan de klok en niet aan het aantal tikken, dus een trage telefoon laat hem niet anders lopen. De regel over een trage verbinding komt hier niet in beeld — het bestand staat al op je toestel.
+
 Twee dingen met opzet: je muziek **blijft op je toestel** — het bestand gaat in de IndexedDB van je browser en er is geen upload, geen server, geen account nodig. En je eigen nummers **tellen niet mee voor het klassement**, want anders zet je er tien makkelijke bij en sta je bovenaan. XP en push-ups krijg je wel, alsof je het derde nummer van het spel speelde.
 
 De maat blijft aan de muziek vastzitten: elke tik wordt opnieuw uit de audioklok berekend in plaats van opgeteld, dus na een halve minuut loopt er niets weg (gemeten: hooguit een paar honderdsten, en dat is de polling zelf).

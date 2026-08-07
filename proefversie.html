@@ -333,6 +333,16 @@
                border: 4px solid rgba(255,255,255,.14); border-top-color: #ffc740;
                animation: draaiRing 900ms linear infinite; }
   @keyframes draaiRing { to { transform: rotate(360deg); } }
+  /* Een balk in plaats van de ring: hij kruipt naar 99 procent en blijft daar
+     staan tot het werk echt klaar is. Dat laatste procentje is de waarheid —
+     hij weet niet hoe lang het duurt. */
+  .ladenBalk { width: min(70vw, 260px); height: 10px; border-radius: 99px; overflow: hidden;
+               background: rgba(255,255,255,.1); margin: 0 auto 16px; }
+  .ladenBalk[hidden] { display: none; }
+  .ladenBalk i { display: block; height: 100%; width: 0; border-radius: 99px;
+                 background: linear-gradient(90deg, #ffc740, #ff7326); transition: width .12s linear; }
+  .ladenProcent { font-size: 13px; font-weight: 800; color: #ffc740; margin-top: 6px;
+                  font-variant-numeric: tabular-nums; min-height: 18px; }
   .ladenTekst { font-size: 17px; font-weight: 700; }
   .ladenTraag { font-size: 13px; color: rgba(255,255,255,.45); margin-top: 10px;
                 min-height: 18px; max-width: 20rem; line-height: 1.4; }
@@ -1243,8 +1253,10 @@
 
 <div id="laden">
   <div class="ladenVak">
-    <div class="ladenRing"></div>
+    <div class="ladenRing" id="ladenRing"></div>
+    <div class="ladenBalk" id="ladenBalk" hidden><i id="ladenVul"></i></div>
     <div class="ladenTekst" id="ladenTekst"></div>
+    <div class="ladenProcent" id="ladenProcent"></div>
     <div class="ladenTraag" id="ladenTraag"></div>
   </div>
 </div>
@@ -2637,18 +2649,47 @@ function camState(text) { $('camState').textContent = text; }
 
 /* Laadscherm: laat zien dát er iets gebeurt, met na een paar tellen een
    geruststelling voor trage verbindingen. */
-let traagTimer = null;
+let traagTimer = null, balkLus = null, balkStand = 0;
 
-function bezig(tekst) {
+function bezig(tekst, balk) {
   $('ladenTekst').textContent = tekst || t('loading');
   $('ladenTraag').textContent = '';
   $('laden').classList.add('aan');
+  $('ladenRing').hidden = !!balk;
+  $('ladenBalk').hidden = !balk;
+  $('ladenProcent').textContent = '';
+  clearInterval(balkLus); balkLus = null;
+  if (balk) {
+    // Hij kruipt naar 99 en blijft daar staan: na een halve seconde zit hij
+    // op zestig procent, na twee seconden op zesennegentig, en dat laatste
+    // procentje krijg je pas als het werk echt af is. De stand hangt aan de
+    // klok en niet aan het aantal tikken, dus een trage telefoon of een
+    // tabblad op de achtergrond laat hem niet anders lopen.
+    const begin = Date.now();
+    balkStand = 0;
+    balkLus = setInterval(() => {
+      balkStand = Math.min(99, 99.6 * (1 - Math.exp(-(Date.now() - begin) / 550)));
+      $('ladenVul').style.width = balkStand + '%';
+      $('ladenProcent').textContent = Math.floor(balkStand) + '%';
+    }, 40);
+  }
   clearTimeout(traagTimer);
-  traagTimer = setTimeout(() => { $('ladenTraag').textContent = t('loading_slow'); }, 4000);
+  // De regel over een trage verbinding slaat nergens op bij een bestand dat
+  // al op je toestel staat, dus die komt alleen bij het draaiende ringetje.
+  if (!balk)
+    traagTimer = setTimeout(() => { $('ladenTraag').textContent = t('loading_slow'); }, 4000);
 }
 
 function klaar() {
   clearTimeout(traagTimer);
+  clearInterval(balkLus); balkLus = null;
+  // Dat laatste procentje krijg je pas als het echt af is.
+  if (!$('ladenBalk').hidden) {
+    $('ladenVul').style.width = '100%';
+    $('ladenProcent').textContent = '100%';
+    setTimeout(() => $('laden').classList.remove('aan'), 220);
+    return;
+  }
   $('laden').classList.remove('aan');
 }
 
@@ -5712,7 +5753,7 @@ async function eigenBuffer(nummer) {
 /// Een gekozen bestand toevoegen: inlezen, tempo zoeken, bewaren.
 async function eigenToevoegen(bestand) {
   if (!bestand) return;
-  bezig(t('mz_zoeken'));
+  bezig(t('mz_zoeken'), true);
   try {
     const ac = audioAan();
     const data = await bestand.arrayBuffer();
@@ -5818,7 +5859,7 @@ async function startLied(lied) {
   // de muziek er is.
   let buffer = null;
   if (lied.eigen) {
-    bezig(t('mz_uitpakken'));
+    bezig(t('mz_uitpakken'), true);
     try { buffer = await eigenBuffer(lied.eigen); }
     catch (e) { klaar(); melding(t('mz_eigen_fout'), 4000); return; }
     klaar();
