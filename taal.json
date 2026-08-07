@@ -2187,9 +2187,9 @@
       "{0} sur {1} XP"
     ],
     "bp_klaar": [
-      "Je hebt het hele pad uitgelopen. Alles is van jou.",
-      "You have walked the whole pass. It is all yours.",
-      "Tu as parcouru toute la passe. Tout est à toi."
+      "Je hebt het hele pad uitgelopen en alles opgehaald.",
+      "You walked the whole pass and claimed everything.",
+      "Tu as parcouru toute la passe et tout récupéré."
     ],
     "bp_nog": [
       "Nog {0} XP tot de volgende trede.",
@@ -2197,9 +2197,9 @@
       "Encore {0} XP jusqu'au palier suivant."
     ],
     "bp_gehaald": [
-      "Trede {0} gehaald: {1}",
-      "Tier {0} reached: {1}",
-      "Palier {0} atteint : {1}"
+      "Trede {0} klaar om op te halen: {1}",
+      "Tier {0} ready to claim: {1}",
+      "Palier {0} à récupérer : {1}"
     ],
     "bp_loon_punten": [
       "{0} push-ups",
@@ -2217,9 +2217,9 @@
       "{0}"
     ],
     "bp_uitleg": [
-      "Elke tweeduizend XP is een trede. Je krijgt de beloning vanzelf, en het pad hoort bij deze oefening.",
-      "Every two thousand XP is a tier. You get the reward automatically, and the pass belongs to this exercise.",
-      "Chaque deux mille XP est un palier. La récompense arrive toute seule, et la passe appartient à cet exercice."
+      "Elke tweeduizend XP is een trede. Schuif opzij om te zien wat er komt, en haal zelf op wat je verdiend hebt.",
+      "Every two thousand XP is a tier. Swipe sideways to see what is coming, and claim what you have earned.",
+      "Chaque deux mille XP est un palier. Fais défiler pour voir la suite, et récupère toi-même ce que tu as gagné."
     ],
     "bp_slot": [
       "Nog niet",
@@ -2420,6 +2420,61 @@
       "arena {0}",
       "arena {0}",
       "arène {0}"
+    ],
+    "claim": [
+      "Ophalen",
+      "Claim",
+      "Récupérer"
+    ],
+    "claim_alles": [
+      "Alles ophalen ({0})",
+      "Claim all ({0})",
+      "Tout récupérer ({0})"
+    ],
+    "claim_klaar": [
+      "Opgehaald",
+      "Claimed",
+      "Récupéré"
+    ],
+    "bp_nodig": [
+      "{0} XP nodig",
+      "{0} XP needed",
+      "{0} XP nécessaires"
+    ],
+    "bp_open": [
+      "{0} klaar om op te halen",
+      "{0} ready to claim",
+      "{0} à récupérer"
+    ],
+    "q_open": [
+      "{0} klaar om op te halen",
+      "{0} ready to claim",
+      "{0} à récupérer"
+    ],
+    "bp_loon_krat": [
+      "{0}",
+      "{0}",
+      "{0}"
+    ],
+    "quest_lied1": [
+      "Speel 1 nummer uit op de maat",
+      "Clear 1 song on the beat",
+      "Termine 1 morceau en rythme"
+    ],
+    "quest_wbslag50": [
+      "Sla {0} keer op de wereldboss",
+      "Hit the world boss {0} times",
+      "Frappe le boss mondial {0} fois"
+    ],
+    "quest_wlied3": [
+      "Speel 3 nummers uit",
+      "Clear 3 songs",
+      "Termine 3 morceaux"
+    ],
+    "quest_wwb250": [
+      "Doe {0} schade aan de wereldboss",
+      "Deal {0} damage to the world boss",
+      "Inflige {0} dégâts au boss mondial"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

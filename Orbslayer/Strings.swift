@@ -508,6 +508,17 @@ enum Tk: String {
     case lb_soort_muziek
     case lb_soort_boss
     case lb_eenheid_arena
+    case claim
+    case claim_alles
+    case claim_klaar
+    case bp_nodig
+    case bp_open
+    case q_open
+    case bp_loon_krat
+    case quest_lied1
+    case quest_wbslag50
+    case quest_wlied3
+    case quest_wwb250
 }
 
 enum Strings {
@@ -949,13 +960,13 @@ enum Strings {
         "bp_kort": ["Pad", "Pass", "Passe"],
         "bp_trede": ["Trede {0}", "Tier {0}", "Palier {0}"],
         "bp_voortgang": ["{0} van {1} XP", "{0} of {1} XP", "{0} sur {1} XP"],
-        "bp_klaar": ["Je hebt het hele pad uitgelopen. Alles is van jou.", "You have walked the whole pass. It is all yours.", "Tu as parcouru toute la passe. Tout est à toi."],
+        "bp_klaar": ["Je hebt het hele pad uitgelopen en alles opgehaald.", "You walked the whole pass and claimed everything.", "Tu as parcouru toute la passe et tout récupéré."],
         "bp_nog": ["Nog {0} XP tot de volgende trede.", "{0} XP to the next tier.", "Encore {0} XP jusqu'au palier suivant."],
-        "bp_gehaald": ["Trede {0} gehaald: {1}", "Tier {0} reached: {1}", "Palier {0} atteint : {1}"],
+        "bp_gehaald": ["Trede {0} klaar om op te halen: {1}", "Tier {0} ready to claim: {1}", "Palier {0} à récupérer : {1}"],
         "bp_loon_punten": ["{0} push-ups", "{0} push-ups", "{0} pompes"],
         "bp_loon_spul": ["een {0}", "a {0}", "un {0}"],
         "bp_loon_boost": ["{0}", "{0}", "{0}"],
-        "bp_uitleg": ["Elke tweeduizend XP is een trede. Je krijgt de beloning vanzelf, en het pad hoort bij deze oefening.", "Every two thousand XP is a tier. You get the reward automatically, and the pass belongs to this exercise.", "Chaque deux mille XP est un palier. La récompense arrive toute seule, et la passe appartient à cet exercice."],
+        "bp_uitleg": ["Elke tweeduizend XP is een trede. Schuif opzij om te zien wat er komt, en haal zelf op wat je verdiend hebt.", "Every two thousand XP is a tier. Swipe sideways to see what is coming, and claim what you have earned.", "Chaque deux mille XP est un palier. Fais défiler pour voir la suite, et récupère toi-même ce que tu as gagné."],
         "bp_slot": ["Nog niet", "Not yet", "Pas encore"],
         "mode_muziek": ["Op de maat", "On the Beat", "En Rythme"],
         "mode_muziek_sub": ["Push-ups op het ritme, hoe strakker hoe meer", "Push-ups on the beat, the tighter the better", "Des pompes en rythme, plus c'est précis mieux c'est"],
@@ -996,6 +1007,17 @@ enum Strings {
         "lb_soort_muziek": ["Maat", "Beat", "Rythme"],
         "lb_soort_boss": ["Boss", "Boss", "Boss"],
         "lb_eenheid_arena": ["arena {0}", "arena {0}", "arène {0}"],
+        "claim": ["Ophalen", "Claim", "Récupérer"],
+        "claim_alles": ["Alles ophalen ({0})", "Claim all ({0})", "Tout récupérer ({0})"],
+        "claim_klaar": ["Opgehaald", "Claimed", "Récupéré"],
+        "bp_nodig": ["{0} XP nodig", "{0} XP needed", "{0} XP nécessaires"],
+        "bp_open": ["{0} klaar om op te halen", "{0} ready to claim", "{0} à récupérer"],
+        "q_open": ["{0} klaar om op te halen", "{0} ready to claim", "{0} à récupérer"],
+        "bp_loon_krat": ["{0}", "{0}", "{0}"],
+        "quest_lied1": ["Speel 1 nummer uit op de maat", "Clear 1 song on the beat", "Termine 1 morceau en rythme"],
+        "quest_wbslag50": ["Sla {0} keer op de wereldboss", "Hit the world boss {0} times", "Frappe le boss mondial {0} fois"],
+        "quest_wlied3": ["Speel 3 nummers uit", "Clear 3 songs", "Termine 3 morceaux"],
+        "quest_wwb250": ["Doe {0} schade aan de wereldboss", "Deal {0} damage to the world boss", "Inflige {0} dégâts au boss mondial"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

@@ -360,6 +360,9 @@
   #quests.aan { display: block; }
   #quests h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
                color: rgba(255,255,255,.5); margin: 0 0 6px; text-align: center; }
+  .qHaal { flex: none; padding: 7px 14px; border-radius: 99px; border: 0; cursor: pointer;
+           background: linear-gradient(180deg, #ffc740, #ff9426); color: #000;
+           font: inherit; font-size: 12px; font-weight: 900; }
   .qKop { font-size: 11px; font-weight: 800; letter-spacing: 2px;
           color: rgba(255,255,255,.5); margin: 18px 2px 8px; }
   .qRij { position: relative; background: rgba(255,255,255,.05); border-radius: 14px;
@@ -504,18 +507,30 @@
                background: linear-gradient(90deg, #ffc740, #ff7326); }
   .padBalkTekst { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; }
   .padRest { text-align: center; font-size: 12px; color: rgba(255,255,255,.45); margin-bottom: 16px; }
-  .padTrede { display: flex; align-items: center; gap: 12px; padding: 10px 12px;
-              border-radius: 12px; background: rgba(255,255,255,.04); margin-bottom: 6px;
-              opacity: .5; }
-  .padTrede.af { opacity: 1; background: rgba(255,199,64,.09);
-                 border: 1px solid rgba(255,199,64,.3); }
-  .padNr { width: 26px; flex: none; font-size: 12px; font-weight: 900;
-           color: rgba(255,255,255,.4); text-align: right; }
-  .padMunt { color: #ffc740; font-size: 15px; }
-  .padSieraad { font-size: 15px; }
-  .padLoon { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; }
-  .padVink { font-size: 11px; color: rgba(255,255,255,.45); }
-  .padTrede.af .padVink { color: #4ade80; font-weight: 900; }
+  #padLijst { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 14px;
+              scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+  .padKaart { flex: none; width: 132px; scroll-snap-align: start; display: flex;
+              flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px 12px;
+              border-radius: 16px; background: rgba(255,255,255,.04);
+              border: 1px solid rgba(255,255,255,.08); opacity: .55; }
+  .padKaart.open { opacity: 1; border-color: rgba(255,199,64,.45);
+                   background: rgba(255,199,64,.08); }
+  .padKaart.gehaald { opacity: .8; border-color: rgba(74,222,128,.35);
+                      background: rgba(74,222,128,.06); }
+  .padNr { font-size: 11px; font-weight: 900; color: rgba(255,255,255,.4); }
+  .padBeeld { font-size: 30px; line-height: 1; }
+  .padLoon { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.3;
+             min-height: 32px; }
+  .padXp { font-size: 10px; color: rgba(255,255,255,.45); }
+  .padHaal { margin-top: 4px; padding: 7px 16px; border-radius: 99px; border: 0; cursor: pointer;
+             background: linear-gradient(180deg, #ffc740, #ff9426); color: #000;
+             font: inherit; font-size: 12px; font-weight: 900; }
+  .padStaat { margin-top: 4px; font-size: 10px; color: rgba(255,255,255,.45); text-align: center; }
+  .padStaat.af { color: #4ade80; font-weight: 800; }
+  .padAlles { display: block; margin: 0 auto 12px; padding: 9px 22px; border-radius: 99px;
+              border: 1px solid rgba(255,199,64,.5); background: rgba(255,199,64,.12);
+              color: #ffc740; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
+  .padAlles[hidden] { display: none; }
   .padUitleg { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.5;
                margin-top: 16px; }
 
@@ -662,9 +677,9 @@
   .extraIcoon { font-size: 23px; line-height: 1; }
   .extraNaam { font-size: 11px; font-weight: 800; letter-spacing: .5px;
                color: rgba(255,255,255,.75); text-align: center; }
-  .extraBadge { position: absolute; right: 8px; top: 8px; font-size: 10px; font-weight: 900;
-                padding: 3px 7px; border-radius: 99px; background: rgba(255,199,64,.2);
-                color: #ffc740; }
+  /* De badge stond over het icoon heen; hij hangt nu onder het label. */
+  .extraBadge { font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 99px;
+                background: rgba(255,199,64,.2); color: #ffc740; }
   .extraBadge.af { background: rgba(74,222,128,.2); color: #4ade80; }
   .extraBadge:empty { display: none; }
   @media (prefers-reduced-motion: reduce) { .extraKaart:active { transform: none; } }
@@ -1142,6 +1157,7 @@
   <div class="padBalk"><i id="padVul"></i></div>
   <div class="padBalkTekst" id="padBalkTekst"></div>
   <div class="padRest" id="padRest"></div>
+  <button class="padAlles" id="padAlles"></button>
   <div id="padLijst"></div>
   <div class="padUitleg" id="padUitleg"></div>
 </div>
@@ -1709,18 +1725,23 @@ const QUEST_DAG = [
   { id: 'combo1', doel: 1,  xp: 60,  klik: 0 },
   { id: 'duel1',  doel: 1,  xp: 80,  klik: 30 },
   { id: 'snel20', doel: 20, xp: 100, klik: 50 },
+  { id: 'lied1',  doel: 1,  xp: 90,  klik: 40 },
+  { id: 'wbslag50', doel: 50, xp: 90, klik: 40 },
 ];
 const QUEST_WEEK = [
   { id: 'wreps300', doel: 300, xp: 500, klik: 300 },
   { id: 'wboss5',   doel: 5,   xp: 400, klik: 150 },
   { id: 'wduel5',   doel: 5,   xp: 400, klik: 200 },
   { id: 'wkills40', doel: 40,  xp: 350, klik: 150 },
+  { id: 'wlied3',   doel: 3,   xp: 450, klik: 200 },
+  { id: 'wwb250',   doel: 250, xp: 500, klik: 250 },
 ];
 /// Welke teller elke opdracht bijhoudt.
 const QUEST_TELLER = {
   reps25: 'reps', kills3: 'kills', boss1: 'boss', combo1: 'combo',
-  duel1: 'duel', snel20: 'snel',
+  duel1: 'duel', snel20: 'snel', lied1: 'lied', wbslag50: 'wbslag',
   wreps300: 'reps', wboss5: 'boss', wduel5: 'duel', wkills40: 'kills',
+  wlied3: 'lied', wwb250: 'wbslag',
 };
 const dagNr = () => Math.floor(Date.now() / 864e5);
 const weekNr = () => Math.floor((dagNr() + 3) / 7);   // weken beginnen op maandag
@@ -1770,18 +1791,45 @@ function questRep() {
   questTel('reps');
 }
 
+/// Welke opdrachten je gehaald hebt maar nog niet opgehaald.
+function questTeHalen() {
+  const q = questStaat();
+  q.dagOp = q.dagOp || [];
+  q.weekOp = q.weekOp || [];
+  return dagQuests().filter(x => q.dagKlaar.includes(x.id) && !q.dagOp.includes(x.id)).length
+       + weekQuests().filter(x => q.weekKlaar.includes(x.id) && !q.weekOp.includes(x.id)).length;
+}
+
+/// Eén opdracht uitbetalen.
+function questOphalen(id, week) {
+  const q = questStaat();
+  const lijst = week ? weekQuests() : dagQuests();
+  const klaar = week ? q.weekKlaar : q.dagKlaar;
+  const op = week ? (q.weekOp = q.weekOp || []) : (q.dagOp = q.dagOp || []);
+  const quest = lijst.find(x => x.id === id);
+  if (!quest || !klaar.includes(id) || op.includes(id)) return;
+  op.push(id);
+  P.totalXP += quest.xp;
+  if (quest.klik) klikVerdien(quest.klik);
+  bpNakijken();
+  save();
+  geluidWin();
+  let tekst = '+' + quest.xp + ' XP';
+  if (quest.klik) tekst += ' · +' + quest.klik + ' ' + t('stat_pushups');
+  melding(tekst, 3000);
+  renderQuests();
+  if ($('modes').classList.contains('aan')) toonModi();
+}
+
 function questCheck() {
   const q = questStaat();
   [[dagQuests(), q.dagTel, q.dagKlaar], [weekQuests(), q.weekTel, q.weekKlaar]]
     .forEach(([lijst, tel, klaar]) => lijst.forEach(quest => {
       if (klaar.includes(quest.id)) return;
       if ((tel[QUEST_TELLER[quest.id]] || 0) < quest.doel) return;
+      // Gehaald, maar nog niet uitbetaald: dat doe je zelf op het scherm.
       klaar.push(quest.id);
-      P.totalXP += quest.xp;
-      if (quest.klik) klikVerdien(quest.klik);
-      let tekst = t('quest_af', t('quest_' + quest.id, quest.doel)) + '\n+' + quest.xp + ' XP';
-      if (quest.klik) tekst += ' · +' + quest.klik + ' ' + t('stat_pushups');
-      melding(tekst, 5000);
+      melding(t('quest_af', t('quest_' + quest.id, quest.doel)), 4000);
     }));
   if ($('quests').classList.contains('aan')) renderQuests();
 }
@@ -1789,25 +1837,35 @@ function questCheck() {
 function renderQuests() {
   const q = questStaat();
   $('questsKop').textContent = t('quests_titel').toUpperCase();
-  const blok = (kop, lijst, tel, klaar) => {
+  q.dagOp = q.dagOp || []; q.weekOp = q.weekOp || [];
+  const blok = (kop, lijst, tel, klaar, op, week) => {
     let html = `<div class="qKop">${ontsmet(kop)}</div>`;
     lijst.forEach(quest => {
-      const af = klaar.includes(quest.id);
+      const af = klaar.includes(quest.id), gehaald = op.includes(quest.id);
       const stand = Math.min(tel[QUEST_TELLER[quest.id]] || 0, quest.doel);
       const loon = '+' + quest.xp + ' XP'
         + (quest.klik ? ' · +' + quest.klik + ' ' + t('stat_pushups') : '');
-      html += `<div class="qRij${af ? ' af' : ''}">` +
+      const rechts = gehaald ? `<div class="qStand">✓</div>`
+        : af ? `<button class="qHaal" data-quest="${quest.id}" data-week="${week ? 1 : 0}">` +
+               `${ontsmet(t('claim'))}</button>`
+        : `<div class="qStand">${stand} / ${quest.doel}</div>`;
+      html += `<div class="qRij${gehaald ? ' af' : ''}">` +
         `<div class="qTekst"><b>${ontsmet(t('quest_' + quest.id, quest.doel))}</b>` +
-        `<small>${ontsmet(loon)}</small></div>` +
-        `<div class="qStand">${af ? '✓' : stand + ' / ' + quest.doel}</div>` +
+        `<small>${ontsmet(loon)}</small></div>` + rechts +
         `<div class="qBalk"><i style="width:${af ? 100 : Math.round(stand / quest.doel * 100)}%"></i></div>` +
         `</div>`;
     });
     return html;
   };
   $('questsLijst').innerHTML =
-    blok(t('quests_vandaag'), dagQuests(), q.dagTel, q.dagKlaar) +
-    blok(t('quests_week'), weekQuests(), q.weekTel, q.weekKlaar);
+    blok(t('quests_vandaag'), dagQuests(), q.dagTel, q.dagKlaar, q.dagOp, false) +
+    blok(t('quests_week'), weekQuests(), q.weekTel, q.weekKlaar, q.weekOp, true);
+  $('questsLijst').querySelectorAll('.qHaal').forEach(knop => {
+    knop.onclick = e => {
+      e.stopPropagation();
+      questOphalen(knop.dataset.quest, knop.dataset.week === '1');
+    };
+  });
   $('questsDicht').textContent = t('close');
 }
 
@@ -2883,13 +2941,15 @@ function toonModi() {
   $('extraKlassement').textContent = t('leaderboard');
   $('extraInstel').textContent = t('settings');
   $('extraPad').textContent = t('bp_kort');
-  $('padBadge').textContent = bpTrede() + '/' + BP_TREDEN;
-  $('padBadge').classList.toggle('af', bpTrede() >= BP_TREDEN);
+  const padOp = bpTeHalen();
+  $('padBadge').textContent = padOp ? padOp : bpTrede() + '/' + BP_TREDEN;
+  $('padBadge').classList.toggle('af', padOp > 0);
   // Op de opdrachtenkaart staat meteen hoever je vandaag bent.
   const q = questStaat(), dag = dagQuests();
   const af = dag.filter(x => q.dagKlaar.includes(x.id)).length;
-  $('questBadge').textContent = af + '/' + dag.length;
-  $('questBadge').classList.toggle('af', af === dag.length);
+  const teHalen = questTeHalen();
+  $('questBadge').textContent = teHalen ? teHalen : af + '/' + dag.length;
+  $('questBadge').classList.toggle('af', teHalen > 0);
   $('modesDicht').textContent = t('cancel');
 }
 
@@ -3885,6 +3945,7 @@ function kratBuit(krat) {
     terug = Math.ceil(krat.prijs * 0.4);
     klikVerdien(terug);
   } else spullen().push(item.id);
+  save();
   rolNaarBuit(krat, item, terug);
 }
 
@@ -3965,53 +4026,98 @@ function toonBuit(item, terug) {
 /* ---------------------------------------------------------------
    Het seizoenspad: vijftig treden van tweeduizend XP, samen honderdduizend.
    De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit
-   door te spelen. Elke trede geeft iets, en dat komt vanzelf binnen — geen
-   ophaalknop. Het pad hoort bij de oefening waarin je speelt.
+   door te spelen. Wat een trede oplevert staat er met zoveel woorden op —
+   push-ups of een krat met naam — en je haalt het zelf op met een knop. Het
+   pad hoort bij de oefening waarin je speelt.
 ---------------------------------------------------------------- */
 const BP_TREDEN = 50, BP_XP = 2000;
 
-/// Wat trede n oplevert. Elke vijfde trede een sieraad, de tiende een boost
-/// erbij, de rest push-ups voor de clicker.
+/// Wat trede n oplevert. Elke derde trede een houten krat, elke vijfde een
+/// zilveren, elke tiende een gouden; de rest push-ups voor de clicker. Zo
+/// staat er altijd iets concreets op de kaart in plaats van 'zeldzaam'.
 function bpLoon(n) {
-  if (n % 10 === 0) return { soort: 'spul', graad: 3, boost: 'xp2' };
-  if (n % 5 === 0) return { soort: 'spul', graad: 2 };
-  if (n % 3 === 0) return { soort: 'spul', graad: 1 };
-  return { soort: 'punten', aantal: 60 + n * 40 };
+  const srt = i => KRAT_SOORTEN[i % KRAT_SOORTEN.length].soort;
+  if (n % 10 === 0) return { krat: 'goud_' + srt(n / 10 - 1) };
+  if (n % 5 === 0) return { krat: 'zilver_' + srt(Math.floor(n / 5)) };
+  if (n % 3 === 0) return { krat: 'hout_' + srt(Math.floor(n / 3)) };
+  return { punten: 60 + n * 40 };
 }
 
 function bpLoonTekst(n) {
   const loon = bpLoon(n);
-  if (loon.soort === 'punten') return t('bp_loon_punten', getal(loon.aantal));
-  return t('graad_' + loon.graad);
+  return loon.krat ? t('krat_' + loon.krat) : t('bp_loon_punten', getal(loon.punten));
 }
 
 const bpTrede = () => Math.min(BP_TREDEN, Math.floor((P.totalXP || 0) / BP_XP));
+const bpOpgehaald = () => (Array.isArray(P.bpOp) ? P.bpOp : (P.bpOp = []));
+const bpTeHalen = () => Math.max(0, bpTrede() - bpOpgehaald().length);
 
-/// Deelt uit wat je verdiend hebt maar nog niet gehad. Draait na elke XP.
+/// Alleen kijken of er iets bij is gekomen; ophalen doe je zelf.
 function bpNakijken(stil) {
-  if (!Array.isArray(P.bpGehad)) P.bpGehad = [];
   const tot = bpTrede();
+  if (!Array.isArray(P.bpGehad)) P.bpGehad = [];
   for (let n = 1; n <= tot; n++) {
     if (P.bpGehad.includes(n)) continue;
     P.bpGehad.push(n);
+    if (!stil) { melding(t('bp_gehaald', n, bpLoonTekst(n)), 4000); geluidWin(); }
+  }
+  if ($('pad').classList.contains('aan')) tekenPad();
+}
+
+/// Alles tegelijk. De kratten gaan dan zonder rolletje open, anders zit je
+/// een minuut lang naar bandjes te kijken; wat erin zat lees je in de melding.
+function bpAllesOphalen() {
+  const tot = bpTrede();
+  let punten = 0;
+  const buit = [];
+  for (let n = 1; n <= tot; n++) {
+    if (bpOpgehaald().includes(n)) continue;
+    bpOpgehaald().push(n);
     const loon = bpLoon(n);
-    if (loon.soort === 'punten') {
-      klikVerdien(loon.aantal);
-    } else {
-      const nieuw = COSMETICA.filter(c => c.graad === loon.graad && !spullen().includes(c.id));
-      const pak = nieuw.length ? nieuw[Math.floor(Math.random() * nieuw.length)]
-                               : COSMETICA[Math.floor(Math.random() * COSMETICA.length)];
-      if (!spullen().includes(pak.id)) spullen().push(pak.id);
-      else klikVerdien(200);
-    }
-    if (loon.boost) {
-      klikStaat().boosts[loon.boost] =
-        Math.max(Date.now(), klikStaat().boosts[loon.boost] || 0) + 30 * 60 * 1000;
-    }
-    if (!stil) {
-      melding(t('bp_gehaald', n, bpLoonTekst(n)), 4000);
-      geluidWin();
-    }
+    if (loon.punten) { punten += loon.punten; continue; }
+    const krat = KRATTEN.find(k => k.id === loon.krat);
+    if (krat) buit.push(kratStil(krat));
+  }
+  if (punten) klikVerdien(punten);
+  save();
+  tekenPad();
+  if ($('modes').classList.contains('aan')) toonModi();
+  geluidWin();
+  const stukjes = [];
+  if (punten) stukjes.push('+' + getal(punten) + ' ' + t('klik_kop'));
+  if (buit.length) stukjes.push(buit.map(c => cosNaam(c)).join(', '));
+  if (stukjes.length) melding(stukjes.join(' · '), 5000);
+}
+
+/// Een krat openen zonder show: geeft terug wat erin zat.
+function kratStil(krat) {
+  const lot = Math.random() * 100;
+  let graad = 1, som = 0;
+  for (let i = 0; i < 3; i++) { som += krat.kans[i]; if (lot < som) { graad = i + 1; break; } }
+  let pool = kratPool(krat, graad);
+  if (!pool.length) pool = kratPool(krat);
+  const item = pool[Math.floor(Math.random() * pool.length)];
+  if (spullen().includes(item.id)) klikVerdien(Math.ceil(krat.prijs * 0.4));
+  else spullen().push(item.id);
+  return item;
+}
+
+/// Eén trede ophalen. Een krat gaat meteen open, met rolletje en al.
+function bpOphalen(n) {
+  if (n > bpTrede() || bpOpgehaald().includes(n)) return;
+  bpOpgehaald().push(n);
+  const loon = bpLoon(n);
+  if (loon.punten) {
+    klikVerdien(loon.punten);
+    melding('+' + getal(loon.punten) + ' ' + t('klik_kop'), 3000);
+    geluidWin();
+  }
+  save();
+  tekenPad();
+  if ($('modes').classList.contains('aan')) toonModi();
+  if (loon.krat) {
+    const krat = KRATTEN.find(k => k.id === loon.krat);
+    if (krat) kratBuit(krat);
   }
 }
 
@@ -4027,24 +4133,40 @@ function tekenPad() {
   $('padBalkTekst').textContent = t('bp_voortgang', getal(Math.min(xp, BP_TREDEN * BP_XP)),
                                     getal(BP_TREDEN * BP_XP));
   $('padVul').style.width = Math.min(100, xp / (BP_TREDEN * BP_XP) * 100) + '%';
-  $('padRest').textContent = tot >= BP_TREDEN
-    ? t('bp_klaar') : t('bp_nog', getal(BP_XP - (xp % BP_XP)));
+  const open = bpTeHalen();
+  $('padAlles').hidden = open < 2;
+  $('padAlles').textContent = t('claim_alles', open);
+  $('padRest').textContent = open ? t('bp_open', open)
+    : tot >= BP_TREDEN ? t('bp_klaar') : t('bp_nog', getal(BP_XP - (xp % BP_XP)));
+  $('padRest').style.color = open ? '#ffc740' : '';
   $('padUitleg').textContent = t('bp_uitleg');
 
   let html = '';
   for (let n = 1; n <= BP_TREDEN; n++) {
-    const af = n <= tot;
+    const open = n <= tot, gehaald = bpOpgehaald().includes(n);
     const loon = bpLoon(n);
-    const beeld = loon.soort === 'punten'
-      ? `<span class="padMunt">▲</span>`
-      : `<span class="padSieraad" style="color:${COS_GRAADKLEUR[loon.graad - 1]}">◆</span>`;
-    html += `<div class="padTrede${af ? ' af' : ''}">` +
-      `<span class="padNr">${n}</span>${beeld}` +
-      `<span class="padLoon">${ontsmet(bpLoonTekst(n))}` +
-      `${loon.boost ? ' · ' + ontsmet(t('koop_xp2')) : ''}</span>` +
-      `<span class="padVink">${af ? '✓' : ontsmet(t('bp_slot'))}</span></div>`;
+    const kleur = loon.krat ? (loon.krat.startsWith('goud') ? '#ffc740'
+                            : loon.krat.startsWith('zilver') ? '#c8cdd2' : '#b98a5a')
+                            : '#ffc740';
+    const beeld = loon.krat ? '▣' : '▲';
+    const knop = gehaald
+      ? `<span class="padStaat af">${ontsmet(t('claim_klaar'))}</span>`
+      : open ? `<button class="padHaal" data-trede="${n}">${ontsmet(t('claim'))}</button>`
+             : `<span class="padStaat">${ontsmet(t('bp_nodig', voluit(n * BP_XP - xp)))}</span>`;
+    html += `<div class="padKaart${open ? ' open' : ''}${gehaald ? ' gehaald' : ''}" data-n="${n}">` +
+      `<span class="padNr">${n}</span>` +
+      `<span class="padBeeld" style="color:${kleur}">${beeld}</span>` +
+      `<span class="padLoon">${ontsmet(bpLoonTekst(n))}</span>` +
+      `<span class="padXp">${voluit(n * BP_XP)} XP</span>${knop}</div>`;
   }
   $('padLijst').innerHTML = html;
+  $('padLijst').querySelectorAll('.padHaal').forEach(k => {
+    k.onclick = e => { e.stopPropagation(); bpOphalen(+k.dataset.trede); };
+  });
+  // Schuif naar de eerstvolgende trede die nog niet opgehaald is.
+  const doel = $('padLijst').querySelector('.padKaart.open:not(.gehaald)')
+            || $('padLijst').querySelector(`.padKaart[data-n="${Math.min(BP_TREDEN, tot + 1)}"]`);
+  if (doel) $('padLijst').scrollLeft = Math.max(0, doel.offsetLeft - 20);
 }
 
 function renderInventaris() {
@@ -4871,6 +4993,10 @@ function getal(n) {
     return new Intl.NumberFormat(TAAL, { notation: 'compact', maximumFractionDigits: 1 }).format(n);
   } catch (e) { return n.toLocaleString(TAAL); }
 }
+
+/// Voluit met puntjes ertussen. Bij het seizoenspad wil je niet '28K' zien
+/// maar precies weten hoeveel XP je nog te gaan hebt.
+const voluit = n => Math.round(n).toLocaleString(TAAL === 'en' ? 'en-US' : 'nl-NL');
 /// Kleine bedragen met twee decimalen, zodat je ziet dat een techniekstap iets
 /// doet: 1,01 push-up per push-up moet er niet uitzien als 1.
 function getalFijn(n) {
@@ -5287,13 +5413,89 @@ document.querySelectorAll('.klikTab').forEach(tab => {
    Het tempo is met opzet laag voor muziek maar hoog voor push-ups: twintig
    tot zesendertig herhalingen per minuut is precies een stevig tempo.
 ---------------------------------------------------------------- */
+/* Elk nummer heeft een echte wijs. Eén herhaling duurt één maat, en die maat
+   valt uiteen in acht stapjes; op twintig tot zesendertig maten per minuut
+   klinkt dat als een nummer van 160 tot 288 achtsten — gewoon muziek dus.
+   De noten staan in MIDI-nummers (60 = centrale do); 0 is een rust. De wijs
+   is vier maten lang en herhaalt zich, met een bas die eronder meeloopt. */
 const LIEDJES = [
-  { id: 1, tempo: 20, reps: 18 },
-  { id: 2, tempo: 24, reps: 20 },
-  { id: 3, tempo: 28, reps: 22 },
-  { id: 4, tempo: 32, reps: 24 },
-  { id: 5, tempo: 36, reps: 26 },
+  { id: 1, tempo: 20, reps: 18, golf: 'triangle',
+    bas: [45, 41, 43, 41],
+    wijs: [69, 0, 72, 0, 76, 0, 72, 69,  0, 69, 68, 0, 69, 0, 72, 0,
+           76, 0, 79, 0, 76, 72, 69, 0,  68, 0, 69, 0, 69, 0, 0, 0] },
+  { id: 2, tempo: 24, reps: 20, golf: 'square',
+    bas: [43, 43, 48, 46],
+    wijs: [62, 65, 69, 65, 62, 0, 69, 0,  62, 65, 69, 72, 70, 69, 0, 0,
+           74, 0, 72, 69, 65, 69, 72, 0,  70, 69, 67, 65, 62, 0, 0, 0] },
+  { id: 3, tempo: 28, reps: 22, golf: 'sawtooth',
+    bas: [40, 40, 45, 43],
+    wijs: [64, 67, 71, 74, 71, 67, 64, 0,  63, 67, 70, 74, 70, 67, 63, 0,
+           69, 72, 76, 72, 69, 0, 67, 0,  71, 74, 71, 67, 64, 0, 0, 0] },
+  { id: 4, tempo: 32, reps: 24, golf: 'square',
+    bas: [50, 48, 46, 45],
+    wijs: [74, 0, 74, 76, 77, 76, 74, 72,  72, 0, 72, 74, 76, 74, 72, 70,
+           70, 0, 70, 72, 74, 72, 70, 69,  69, 72, 74, 77, 76, 74, 72, 0] },
+  { id: 5, tempo: 36, reps: 26, golf: 'sawtooth',
+    bas: [38, 38, 43, 41],
+    wijs: [74, 77, 81, 77, 74, 77, 81, 84,  83, 81, 79, 77, 74, 77, 79, 81,
+           81, 84, 86, 84, 81, 79, 77, 74,  77, 79, 81, 84, 81, 77, 74, 0] },
 ];
+
+/// MIDI-nummer naar toonhoogte. 69 is de a van 440 hertz.
+const nootHz = n => 440 * Math.pow(2, (n - 69) / 12);
+
+/// Zet één maat van het nummer klaar: bas, wijs, klap en een tik op de tel.
+/// Alles wordt vooruit ingepland, dus haperende beeldjes storen het ritme niet.
+function liedMaat(lied, maat) {
+  const ac = audioAan();
+  if (!ac) return;
+  const t0 = ac.currentTime + 0.02;
+  const maatDuur = 60 / lied.tempo;
+  const stap = maatDuur / 8;
+  const luid = volMuziek / 100;
+
+  const speel = (hz, begin, duur, golf, sterkte, laagdoor) => {
+    if (luid <= 0) return;
+    const bron = ac.createOscillator(), knop = ac.createGain(), zeef = ac.createBiquadFilter();
+    zeef.type = 'lowpass';
+    zeef.frequency.setValueAtTime(laagdoor, t0 + begin);
+    bron.type = golf;
+    bron.frequency.setValueAtTime(hz, t0 + begin);
+    knop.gain.setValueAtTime(0.0001, t0 + begin);
+    knop.gain.exponentialRampToValueAtTime(sterkte * luid, t0 + begin + 0.015);
+    knop.gain.exponentialRampToValueAtTime(0.0001, t0 + begin + duur);
+    bron.connect(zeef).connect(knop).connect(ac.destination);
+    bron.start(t0 + begin);
+    bron.stop(t0 + begin + duur + 0.04);
+  };
+  const klap = (begin, sterkte) => {
+    if (luid <= 0) return;
+    const lengte = Math.floor(ac.sampleRate * 0.06);
+    const buf = ac.createBuffer(1, lengte, ac.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < lengte; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / lengte);
+    const bron = ac.createBufferSource(), knop = ac.createGain(), zeef = ac.createBiquadFilter();
+    bron.buffer = buf;
+    zeef.type = 'highpass';
+    zeef.frequency.value = 5000;
+    knop.gain.value = sterkte * luid;
+    bron.connect(zeef).connect(knop).connect(ac.destination);
+    bron.start(t0 + begin);
+  };
+
+  // De bas houdt de hele maat aan, met een stootje halverwege.
+  const grond = lied.bas[maat % lied.bas.length];
+  speel(nootHz(grond), 0, maatDuur * 0.55, 'triangle', 0.10, 700);
+  speel(nootHz(grond + 12), stap * 4, maatDuur * 0.35, 'triangle', 0.06, 700);
+  // De wijs erboven: acht stapjes uit de vier maten lange melodie.
+  for (let i = 0; i < 8; i++) {
+    const noot = lied.wijs[((maat % 4) * 8 + i) % lied.wijs.length];
+    if (noot) speel(nootHz(noot), i * stap, stap * 0.9, lied.golf, 0.055, 2600);
+    if (i % 2 === 1) klap(i * stap, 0.05);
+  }
+  // En op de tel zelf een duidelijke tik, want daar moet je omlaag zijn.
+  toon(660, 0.05, 'square', 0.4);
+}
 const MZ_HALEN = 70;   // procent op de maat dat een nummer uitspeelt
 
 let mzLied = null, mzFase = 'uit', mzTik = 0, mzTellerLus = null;
@@ -5349,6 +5551,8 @@ function startLied(lied) {
     mzFase = 'bezig';
     mzVolgende = Date.now() + 60000 / lied.tempo;
     mzTik = 0;
+    clearInterval(muziekLus); muziekLus = null;   // de menumuziek zwijgt nu even
+    liedMaat(lied, 0);
     clearInterval(mzTellerLus);
     mzTellerLus = setInterval(mzLoop, 40);
   }, 2000);
@@ -5362,7 +5566,7 @@ function mzLoop() {
   if (over <= 0) {
     mzVolgende += stap;
     mzTik++;
-    toon(660, 0.05, 'square', 0.4);
+    liedMaat(mzLied, mzTik);
     // Een tik zonder herhaling telt als gemist.
     if (mzTik > mzGedaan + 1) { mzGedaan++; mzOordeel('mz_mis', '#f2263a'); mzBijwerken(); }
     if (mzGedaan >= mzLied.reps) { eindeLied(); return; }
@@ -5407,8 +5611,10 @@ function muziekRep() {
 function eindeLied() {
   clearInterval(mzTellerLus); mzTellerLus = null;
   mzFase = 'klaar';
+  muziekBij();
   const pct = mzGedaan ? Math.round(mzRaak / mzGedaan * 100) : 0;
   const gehaald = pct >= MZ_HALEN;
+  if (gehaald) questTel('lied');
   const mz = muziekStaat();
   const eerder = mz.beste[mzLied.id] || 0;
   if (pct > eerder) mz.beste[mzLied.id] = pct;
@@ -5439,9 +5645,11 @@ function verlaatMuziek() {
   $('mzKies').classList.remove('aan');
   $('stage').querySelector('.middle').appendChild($('nosebar'));
   camBalkBijwerken();
+  muziekBij();
   toonMenu();
 }
 
+$('padAlles').addEventListener('click', e => { e.stopPropagation(); bpAllesOphalen(); });
 $('modeMuziek').addEventListener('click', e => { e.stopPropagation(); toonMuziek(); });
 $('mzKiesDicht').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
 $('mzStop').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
@@ -5526,6 +5734,7 @@ function bossRep() {
   wbNu.hp = Math.max(0, wbNu.hp - 1);
   wbNu.jij++; wbNu.samen++;
   P.bossSchade = (P.bossSchade || 0) + 1;
+  questTel('wbslag');
   P.totalXP += WB_XP_PER * xpMaal();
   klikVerdien(WB_PUNT_PER);
   bpNakijken();

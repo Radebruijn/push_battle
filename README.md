@@ -185,7 +185,9 @@ De knop **Vechten** brengt je in het gevecht; linksboven ga je weer terug naar h
 
 ## Spelmodi
 
-Linksboven in het menu zit een burgermenu (☰). Bovenin staan de vier spelmodi als brede kaarten. Daaronder, achter een streep met het kopje **Meer**, staan drie kleinere vakjes in een andere vorm: **Opdrachten**, **Klassement** en **Instellingen**. Die zien er met opzet anders uit dan de spelmodi — je gaat er niet spelen, je kijkt of stelt er iets in. Op het vakje Opdrachten staat een badge met hoever je vandaag bent (*0/3*), die groen wordt als je alle drie gehaald hebt.
+Linksboven in het menu zit een burgermenu (☰). Bovenin staan de spelmodi als brede kaarten: Arena, Duel, Online, Wereldboss, Op de maat en Clicker. Daaronder, achter een streep met het kopje **Meer**, staan vier kleinere vakjes in een andere vorm: **Opdrachten**, **Klassement**, **Pad** en **Instellingen**. Die zien er met opzet anders uit dan de spelmodi — je gaat er niet spelen, je kijkt of stelt er iets in.
+
+Op Opdrachten en Pad staat een badge, onder het label en dus niet over het icoon heen. Normaal laat hij zien hoever je bent (*0/3*, *12/50*); staat er iets klaar om op te halen, dan slaat hij om naar dat aantal en wordt hij groen. Zo zie je vanuit het menu in één oogopslag dat er nog iets voor je klaarligt.
 
 De bovenbalk is daardoor leeg op twee knoppen na: het menu links en je account (met je foto) rechts.
 
@@ -279,6 +281,8 @@ Een ring krimpt naar een doelring toe; op het moment dat hij er precies overheen
 
 Er zijn vijf nummers die steeds sneller gaan, van twintig tot zesendertig herhalingen per minuut. Dat is met opzet traag voor muziek en stevig voor push-ups. Haal je zeventig procent op de maat, dan staat het nummer op je naam; je beste percentage per nummer blijft staan.
 
+**Er speelt echte muziek onder.** Elk nummer heeft een eigen wijs: een basloop, een melodie van vier maten en een klapje op de tussenmaat, allemaal opgebouwd in de browser — er staat geen enkel geluidsbestand in het spel. Eén herhaling is één maat, en die maat valt uiteen in acht stapjes, dus op zesendertig maten per minuut hoor je gewoon een nummer op tempo. De maat wordt telkens een hele maat vooruit ingepland, zodat een haperend beeldje het ritme niet scheeftrekt. De menumuziek zwijgt zolang je speelt.
+
 ## De wereldboss
 
 Eén monster per oefening waar iedereen tegelijk op slaat. Je ziet de balk zakken door andermans herhalingen, hoeveel vechters er meedoen en hoeveel schade jij zelf hebt gedaan.
@@ -287,18 +291,26 @@ Eén monster per oefening waar iedereen tegelijk op slaat. Je ziet de balk zakke
 
 Elke klap levert je twee XP en drie push-ups op, dus je beloning is precies je aandeel in de schade. Gaat hij neer, dan staat er meteen een nieuwe — groter, want er is inmiddels meer volk. Je klappen worden gebundeld verstuurd, zodat er niet voor elke herhaling een verzoek de deur uit gaat.
 
+## Opdrachten
+
+Elke dag drie opdrachten en elke week twee, gekozen uit een vaste voorraad. De datum bepaalt de keuze, dus iedereen heeft dezelfde. Ze lopen mee met wat je toch al doet: push-ups, kills, bosses, duels, je snelste minuut, een nummer op de maat uitspelen en klappen op de wereldboss.
+
+**De beloning komt niet vanzelf binnen.** Een gehaalde opdracht krijgt een knop *Ophalen*; pas als je die indrukt gaan de XP en de push-ups naar je toe, en verandert de knop in een vinkje. Op de tegel in het menu staat hoeveel er klaarstaat. Wisselt de dag of de week, dan beginnen de tellers en de lijst opnieuw.
+
 ## Het seizoenspad
 
-Vijftig treden van tweeduizend XP, samen honderdduizend. De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit door te spelen — er is geen aparte munt en geen ophaalknop. Zodra je een trede haalt krijg je de beloning meteen, met een melding en een deuntje.
+Vijftig treden van tweeduizend XP, samen honderdduizend. De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit door te spelen — er is geen aparte munt. De treden staan naast elkaar in een rij die je opzij schuift, en op elke kaart staat precies wat erin zit en hoeveel XP je ervoor nodig hebt.
 
 | Trede | Wat je krijgt |
 |---|---|
 | de meeste | push-ups voor de clicker, oplopend van 100 tot ruim 2000 |
-| elke derde | iets gewoons uit de kast |
-| elke vijfde | iets zeldzaams |
-| elke tiende | iets episch, plus een half uur dubbele XP |
+| elke derde | een houten krat, met naam: *Houten titelkrat*, *Houten koppenkrat*, … |
+| elke vijfde | een zilveren krat |
+| elke tiende | een gouden krat |
 
-Krijg je iets wat je al hebt, dan wordt het omgezet in push-ups. Het pad hoort bij de oefening waarin je speelt: je push-uppad staat los van je squatpad, net als al het andere. Je vindt het in het burgermenu onder **Pad**, met op de tegel hoever je bent.
+**Je haalt het zelf op.** Een gehaalde trede krijgt een knop *Ophalen*; pas dan is het van jou. Een krat gaat daarbij open met hetzelfde rolletje als in de winkel. Staat er meer klaar, dan haal je met één knop alles ineens op — de kratten gaan dan zonder show open en je leest in de melding wat erin zat. Krijg je iets wat je al hebt, dan wordt het omgezet in push-ups.
+
+Het pad hoort bij de oefening waarin je speelt: je push-uppad staat los van je squatpad, net als al het andere. Je vindt het in het burgermenu onder **Pad**, met op de tegel hoeveel er klaarstaat om op te halen.
 
 ## Crates
 
