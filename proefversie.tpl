@@ -425,6 +425,33 @@
                margin-left: -1.5px; background: #ffc740;
                box-shadow: 0 0 14px rgba(255,199,64,.9); }
 
+  /* Het seizoenspad */
+  #pad { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
+         display: none; padding: 30px 20px; overflow-y: auto; }
+  #pad.aan { display: block; }
+  #pad h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+            color: rgba(255,255,255,.5); margin: 0 0 16px; padding: 8px 46px 0; }
+  .padBalk { height: 12px; border-radius: 99px; background: rgba(255,255,255,.08);
+             overflow: hidden; }
+  .padBalk i { display: block; height: 100%; border-radius: 99px;
+               background: linear-gradient(90deg, #ffc740, #ff7326); }
+  .padBalkTekst { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; }
+  .padRest { text-align: center; font-size: 12px; color: rgba(255,255,255,.45); margin-bottom: 16px; }
+  .padTrede { display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+              border-radius: 12px; background: rgba(255,255,255,.04); margin-bottom: 6px;
+              opacity: .5; }
+  .padTrede.af { opacity: 1; background: rgba(255,199,64,.09);
+                 border: 1px solid rgba(255,199,64,.3); }
+  .padNr { width: 26px; flex: none; font-size: 12px; font-weight: 900;
+           color: rgba(255,255,255,.4); text-align: right; }
+  .padMunt { color: #ffc740; font-size: 15px; }
+  .padSieraad { font-size: 15px; }
+  .padLoon { flex: 1; min-width: 0; font-size: 13px; font-weight: 700; }
+  .padVink { font-size: 11px; color: rgba(255,255,255,.45); }
+  .padTrede.af .padVink { color: #4ade80; font-weight: 900; }
+  .padUitleg { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.5;
+               margin-top: 16px; }
+
   /* Het kansenscherm achter het vraagteken op een krat */
   #kansen { position: fixed; inset: 0; z-index: 31; background: rgba(0,0,0,.96);
             display: none; padding: 30px 22px; overflow-y: auto; }
@@ -559,14 +586,14 @@
                    color: rgba(255,255,255,.35); }
   .menuScheiding::before, .menuScheiding::after {
     content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.12); }
-  .menuExtra { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .menuExtra { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .extraKaart { position: relative; display: flex; flex-direction: column; align-items: center;
                 gap: 8px; padding: 16px 6px 13px; border-radius: 18px; cursor: pointer;
                 border: 1px solid rgba(255,255,255,.1); color: inherit; font: inherit;
                 background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); }
   .extraKaart:active { transform: scale(.97); }
-  .extraIcoon { font-size: 26px; line-height: 1; }
-  .extraNaam { font-size: 12px; font-weight: 800; letter-spacing: .5px;
+  .extraIcoon { font-size: 23px; line-height: 1; }
+  .extraNaam { font-size: 11px; font-weight: 800; letter-spacing: .5px;
                color: rgba(255,255,255,.75); text-align: center; }
   .extraBadge { position: absolute; right: 8px; top: 8px; font-size: 10px; font-weight: 900;
                 padding: 3px 7px; border-radius: 99px; background: rgba(255,199,64,.2);
@@ -926,6 +953,11 @@
       <span class="extraIcoon">🏆</span>
       <span class="extraNaam" id="extraKlassement"></span>
     </button>
+    <button class="extraKaart" id="padKnop">
+      <span class="extraIcoon">🎖️</span>
+      <span class="extraNaam" id="extraPad"></span>
+      <span class="extraBadge" id="padBadge"></span>
+    </button>
     <button class="extraKaart" id="tandwiel">
       <span class="extraIcoon">⚙</span>
       <span class="extraNaam" id="extraInstel"></span>
@@ -975,6 +1007,16 @@
     <div class="rolBand" id="rolBand"></div>
     <div class="rolWijzer"></div>
   </div>
+</div>
+
+<div id="pad">
+  <button class="sluitKruis links" id="padDicht" aria-label="sluiten">✕</button>
+  <h2 id="padKop"></h2>
+  <div class="padBalk"><i id="padVul"></i></div>
+  <div class="padBalkTekst" id="padBalkTekst"></div>
+  <div class="padRest" id="padRest"></div>
+  <div id="padLijst"></div>
+  <div class="padUitleg" id="padUitleg"></div>
 </div>
 
 <div id="kansen">
@@ -1845,6 +1887,7 @@ function rep() {
     showBanner(text);
 
     if (entered) setTimeout(() => showIntro(entered, idxNu()), 1700);
+    bpNakijken();
   }
 
   save();
@@ -2707,6 +2750,9 @@ function toonModi() {
   $('extraQuests').textContent = t('quests_titel');
   $('extraKlassement').textContent = t('leaderboard');
   $('extraInstel').textContent = t('settings');
+  $('extraPad').textContent = t('bp_kort');
+  $('padBadge').textContent = bpTrede() + '/' + BP_TREDEN;
+  $('padBadge').classList.toggle('af', bpTrede() >= BP_TREDEN);
   // Op de opdrachtenkaart staat meteen hoever je vandaag bent.
   const q = questStaat(), dag = dagQuests();
   const af = dag.filter(x => q.dagKlaar.includes(x.id)).length;
@@ -2820,6 +2866,7 @@ function eindigDuel() {
   const xp = (gewonnen ? duelWinstXP(duelNiveau) : duelVerliesXP(duelNiveau)) * xpMaal();
 
   P.totalXP += xp;
+  bpNakijken();
   if (gewonnen) { P.duelsWon = (P.duelsWon || 0) + 1; tikStreak(); questTel('duel'); }
   P.duelBest = P.duelBest || {};
   if (duelJij > (P.duelBest[duelNiveau] || 0)) P.duelBest[duelNiveau] = duelJij;
@@ -3194,6 +3241,12 @@ $('invDicht').addEventListener('click', e => {
 });
 $('invOpen').addEventListener('click', e => {
   e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
+});
+$('padKnop').addEventListener('click', e => {
+  e.stopPropagation(); $('modes').classList.remove('aan'); toonPad();
+});
+$('padDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('pad').classList.remove('aan');
 });
 $('kansenDicht').addEventListener('click', e => {
   e.stopPropagation(); $('kansen').classList.remove('aan');
@@ -3775,6 +3828,91 @@ function toonBuit(item, terug) {
     `<div class="buitStatus">${terug ? ontsmet(t('buit_dubbel', terug)) : `<b>${ontsmet(t('buit_nieuw'))}</b>`}</div>`;
   $('buitKaart').style.boxShadow = `0 0 60px ${g}55`;
   $('buit').classList.add('aan');
+}
+
+/* ---------------------------------------------------------------
+   Het seizoenspad: vijftig treden van tweeduizend XP, samen honderdduizend.
+   De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit
+   door te spelen. Elke trede geeft iets, en dat komt vanzelf binnen — geen
+   ophaalknop. Het pad hoort bij de oefening waarin je speelt.
+---------------------------------------------------------------- */
+const BP_TREDEN = 50, BP_XP = 2000;
+
+/// Wat trede n oplevert. Elke vijfde trede een sieraad, de tiende een boost
+/// erbij, de rest push-ups voor de clicker.
+function bpLoon(n) {
+  if (n % 10 === 0) return { soort: 'spul', graad: 3, boost: 'xp2' };
+  if (n % 5 === 0) return { soort: 'spul', graad: 2 };
+  if (n % 3 === 0) return { soort: 'spul', graad: 1 };
+  return { soort: 'punten', aantal: 60 + n * 40 };
+}
+
+function bpLoonTekst(n) {
+  const loon = bpLoon(n);
+  if (loon.soort === 'punten') return t('bp_loon_punten', getal(loon.aantal));
+  return t('graad_' + loon.graad);
+}
+
+const bpTrede = () => Math.min(BP_TREDEN, Math.floor((P.totalXP || 0) / BP_XP));
+
+/// Deelt uit wat je verdiend hebt maar nog niet gehad. Draait na elke XP.
+function bpNakijken(stil) {
+  if (!Array.isArray(P.bpGehad)) P.bpGehad = [];
+  const tot = bpTrede();
+  for (let n = 1; n <= tot; n++) {
+    if (P.bpGehad.includes(n)) continue;
+    P.bpGehad.push(n);
+    const loon = bpLoon(n);
+    if (loon.soort === 'punten') {
+      klikVerdien(loon.aantal);
+    } else {
+      const nieuw = COSMETICA.filter(c => c.graad === loon.graad && !spullen().includes(c.id));
+      const pak = nieuw.length ? nieuw[Math.floor(Math.random() * nieuw.length)]
+                               : COSMETICA[Math.floor(Math.random() * COSMETICA.length)];
+      if (!spullen().includes(pak.id)) spullen().push(pak.id);
+      else klikVerdien(200);
+    }
+    if (loon.boost) {
+      klikStaat().boosts[loon.boost] =
+        Math.max(Date.now(), klikStaat().boosts[loon.boost] || 0) + 30 * 60 * 1000;
+    }
+    if (!stil) {
+      melding(t('bp_gehaald', n, bpLoonTekst(n)), 4000);
+      geluidWin();
+    }
+  }
+}
+
+function toonPad() {
+  $('pad').classList.add('aan');
+  tekenPad();
+}
+
+function tekenPad() {
+  const xp = P.totalXP || 0, tot = bpTrede();
+  $('padKop').textContent = t('bp_titel').toUpperCase();
+  $('padDicht').title = t('close');
+  $('padBalkTekst').textContent = t('bp_voortgang', getal(Math.min(xp, BP_TREDEN * BP_XP)),
+                                    getal(BP_TREDEN * BP_XP));
+  $('padVul').style.width = Math.min(100, xp / (BP_TREDEN * BP_XP) * 100) + '%';
+  $('padRest').textContent = tot >= BP_TREDEN
+    ? t('bp_klaar') : t('bp_nog', getal(BP_XP - (xp % BP_XP)));
+  $('padUitleg').textContent = t('bp_uitleg');
+
+  let html = '';
+  for (let n = 1; n <= BP_TREDEN; n++) {
+    const af = n <= tot;
+    const loon = bpLoon(n);
+    const beeld = loon.soort === 'punten'
+      ? `<span class="padMunt">▲</span>`
+      : `<span class="padSieraad" style="color:${COS_GRAADKLEUR[loon.graad - 1]}">◆</span>`;
+    html += `<div class="padTrede${af ? ' af' : ''}">` +
+      `<span class="padNr">${n}</span>${beeld}` +
+      `<span class="padLoon">${ontsmet(bpLoonTekst(n))}` +
+      `${loon.boost ? ' · ' + ontsmet(t('koop_xp2')) : ''}</span>` +
+      `<span class="padVink">${af ? '✓' : ontsmet(t('bp_slot'))}</span></div>`;
+  }
+  $('padLijst').innerHTML = html;
 }
 
 function renderInventaris() {
@@ -4363,6 +4501,7 @@ function olEinde(reden) {
             : gewonnen ? duelWinstXP(olPeil()) : duelVerliesXP(olPeil())) * xpMaal();
 
   P.totalXP += xp;
+  bpNakijken();
   if (gewonnen) { P.onlineWon = (P.onlineWon || 0) + 1; tikStreak(); questTel('duel'); }
   save();
 

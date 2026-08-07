@@ -457,6 +457,18 @@ enum Tk: String {
     case houd_instel_uit
     case winkel_boosts
     case winkel_boosts_uit
+    case bp_titel
+    case bp_kort
+    case bp_trede
+    case bp_voortgang
+    case bp_klaar
+    case bp_nog
+    case bp_gehaald
+    case bp_loon_punten
+    case bp_loon_spul
+    case bp_loon_boost
+    case bp_uitleg
+    case bp_slot
 }
 
 enum Strings {
@@ -894,6 +906,18 @@ enum Strings {
         "houd_instel_uit": ["Zet dit uit als de camera je romp niet in beeld krijgt.", "Turn this off if the camera cannot see your torso.", "Désactive ceci si la caméra ne voit pas ton buste."],
         "winkel_boosts": ["Voor even", "For a while", "Pour un moment"],
         "winkel_boosts_uit": ["Gaat op zodra je het gebruikt.", "Used up once you spend it.", "Disparaît une fois utilisé."],
+        "bp_titel": ["Seizoenspad", "Season Pass", "Passe de Saison"],
+        "bp_kort": ["Pad", "Pass", "Passe"],
+        "bp_trede": ["Trede {0}", "Tier {0}", "Palier {0}"],
+        "bp_voortgang": ["{0} van {1} XP", "{0} of {1} XP", "{0} sur {1} XP"],
+        "bp_klaar": ["Je hebt het hele pad uitgelopen. Alles is van jou.", "You have walked the whole pass. It is all yours.", "Tu as parcouru toute la passe. Tout est à toi."],
+        "bp_nog": ["Nog {0} XP tot de volgende trede.", "{0} XP to the next tier.", "Encore {0} XP jusqu'au palier suivant."],
+        "bp_gehaald": ["Trede {0} gehaald: {1}", "Tier {0} reached: {1}", "Palier {0} atteint : {1}"],
+        "bp_loon_punten": ["{0} push-ups", "{0} push-ups", "{0} pompes"],
+        "bp_loon_spul": ["een {0}", "a {0}", "un {0}"],
+        "bp_loon_boost": ["{0}", "{0}", "{0}"],
+        "bp_uitleg": ["Elke tweeduizend XP is een trede. Je krijgt de beloning vanzelf, en het pad hoort bij deze oefening.", "Every two thousand XP is a tier. You get the reward automatically, and the pass belongs to this exercise.", "Chaque deux mille XP est un palier. La récompense arrive toute seule, et la passe appartient à cet exercice."],
+        "bp_slot": ["Nog niet", "Not yet", "Pas encore"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

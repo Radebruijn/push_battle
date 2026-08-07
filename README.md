@@ -271,6 +271,19 @@ Woede is dus geen tikwedstrijd meer maar een oefening: één minuut, alles telt 
 
 Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wordt er alleen lokaal bewaard; de server krijgt je stand als je iets koopt of het scherm verlaat. Wordt de balans omgegooid, dan gaat `KLIK_VERSIE` omhoog en begint de clicker opnieuw — je vertelt dat één keer met een melding.
 
+## Het seizoenspad
+
+Vijftig treden van tweeduizend XP, samen honderdduizend. De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit door te spelen — er is geen aparte munt en geen ophaalknop. Zodra je een trede haalt krijg je de beloning meteen, met een melding en een deuntje.
+
+| Trede | Wat je krijgt |
+|---|---|
+| de meeste | push-ups voor de clicker, oplopend van 100 tot ruim 2000 |
+| elke derde | iets gewoons uit de kast |
+| elke vijfde | iets zeldzaams |
+| elke tiende | iets episch, plus een half uur dubbele XP |
+
+Krijg je iets wat je al hebt, dan wordt het omgezet in push-ups. Het pad hoort bij de oefening waarin je speelt: je push-uppad staat los van je squatpad, net als al het andere. Je vindt het in het burgermenu onder **Pad**, met op de tegel hoever je bent.
+
 ## Crates
 
 Het clickerscherm heeft drie tabbladen: **Helpers**, **Upgrades** en **Winkel**. In de winkel staat alles wat je opmaakt: bovenin de dingen die even werken (dubbele XP, dubbele push-ups, Sprint, Eiwitreep) en daaronder de negen kratten, gegroepeerd per soort:
