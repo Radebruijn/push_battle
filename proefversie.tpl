@@ -535,6 +535,23 @@
              color: rgba(255,255,255,.7); font: inherit; font-size: 12px; font-weight: 800; }
   .mzKlein.weg { border-color: rgba(242,38,58,.35); color: #f2263a; }
   .mzErbij { border-style: dashed; }
+  /* Tempo bijstellen: het nummer speelt en jij tikt mee. Vier tikken is
+     genoeg om de tellen precies te leggen. */
+  #mzTempo { position: fixed; inset: 0; z-index: 14; background: #05060a; display: none;
+             padding: 30px 20px; text-align: center; overflow-y: auto; }
+  #mzTempo.aan { display: block; }
+  #mzTempo h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
+                color: rgba(255,255,255,.5); margin: 0 0 10px; padding: 8px 46px 0; }
+  .mzTempoNaam { font-size: 17px; font-weight: 900; margin-bottom: 4px; }
+  .mzTempoNu { font-size: 13px; color: #ffc740; font-weight: 700; margin-bottom: 14px; }
+  .mzTempoRij { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .mzTikPad { width: min(70vw, 260px); height: min(70vw, 260px); border-radius: 50%;
+              margin: 0 auto; display: block; cursor: pointer; font: inherit; font-size: 18px;
+              font-weight: 900; letter-spacing: 2px; color: #000;
+              background: linear-gradient(180deg, #ffc740, #ff9426);
+              border: 0; box-shadow: 0 0 40px rgba(255,199,64,.25); }
+  .mzTikPad:active { transform: scale(.96); }
+  .mzTikTel { font-size: 14px; font-weight: 800; margin-top: 16px; min-height: 20px; }
   .mzPlus { flex: none; font-size: 22px; color: #ffc740; }
   .mzEigenUit { font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.5;
                 margin: 12px 2px 0; }
@@ -1176,6 +1193,22 @@
     <button id="mzZoekGa"></button>
   </div>
   <div id="mzZoekLijst"></div>
+</div>
+
+<div id="mzTempo">
+  <button class="sluitKruis" id="mzTempoDicht" aria-label="sluiten">✕</button>
+  <h2 id="mzTempoKop"></h2>
+  <div class="mzTempoNaam" id="mzTempoNaam"></div>
+  <div class="mzTempoNu" id="mzTempoNu"></div>
+  <div class="mzTempoRij">
+    <button class="mzKlein" id="mzHalf">½</button>
+    <button class="mzKlein" id="mzDubbel">2×</button>
+  </div>
+  <button class="mzTikPad" id="mzTikPad"></button>
+  <div class="mzTikTel" id="mzTikTel"></div>
+  <div class="mzZoekUit" id="mzTikUit"></div>
+  <button class="grotKnop" id="mzTikBewaar"></button>
+  <button class="tekstKnop" id="mzTikOpnieuw"></button>
 </div>
 
 <div id="mz">
@@ -5773,8 +5806,7 @@ function eigenLied(nummer) {
 async function eigenBuffer(nummer) {
   if (eigenBuffers[nummer.id]) return eigenBuffers[nummer.id];
   const ac = audioAan();
-  const data = await nummer.blob.arrayBuffer();
-  const buf = await ac.decodeAudioData(data);
+  const buf = await decodeer(ac, await nummer.blob.arrayBuffer());
   eigenBuffers[nummer.id] = buf;
   return buf;
 }
@@ -5786,7 +5818,7 @@ async function eigenToevoegen(bestand) {
   try {
     const ac = audioAan();
     const data = await bestand.arrayBuffer();
-    const buffer = await ac.decodeAudioData(data.slice(0));
+    const buffer = await decodeer(ac, data.slice(0));
     const { bpm, fase } = vindTempo(buffer);
     const naam = bestand.name.replace(/\.[a-z0-9]+$/i, '').slice(0, 40) || 'Nummer';
     const nummer = await eigenBewaren({
@@ -5821,6 +5853,27 @@ async function eigenToevoegen(bestand) {
    beat komt er vanzelf onder te liggen. Geen account of sleutel nodig: de zoek-
    en fragmentendienst van iTunes is openbaar. */
 const AUDIO_STAART = /\.(mp3|m4a|aac|wav|ogg|oga|opus|flac|weba)(\?|#|$)/i;
+
+/* Vier nummers om mee te beginnen, met hun nummer bij Apple erbij zodat er
+   niets gezocht hoeft te worden: één tik en het fragment staat in je lijst.
+   De muziek zelf zit niet in het spel — die komt bij het aantikken van de
+   openbare fragmentendienst, net als bij zelf zoeken. */
+const MZ_TIPS = [
+  { id: 1468508848, artiest: 'Lil Tecca',      titel: 'Ransom' },
+  { id: 1802034520, artiest: 'Lil Tecca',      titel: 'Dark Thoughts' },
+  { id: 1842454196, artiest: 'd4vd',           titel: 'Feel It' },
+  { id: 1806614466, artiest: 'PinkPantheress', titel: 'Illegal' },
+];
+
+/// Safari kent alleen de oude vorm met twee functies, Chrome geeft een
+/// belofte terug. Deze doet het allebei.
+function decodeer(ac, data) {
+  return new Promise((klaar, fout) => {
+    let bezig = false;
+    const p = ac.decodeAudioData(data, b => { bezig = true; klaar(b); }, e => fout(e || new Error('decode')));
+    if (p && p.then && !bezig) p.then(klaar, fout);
+  });
+}
 
 /// Haalt de ruis uit een videotitel zodat er een liedtitel overblijft.
 function schoonTitel(titel, auteur) {
@@ -5928,22 +5981,49 @@ async function linkBestandErbij(url) {
 }
 
 /// Een gevonden nummer ophalen en toevoegen alsof het een eigen bestand was.
+/// Elke stap heeft zijn eigen melding, anders sta je bij een fout te raden
+/// of het aan het internet, aan de telefoon of aan de opslag ligt.
 async function mzOnlineErbij(r) {
   bezig(t('mz_zoeken'), true);
+  const naam = (r.artistName + ' — ' + r.trackName).slice(0, 48);
+  let blob, buffer;
   try {
-    const blob = await (await fetch(r.previewUrl)).blob();
-    const ac = audioAan();
-    const buffer = await ac.decodeAudioData(await blob.arrayBuffer());
+    const a = await fetch(r.previewUrl);
+    if (!a.ok) throw new Error('status ' + a.status);
+    blob = await a.blob();
+  } catch (e) { klaar(); melding(t('mz_fout_halen'), 5000); return; }
+  try {
+    buffer = await decodeer(audioAan(), await blob.arrayBuffer());
+  } catch (e) { klaar(); melding(t('mz_fout_lezen'), 5000); return; }
+  try {
     const { bpm, fase } = vindTempo(buffer);
-    const naam = (r.artistName + ' — ' + r.trackName).slice(0, 48);
     const nummer = await eigenBewaren({ naam, blob, bpm, fase, duur: buffer.duration });
     eigenNummers.push(nummer);
     eigenBuffers[nummer.id] = buffer;
-    klaar();
-    $('mzZoek').classList.remove('aan');
-    melding(t('mz_eigen_erbij', naam), 3500);
-    tekenMuziekKeuze();
-  } catch (e) { klaar(); melding(t('mz_eigen_fout'), 4000); }
+  } catch (e) { klaar(); melding(t('mz_fout_bewaren'), 5000); return; }
+  klaar();
+  $('mzZoek').classList.remove('aan');
+  melding(t('mz_eigen_erbij', naam), 3500);
+  tekenMuziekKeuze();
+}
+
+/// Eén tik op een voorstel: nummer opzoeken bij Apple en toevoegen.
+async function mzTipErbij(tip) {
+  bezig(t('mz_zoeken'), true);
+  let raak = null;
+  try {
+    const j = await (await fetch('https://itunes.apple.com/lookup?id=' + tip.id)).json();
+    raak = (j.results || []).find(r => r.previewUrl);
+  } catch (e) { /* dan proberen we het met zoeken */ }
+  if (!raak) {
+    try {
+      const lijst = await itunesZoek([tip.artiest + ' ' + tip.titel]);
+      raak = lijst[0];
+    } catch (e) { /* niets */ }
+  }
+  klaar();
+  if (!raak) { melding(t('mz_fout_halen'), 5000); return; }
+  await mzOnlineErbij(raak);
 }
 
 function mzZoekOpen(vooraf) {
@@ -6018,6 +6098,21 @@ function tekenMuziekKeuze() {
     $('mzLijst').appendChild(knop);
   });
 
+  // Voorstellen die je nog niet hebt staan: één tik en ze staan erbij.
+  const tips = MZ_TIPS.filter(tip =>
+    !eigenNummers.some(n => n.naam.toLowerCase().includes(tip.titel.toLowerCase())));
+  if (tips.length) {
+    kop(t('mz_kop_tips'));
+    tips.forEach(tip => {
+      const knop = document.createElement('button');
+      knop.className = 'mzRij';
+      knop.innerHTML = `<span style="flex:1;min-width:0"><b>${ontsmet(tip.titel)}</b>` +
+        `<small>${ontsmet(tip.artiest)}</small></span><span class="mzPlus">＋</span>`;
+      knop.onclick = e => { e.stopPropagation(); mzTipErbij(tip); };
+      $('mzLijst').appendChild(knop);
+    });
+  }
+
   kop(t('mz_kop_eigen'));
   eigenNummers.forEach(nummer => {
     const lied = eigenLied(nummer);
@@ -6027,24 +6122,15 @@ function tekenMuziekKeuze() {
       `<button class="mzSpeel"><b>${ontsmet(nummer.naam)}</b>` +
       `<small>${ontsmet(t('mz_eigen_info', Math.round(nummer.bpm), lied.reps))}</small></button>` +
       `<span class="mzBest">${beste(lied.id) ? ontsmet(t('mz_beste', beste(lied.id))) : ''}</span>` +
-      `<button class="mzKlein" data-doe="half" title="${ontsmet(t('mz_halveer'))}">½</button>` +
-      `<button class="mzKlein" data-doe="dubbel" title="${ontsmet(t('mz_verdubbel'))}">2×</button>` +
+      `<button class="mzKlein" data-doe="tempo" title="${ontsmet(t('mz_tempo_knop'))}">♩</button>` +
       `<button class="mzKlein weg" data-doe="weg" title="${ontsmet(t('mz_verwijder'))}">✕</button>`;
     rij.querySelector('.mzSpeel').onclick = e => { e.stopPropagation(); startLied(eigenLied(nummer)); };
     rij.querySelectorAll('.mzKlein').forEach(k => {
       k.onclick = async e => {
         e.stopPropagation();
-        if (k.dataset.doe === 'weg') {
-          await eigenWeg(nummer.id);
-          melding(t('mz_eigen_weg'), 2500);
-        } else {
-          nummer.bpm = k.dataset.doe === 'half' ? nummer.bpm / 2 : nummer.bpm * 2;
-          if (nummer.bpm < 40 || nummer.bpm > 320) {
-            nummer.bpm = k.dataset.doe === 'half' ? nummer.bpm * 2 : nummer.bpm / 2;
-            return;
-          }
-          await eigenBijwerken(nummer);
-        }
+        if (k.dataset.doe === 'tempo') { mzTempoOpen(nummer); return; }
+        await eigenWeg(nummer.id);
+        melding(t('mz_eigen_weg'), 2500);
         tekenMuziekKeuze();
       };
     });
@@ -6069,6 +6155,111 @@ function tekenMuziekKeuze() {
   uitleg.className = 'mzEigenUit';
   uitleg.textContent = t('mz_eigen_uit');
   $('mzLijst').appendChild(uitleg);
+}
+
+/* Tempo bijstellen. Het zoeken van de maat gaat automatisch, maar bij muziek
+   met een losse beat — trap, jungle, alles met veel hi-hats — zit een
+   automaat er zo een halve maat naast. Dan tik je zelf mee: uit de tijden van
+   je tikken volgt met een rechte-lijn-benadering zowel het tempo als de fase,
+   en dat is per definitie precies waar jij de tel voelt. */
+let tempoNummer = null, tempoBron = null, tempoStart = 0, tempoTikken = [];
+
+function mzTempoOpen(nummer) {
+  tempoNummer = nummer;
+  tempoTikken = [];
+  $('mzTempoKop').textContent = t('mz_tempo_kop').toUpperCase();
+  $('mzTempoNaam').textContent = nummer.naam;
+  $('mzTikPad').textContent = t('mz_tik_pad');
+  $('mzTikUit').textContent = t('mz_tik_uit');
+  $('mzTikBewaar').textContent = t('mz_tik_bewaar');
+  $('mzTikOpnieuw').textContent = t('mz_tik_opnieuw');
+  $('mzTempoDicht').title = t('close');
+  $('mzTempo').classList.add('aan');
+  mzTempoBij();
+  mzTempoSpeel();
+}
+
+function mzTempoBij() {
+  const n = tempoNummer;
+  if (!n) return;
+  const lied = eigenLied(n);
+  $('mzTempoNu').textContent = t('mz_tempo_nu', Math.round(n.bpm), Math.round(60 / lied.periode));
+  const tel = tempoTikken.length;
+  $('mzTikTel').textContent = tel < 4 ? (tel ? t('mz_tik_nog', 4 - tel) : '')
+                                      : t('mz_tik_tel', tel) + ' · ' + Math.round(mzTikTempo().bpm) + ' BPM';
+  $('mzTikBewaar').style.display = tel >= 4 ? 'block' : 'none';
+  $('mzTikOpnieuw').style.display = tel ? 'block' : 'none';
+}
+
+/// Het nummer speelt mee terwijl je tikt, anders tik je op niets.
+async function mzTempoSpeel() {
+  mzTempoStil();
+  try {
+    const buffer = await eigenBuffer(tempoNummer);
+    const ac = audioAan();
+    tempoBron = ac.createBufferSource();
+    tempoBron.buffer = buffer;
+    tempoBron.loop = true;
+    const knop = ac.createGain();
+    knop.gain.value = Math.max(0.3, volMuziek / 100);
+    tempoBron.connect(knop).connect(ac.destination);
+    tempoBron.start(ac.currentTime + 0.05);
+    tempoStart = ac.currentTime + 0.05;
+  } catch (e) { melding(t('mz_fout_lezen'), 4000); }
+}
+
+function mzTempoStil() {
+  if (!tempoBron) return;
+  try { tempoBron.stop(); } catch (e) {}
+  tempoBron.disconnect();
+  tempoBron = null;
+}
+
+/// Rechte lijn door je tikken: t = fase + k × periode. De helling is de maat,
+/// het snijpunt de fase. Zo tellen alle tikken mee, niet alleen de laatste.
+function mzTikTempo() {
+  const t = tempoTikken.slice(-12);
+  const n = t.length;
+  let sx = 0, sy = 0, sxy = 0, sxx = 0;
+  for (let k = 0; k < n; k++) { sx += k; sy += t[k]; sxy += k * t[k]; sxx += k * k; }
+  const periode = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+  const fase = (sy - periode * sx) / n;
+  return { bpm: 60 / periode, fase: ((fase % periode) + periode) % periode };
+}
+
+function mzTikErbij() {
+  if (!tempoNummer || !audio) return;
+  tempoTikken.push(audio.currentTime - tempoStart);
+  toon(1200, 0.03, 'square', 0.5);
+  mzTempoBij();
+}
+
+async function mzTempoBewaren() {
+  if (!tempoNummer || tempoTikken.length < 4) return;
+  const { bpm, fase } = mzTikTempo();
+  if (!isFinite(bpm) || bpm < 30 || bpm > 320) return;
+  tempoNummer.bpm = Math.round(bpm * 10) / 10;
+  tempoNummer.fase = fase;
+  await eigenBijwerken(tempoNummer);
+  melding(t('mz_tempo_klaar', Math.round(bpm)), 3000);
+  mzTempoSluit();
+  tekenMuziekKeuze();
+}
+
+function mzTempoSluit() {
+  mzTempoStil();
+  tempoNummer = null;
+  $('mzTempo').classList.remove('aan');
+}
+
+async function mzTempoMaal(maal) {
+  if (!tempoNummer) return;
+  const nieuw = tempoNummer.bpm * maal;
+  if (nieuw < 40 || nieuw > 320) return;
+  tempoNummer.bpm = nieuw;
+  await eigenBijwerken(tempoNummer);
+  mzTempoBij();
+  tekenMuziekKeuze();
 }
 
 async function startLied(lied) {
@@ -6242,6 +6433,14 @@ $('mzZoekVeld').addEventListener('keydown', e => {
   // de zoeker daar meer aan dan aan de link alleen.
   mzZoekOpen(tekst);
 })();
+$('mzTikPad').addEventListener('pointerdown', e => { e.stopPropagation(); mzTikErbij(); });
+$('mzTikBewaar').addEventListener('click', e => { e.stopPropagation(); mzTempoBewaren(); });
+$('mzTikOpnieuw').addEventListener('click', e => {
+  e.stopPropagation(); tempoTikken = []; mzTempoBij(); mzTempoSpeel();
+});
+$('mzHalf').addEventListener('click', e => { e.stopPropagation(); mzTempoMaal(0.5); });
+$('mzDubbel').addEventListener('click', e => { e.stopPropagation(); mzTempoMaal(2); });
+$('mzTempoDicht').addEventListener('click', e => { e.stopPropagation(); mzTempoSluit(); });
 $('mzBestand').addEventListener('change', e => {
   eigenToevoegen(e.target.files && e.target.files[0]);
   e.target.value = '';

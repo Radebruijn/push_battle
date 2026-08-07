@@ -2640,6 +2640,76 @@
       "Dit bestand is groter dan 40 MB.",
       "This file is larger than 40 MB.",
       "Ce fichier dépasse 40 Mo."
+    ],
+    "mz_kop_tips": [
+      "Om mee te beginnen",
+      "To get you started",
+      "Pour commencer"
+    ],
+    "mz_fout_halen": [
+      "Kon het fragment niet ophalen. Is er internet?",
+      "Could not fetch the clip. Is there internet?",
+      "Impossible de récupérer l’extrait. Y a-t-il du réseau ?"
+    ],
+    "mz_fout_lezen": [
+      "Dit toestel kan dit fragment niet afspelen.",
+      "This device cannot play this clip.",
+      "Cet appareil ne peut pas lire cet extrait."
+    ],
+    "mz_fout_bewaren": [
+      "Kon het nummer niet bewaren op dit toestel.",
+      "Could not store the track on this device.",
+      "Impossible d’enregistrer le morceau sur cet appareil."
+    ],
+    "mz_tempo_kop": [
+      "Tempo",
+      "Tempo",
+      "Tempo"
+    ],
+    "mz_tempo_knop": [
+      "Tempo bijstellen",
+      "Adjust tempo",
+      "Régler le tempo"
+    ],
+    "mz_tik_pad": [
+      "TIK MEE",
+      "TAP ALONG",
+      "TAPE EN RYTHME"
+    ],
+    "mz_tik_uit": [
+      "Het nummer speelt. Tik minstens vier keer mee op de maat, dan weet het spel precies waar de tellen liggen.",
+      "The track is playing. Tap along at least four times and the game knows exactly where the beats are.",
+      "Le morceau joue. Tape au moins quatre fois en rythme et le jeu saura où sont les temps."
+    ],
+    "mz_tik_tel": [
+      "{0} tikken",
+      "{0} taps",
+      "{0} frappes"
+    ],
+    "mz_tik_nog": [
+      "Nog {0} tikken",
+      "{0} taps to go",
+      "Encore {0} frappes"
+    ],
+    "mz_tik_bewaar": [
+      "Dit tempo bewaren",
+      "Save this tempo",
+      "Garder ce tempo"
+    ],
+    "mz_tik_opnieuw": [
+      "Opnieuw tikken",
+      "Tap again",
+      "Retaper"
+    ],
+    "mz_tempo_klaar": [
+      "Tempo bewaard: {0} BPM",
+      "Tempo saved: {0} BPM",
+      "Tempo enregistré : {0} BPM"
+    ],
+    "mz_tempo_nu": [
+      "Nu: {0} BPM · {1} push-ups per minuut",
+      "Now: {0} BPM · {1} push-ups per minute",
+      "Actuel : {0} BPM · {1} pompes par minute"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

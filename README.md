@@ -291,6 +291,8 @@ Er zijn vijf nummers die steeds sneller gaan, van twintig tot zesendertig herhal
 
 Onder de vijf nummers van het spel staat **Nummer van je toestel**. Daarmee kies je een muziekbestand van je telefoon of computer — je eigen mp3 of m4a — en push je op dát nummer.
 
+Bovenaan de eigen nummers staat **Om mee te beginnen**: vier nummers die met één tik klaarstaan — *Ransom* en *Dark Thoughts* van Lil Tecca, *Feel It* van d4vd en *Illegal* van PinkPantheress. De muziek zelf zit niet in het spel; bij het aantikken wordt het officiële fragment opgehaald met het nummernummer dat erbij staat, dus zonder zoeken en zonder typen. Heb je er een toegevoegd, dan verdwijnt hij uit de rij voorstellen.
+
 Daaronder staat **Zoek een nummer online**: typ een naam of plak een link, en je krijgt het officiële fragment van dertig seconden. Wat er met een link gebeurt hangt af van wie hem uitgeeft, want niet iedereen laat een andere site meekijken:
 
 | Wat je plakt | Wat er gebeurt |
@@ -306,7 +308,9 @@ Vindt hij niets, dan probeert hij het nog een keer met alleen de eerste zes woor
 
 Het spel zoekt het tempo er zelf bij. Het maakt van de eerste minuut een luidheidscurve, houdt alleen over wat harder wordt (dat zijn de klappen) en zoekt met een autocorrelatie welke afstand het vaakst terugkomt. Daarna bepaalt het ook nog de fase — waar de eerste tel valt — zodat de ring precies op de beat inklapt. Op een testnummer van 140 BPM komt hij op 140,6 uit, met de tel elf milliseconden na het begin.
 
-Eén push-up duurt geen tel maar een hele maat: het spel kiest 2, 4, 8 of 16 tellen per herhaling zodat je tussen de achttien en tweeënveertig keer per minuut zakt. Op 140 BPM is dat vier tellen, dus 35 push-ups per minuut. Hoeveel herhalingen een nummer telt volgt uit de lengte, met een dak op veertig. Zit het tempo een octaaf ernaast, dan zet je het met **½** of **2×** goed; met **✕** gooi je een nummer weg.
+Eén push-up duurt geen tel maar een hele maat: het spel kiest 2, 4, 8 of 16 tellen per herhaling zodat je tussen de achttien en tweeënveertig keer per minuut zakt. Op 140 BPM is dat vier tellen, dus 35 push-ups per minuut. Hoeveel herhalingen een nummer telt volgt uit de lengte, met een dak op veertig. Klopt het gevonden tempo niet, dan zet je het zelf goed met de **♩** naast het nummer. Daar speelt het nummer in een lus terwijl jij op een grote knop meetikt: uit je tikken volgt met een rechte-lijn-benadering (*t = fase + k × periode*) zowel het tempo als de fase, dus de tellen liggen precies waar jij ze voelt. Vier tikken is genoeg, meer is nauwkeuriger. **½** en **2×** staan er ook, voor als hij er alleen een octaaf naast zit. Met **✕** gooi je een nummer weg.
+
+Automatisch tempo zoeken werkt goed bij een strakke vierkwartsmaat — op een testtoon van 140 BPM komt hij op 140,6 en op *Never Gonna Give You Up* precies op 113 — maar bij trap en jungle, waar de kick dun is en de hi-hats druk, zit hij er geregeld een halve maat naast. Daar is de tikknop voor.
 
 Terwijl het nummer klaargezet wordt zie je geen draaiend ringetje maar een balk. Die kruipt naar **99 procent** en blijft daar staan: na een halve seconde zit hij op zestig, na twee seconden op zesennegentig, en dat laatste procentje krijg je pas als het werk echt af is. De stand hangt aan de klok en niet aan het aantal tikken, dus een trage telefoon laat hem niet anders lopen. De regel over een trage verbinding komt hier niet in beeld — het bestand staat al op je toestel.
 
