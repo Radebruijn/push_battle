@@ -107,7 +107,7 @@ Op het accountscherm kies je met drie tabbladen welke oefening je bekijkt. Je zi
 
 Zonder account speel je gewoon door; je voortgang staat dan in de browser waarin je speelt. Log je in met de knop rechtsboven, dan gaat alles mee naar elk apparaat waarop je inlogt — je telefoon en je laptop delen dezelfde voortgang.
 
-Op het accountscherm staan al je cijfers bij elkaar: push-ups, kills, uitgespeelde arena's, gewonnen duels, je streak en je level. Daaronder staat **Inventaris** als eigen knop; de trofeeënkast staat daarbinnen, onder je titels, iconen en naamkleuren.
+Op het accountscherm staan al je cijfers bij elkaar: push-ups, kills, uitgespeelde arena's, gewonnen duels, je streak en je level. Meer niet — je inventaris hangt niet aan je account maar aan het menu, achter de rugzak rechtsonder. De trofeeënkast staat daarbinnen, onder je titels, iconen en naamkleuren.
 
 **Sluiten en uitloggen zitten expres niet bij elkaar.** Sluiten is een rond kruisje rechtsboven dat in beeld blijft terwijl je scrolt; uitloggen staat als losse rode knop helemaal onderaan, achter een streep, met niets eromheen — de twee zitten in tegenovergestelde hoeken van het scherm. Eén tik op uitloggen zet er bovendien *Zeker weten? Tik nog een keer*; pas de tweede tik doet het echt, en na vier seconden vervalt dat vanzelf.
 
@@ -177,11 +177,11 @@ De acht rangen: Rekruut (streep), Vuistvechter (strepen), Orbjager (zwaard), Sla
 
 Je begint in het menu. In de bovenbalk staat alles naast elkaar: links het burgermenu (☰), in het midden de drie oefeningen (Push-ups, Sit-ups, Squats) en rechts jijzelf — met je eigen foto als je er een hebt, rond en van rand tot rand, zodat je jouw hoofd rechtsboven ziet staan.
 
-Daaronder hangen twee knoppen aan die twee kanten: **onder het burgermenu het klassement** (🏆) en **onder je foto de instellingen** (⚙). Wat met spelen te maken heeft hangt links, wat met jou te maken heeft rechts.
+De tweede balk is één regel: **de beker links** (het klassement, recht onder het burgermenu), **PUSH BATTLE in het midden** en **het tandwiel rechts** (de instellingen, recht onder je foto). De titel schuift dus precies tussen die twee knoppen in en krimpt mee op smalle schermen. Wat met spelen te maken heeft hangt links, wat met jou te maken heeft rechts.
 
 Dan volgen je rang, level en XP, en daaronder de arena waar je nu in zit met de vijand die op je wacht en hoeveel minions je in deze arena al gevloerd hebt. **Tik op die vijand en je seizoenspad gaat open.** Ligt er iets klaar om op te halen, dan staat er een lintje met een getal naast hem.
 
-Linksonder, vlak boven de strook met wat er komt, staan je **opdrachten** met hoever je vandaag bent.
+Onderaan, vlak boven de strook met wat er komt, staan twee knoppen zo groot als het burgermenu: links het klembord met je **opdrachten**, rechts de rugzak met je **inventaris**. Geen bijschrift en geen 0/3 — alleen een geel getal op het klembord als er iets klaarligt om op te halen.
 
 Onder **Hierna** staat een rij die je opzij kunt scrollen. De eerste drie kaartjes tonen de arena's die na deze komen: hun naam, hun ras en hun icoon, maar op slot. Je kunt er niet naartoe springen — ze gaan alleen open door de boss van de arena ervoor te verslaan. Daarachter loopt de rij door met vijftien vraagtekens, zodat je ziet hoever de weg nog reikt zonder te weten wat je te wachten staat.
 

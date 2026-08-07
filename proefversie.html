@@ -153,8 +153,10 @@
   #menu.uit { display: none; }
   #stage.uit { display: none; }
   #menuAura { position: fixed; inset: 0; pointer-events: none; }
-  .mTitel { font-size: 27px; font-weight: 900; letter-spacing: 5px; text-align: center;
-             margin: 0; }
+  /* De titel staat ingeklemd tussen de beker en het tandwiel; hij krimpt mee
+     zodat er op een smal scherm niets afbreekt. */
+  .mTitel { font-size: min(6.2vw, 25px); font-weight: 900; letter-spacing: min(1.2vw, 4px);
+            text-align: center; margin: 0; flex: 1; min-width: 0; white-space: nowrap; }
   .mRang { font-size: 13px; font-weight: 700; color: #ffc740; text-align: center; margin-top: 3px; }
   .mXp { width: min(72vw, 320px); margin: 9px auto 0; }
   .mXpBar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; }
@@ -180,16 +182,16 @@
 
   .mKop { font-size: 10px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.5);
           padding: 0 20px; margin: 10px 0 8px; }
-  /* Opdrachten staan linksonder, vlak boven de strook met wat er komt. */
-  .mOnder { display: flex; padding: 0 20px; margin-top: 6px; }
-  .mQuest { display: flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 99px;
-            border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);
-            color: rgba(255,255,255,.8); font: inherit; font-size: 12px; font-weight: 800;
-            cursor: pointer; }
-  .mQuest i { font-style: normal; font-size: 10px; font-weight: 900; padding: 2px 7px;
-              border-radius: 99px; background: rgba(255,199,64,.2); color: #ffc740; }
-  .mQuest i.af { background: rgba(74,222,128,.2); color: #4ade80; }
-  .mQuest i:empty { display: none; }
+  /* Onderaan twee knoppen, even groot als het burgermenu: je opdrachten
+     links en je kast rechts. Geen bijschrift — het plaatje zegt het al. */
+  .mOnder { display: flex; justify-content: space-between; padding: 0 12px; margin-top: 6px; }
+  .mRond { position: relative; width: 50px; height: 46px; border-radius: 14px; cursor: pointer;
+           border: 0; background: rgba(255,255,255,.07); color: inherit; font: inherit;
+           font-size: 24px; line-height: 1; }
+  .mRond i { position: absolute; right: -3px; top: -4px; font-style: normal; font-size: 10px;
+             font-weight: 900; min-width: 18px; padding: 2px 5px; border-radius: 99px;
+             background: #ffc740; color: #000; }
+  .mRond i:empty { display: none; }
   .mRij { display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 6px;
           scrollbar-width: none; }
   .mRij::-webkit-scrollbar { display: none; }
@@ -280,17 +282,17 @@
      maken heeft aan het menu. */
   .mBalk { display: flex; align-items: center; gap: 8px; padding: 0 12px 5px; }
   .mBalk .sportKiezer { flex: 1; min-width: 0; padding: 0; }
-  .mBalk2 { display: flex; justify-content: space-between; padding: 0 12px 4px; }
+  .mBalk2 { display: flex; align-items: center; gap: 8px; padding: 0 12px 2px; }
   .hoekKnop { width: 50px; height: 32px; border-radius: 12px; cursor: pointer; font-size: 16px;
               border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05);
               color: rgba(255,255,255,.75); line-height: 1; }
   /* De drie oefeningen bovenaan. Elke knop is een eigen wereld: eigen
      voortgang, eigen klassement, eigen opdrachten. */
   .sportKiezer { display: flex; gap: 6px; padding: 0 12px 10px; }
-  .sportKnop { flex: 1; padding: 9px 0; border-radius: 12px; cursor: pointer;
+  .sportKnop { flex: 1; min-width: 0; padding: 9px 2px; border-radius: 12px; cursor: pointer;
                border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05);
-               color: rgba(255,255,255,.55); font: inherit; font-size: 12px;
-               font-weight: 800; letter-spacing: 1px; }
+               color: rgba(255,255,255,.55); font: inherit; font-size: clamp(10px, 3vw, 12px);
+               font-weight: 800; letter-spacing: .5px; white-space: nowrap; }
   .sportKnop.aan { background: rgba(255,199,64,.16); border-color: rgba(255,199,64,.5);
                    color: #ffc740; }
   #burger, #accountKnop {
@@ -909,9 +911,9 @@
     </div>
     <div class="mBalk2">
       <button class="hoekKnop" id="klassementKnop" aria-label="klassement">🏆</button>
+      <h1 class="mTitel">PUSH BATTLE</h1>
       <button class="hoekKnop" id="tandwiel" aria-label="instellingen">⚙</button>
     </div>
-    <h1 class="mTitel">PUSH BATTLE</h1>
     <div class="mRang" id="mRang"></div>
     <div class="mXp">
       <div class="mXpBar"><div class="mXpVul" id="mXpVul"></div></div>
@@ -929,7 +931,8 @@
     </div>
 
     <div class="mOnder">
-      <button class="mQuest" id="questKnop">📜 <span id="extraQuests"></span><i id="questBadge"></i></button>
+      <button class="mRond" id="questKnop" aria-label="opdrachten">📋<i id="questBadge"></i></button>
+      <button class="mRond" id="invOpen" aria-label="inventaris">🎒</button>
     </div>
     <div class="mKop">HIERNA</div>
     <div class="mRij" id="mRij"></div>
@@ -1208,7 +1211,6 @@
   <div class="instelLabel accSportKop" id="accSportKop"></div>
   <div class="sportKiezer accSportRij" id="accSportRij"></div>
   <div class="accCijfers" id="accCijfers"></div>
-  <button class="accKnopBreed" id="invOpen"></button>
 
   <div id="accFormulier">
     <input type="email" id="accEmail" autocomplete="email" inputmode="email">
@@ -2938,12 +2940,12 @@ function toonModi() {
 /// De knoppen om het speelveld heen: opdrachten linksonder en het lintje op
 /// je tegenstander. Allebei laten ze alleen zien hoeveel er klaarligt.
 function menuKnoppenBij() {
-  $('extraQuests').textContent = t('quests_titel');
-  const q = questStaat(), dag = dagQuests();
-  const af = dag.filter(x => q.dagKlaar.includes(x.id)).length;
+  $('questKnop').title = t('quests_titel');
+  $('invOpen').title = t('inv_titel');
+  // Alleen een getal als er iets op te halen valt; hoever je vandaag bent
+  // lees je in het scherm zelf.
   const teHalen = questTeHalen();
-  $('questBadge').textContent = teHalen ? teHalen : af + '/' + dag.length;
-  $('questBadge').classList.toggle('af', teHalen > 0);
+  $('questBadge').textContent = teHalen || '';
   const padOp = bpTeHalen();
   $('mPadTip').hidden = !padOp;
   $('mPadTipTal').textContent = padOp;
@@ -3390,8 +3392,6 @@ function renderAccount() {
     [w.totalXP || 0, 'XP'],
   ].map(([g, l]) => `<div class="accCijfer"><b>${g}</b><span>${l}</span></div>`).join('');
 
-  $('invOpen').textContent = t('inv_titel');
-
   tekenFoto();
   $('naamLabel').textContent = t('name_label').toUpperCase();
   $('naamVeld').placeholder = t('name_hint');
@@ -3430,6 +3430,7 @@ $('invDicht').addEventListener('click', e => {
 $('invOpen').addEventListener('click', e => {
   e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
 });
+
 $('mIcoon').addEventListener('click', e => { e.stopPropagation(); toonPad(); });
 $('padDicht').addEventListener('click', e => {
   e.stopPropagation(); $('pad').classList.remove('aan');
