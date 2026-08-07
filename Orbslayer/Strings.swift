@@ -526,6 +526,20 @@ enum Tk: String {
     case pad_klein_label
     case pad_nog_vijand_1
     case les11
+    case mz_kop_spel
+    case mz_kop_eigen
+    case mz_toevoegen
+    case mz_eigen_uit
+    case mz_eigen_info
+    case mz_zoeken
+    case mz_eigen_fout
+    case mz_eigen_weg
+    case mz_eigen_erbij
+    case mz_niet_mee
+    case mz_halveer
+    case mz_verdubbel
+    case mz_verwijder
+    case mz_uitpakken
 }
 
 enum Strings {
@@ -990,7 +1004,7 @@ enum Strings {
         "mz_uit_score": ["{0}% op de maat", "{0}% on the beat", "{0} % en rythme"],
         "mz_gehaald": ["Gehaald!", "Cleared!", "Réussi !"],
         "mz_nietgehaald": ["Net niet. Zeventig procent is genoeg.", "Just short. Seventy percent is enough.", "Presque. Soixante-dix pour cent suffisent."],
-        "mz_uitleg": ["De ring krimpt op de maat. Kom omlaag als hij het kleinst is.", "The ring shrinks to the beat. Go down when it is smallest.", "L'anneau se resserre au rythme. Descends quand il est au plus petit."],
+        "mz_uitleg": ["Push-ups op de maat. Kies een nummer van het spel of zet er een van jezelf bij.", "Push-ups on the beat. Pick a track from the game or add one of your own.", "Des pompes en rythme. Choisis un morceau du jeu ou ajoute le tien."],
         "mz_liedjes": ["nummers uit", "tracks cleared", "morceaux réussis"],
         "mz_lied1": ["Warmlopen", "Warm-up", "Échauffement"],
         "mz_lied2": ["Vaste Tred", "Steady", "Cadence"],
@@ -1032,6 +1046,20 @@ enum Strings {
         "pad_klein_label": ["Beloning {0}", "Reward {0}", "Récompense {0}"],
         "pad_nog_vijand_1": ["Nog 1 vijand", "1 enemy to go", "Encore 1 ennemi"],
         "les11": ["Tik op je tegenstander voor je seizoenspad. Elke arena geeft daar drie kleine beloningen en een iets grotere voor de boss. Dat is alles — trainen maar!", "Tap your opponent for your season pass. Every arena gives three small rewards there, and a slightly bigger one for the boss. That is all — go train!", "Touche ton adversaire pour ta passe de saison. Chaque arène y donne trois petites récompenses et une un peu plus grande pour le boss. C’est tout — à l’entraînement !"],
+        "mz_kop_spel": ["Van het spel", "From the game", "Du jeu"],
+        "mz_kop_eigen": ["Je eigen nummers", "Your own tracks", "Tes propres morceaux"],
+        "mz_toevoegen": ["Nummer van je toestel", "Track from your device", "Morceau de ton appareil"],
+        "mz_eigen_uit": ["Kies een muziekbestand van je telefoon of computer. Het spel zoekt zelf het tempo en maakt er push-ups van. Je muziek blijft op je toestel — er gaat niets naar een server.", "Pick a music file from your phone or computer. The game finds the tempo itself and turns it into push-ups. Your music stays on your device — nothing goes to a server.", "Choisis un fichier musical sur ton téléphone ou ton ordinateur. Le jeu trouve le tempo lui-même et en fait des pompes. Ta musique reste sur ton appareil — rien ne part vers un serveur."],
+        "mz_eigen_info": ["{0} BPM · {1} push-ups", "{0} BPM · {1} push-ups", "{0} BPM · {1} pompes"],
+        "mz_zoeken": ["Tempo zoeken…", "Finding the tempo…", "Recherche du tempo…"],
+        "mz_eigen_fout": ["Dit bestand kon niet worden afgespeeld.", "This file could not be played.", "Ce fichier n’a pas pu être lu."],
+        "mz_eigen_weg": ["Nummer verwijderd.", "Track removed.", "Morceau supprimé."],
+        "mz_eigen_erbij": ["{0} staat erbij.", "{0} has been added.", "{0} a été ajouté."],
+        "mz_niet_mee": ["Eigen nummers tellen niet mee voor het klassement.", "Your own tracks do not count for the leaderboard.", "Tes propres morceaux ne comptent pas pour le classement."],
+        "mz_halveer": ["Half tempo", "Half tempo", "Demi-tempo"],
+        "mz_verdubbel": ["Dubbel tempo", "Double tempo", "Double tempo"],
+        "mz_verwijder": ["Verwijderen", "Remove", "Supprimer"],
+        "mz_uitpakken": ["Nummer klaarzetten…", "Getting the track ready…", "Préparation du morceau…"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

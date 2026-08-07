@@ -287,6 +287,18 @@ Er zijn vijf nummers die steeds sneller gaan, van twintig tot zesendertig herhal
 
 **Er speelt echte muziek onder.** Elk nummer heeft een eigen wijs: een basloop, een melodie van vier maten en een klapje op de tussenmaat, allemaal opgebouwd in de browser — er staat geen enkel geluidsbestand in het spel. Eén herhaling is één maat, en die maat valt uiteen in acht stapjes, dus op zesendertig maten per minuut hoor je gewoon een nummer op tempo. De maat wordt telkens een hele maat vooruit ingepland, zodat een haperend beeldje het ritme niet scheeftrekt. De menumuziek zwijgt zolang je speelt.
 
+## Je eigen muziek
+
+Onder de vijf nummers van het spel staat **Nummer van je toestel**. Daarmee kies je een muziekbestand van je telefoon of computer — je eigen mp3 of m4a — en push je op dát nummer.
+
+Het spel zoekt het tempo er zelf bij. Het maakt van de eerste minuut een luidheidscurve, houdt alleen over wat harder wordt (dat zijn de klappen) en zoekt met een autocorrelatie welke afstand het vaakst terugkomt. Daarna bepaalt het ook nog de fase — waar de eerste tel valt — zodat de ring precies op de beat inklapt. Op een testnummer van 140 BPM komt hij op 140,6 uit, met de tel elf milliseconden na het begin.
+
+Eén push-up duurt geen tel maar een hele maat: het spel kiest 2, 4, 8 of 16 tellen per herhaling zodat je tussen de achttien en tweeënveertig keer per minuut zakt. Op 140 BPM is dat vier tellen, dus 35 push-ups per minuut. Hoeveel herhalingen een nummer telt volgt uit de lengte, met een dak op veertig. Zit het tempo een octaaf ernaast, dan zet je het met **½** of **2×** goed; met **✕** gooi je een nummer weg.
+
+Twee dingen met opzet: je muziek **blijft op je toestel** — het bestand gaat in de IndexedDB van je browser en er is geen upload, geen server, geen account nodig. En je eigen nummers **tellen niet mee voor het klassement**, want anders zet je er tien makkelijke bij en sta je bovenaan. XP en push-ups krijg je wel, alsof je het derde nummer van het spel speelde.
+
+De maat blijft aan de muziek vastzitten: elke tik wordt opnieuw uit de audioklok berekend in plaats van opgeteld, dus na een halve minuut loopt er niets weg (gemeten: hooguit een paar honderdsten, en dat is de polling zelf).
+
 ## De wereldboss
 
 Eén monster per oefening waar iedereen tegelijk op slaat. Je ziet de balk zakken door andermans herhalingen, hoeveel vechters er meedoen en hoeveel schade jij zelf hebt gedaan.

@@ -497,6 +497,21 @@
   .mzRij b { display: block; font-size: 16px; font-weight: 900; }
   .mzRij small { display: block; font-size: 11px; color: rgba(255,255,255,.45); margin-top: 3px; }
   .mzRij .mzBest { flex: none; font-size: 12px; font-weight: 800; color: #ffc740; }
+  /* Je eigen nummers: dezelfde rij, maar met knopjes om het tempo te
+     verzetten en het nummer weg te gooien. */
+  .mzKop { font-size: 10px; font-weight: 900; letter-spacing: 2px; margin: 18px 2px 8px;
+           color: rgba(255,255,255,.4); text-transform: uppercase; }
+  .mzEigenRij { gap: 6px; }
+  .mzSpeel { flex: 1; min-width: 0; text-align: left; background: none; border: 0;
+             color: inherit; font: inherit; cursor: pointer; padding: 0; }
+  .mzKlein { flex: none; width: 34px; height: 34px; border-radius: 10px; cursor: pointer;
+             border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05);
+             color: rgba(255,255,255,.7); font: inherit; font-size: 12px; font-weight: 800; }
+  .mzKlein.weg { border-color: rgba(242,38,58,.35); color: #f2263a; }
+  .mzErbij { border-style: dashed; }
+  .mzPlus { flex: none; font-size: 22px; color: #ffc740; }
+  .mzEigenUit { font-size: 12px; color: rgba(255,255,255,.4); line-height: 1.5;
+                margin: 12px 2px 0; }
   #mz { position: fixed; inset: 0; z-index: 12; background: #08080a; display: none;
         flex-direction: column; align-items: center; padding: 22px 16px 118px; }
   #mz.aan { display: flex; }
@@ -1120,6 +1135,7 @@
 <div id="mzKies">
   <button class="sluitKruis" id="mzKiesDicht" aria-label="sluiten">✕</button>
   <h2 id="mzKiesKop"></h2>
+  <input type="file" id="mzBestand" accept="audio/*" hidden>
   <div id="mzLijst"></div>
   <div class="padUitleg" id="mzKiesUitleg"></div>
 </div>
@@ -5542,12 +5558,180 @@ function liedMaat(lied, maat) {
 const MZ_HALEN = 70;   // procent op de maat dat een nummer uitspeelt
 
 let mzLied = null, mzFase = 'uit', mzTik = 0, mzTellerLus = null;
+let mzBron = null, mzAudioStart = 0;
+
+/// Zet een eigen nummer stil, waar je ook stopt.
+function mzStil() {
+  if (!mzBron) return;
+  try { mzBron.stop(); } catch (e) {}
+  mzBron.disconnect();
+  mzBron = null;
+}
 let mzGedaan = 0, mzPunten = 0, mzRaak = 0, mzVolgende = 0;
 
 function muziekStaat() {
   if (!P.muziek || typeof P.muziek !== 'object') P.muziek = { liedjes: 0, beste: {} };
   P.muziek.beste = P.muziek.beste || {};
   return P.muziek;
+}
+
+/* ---------------------------------------------------------------
+   Je eigen muziek. Het spel kent maar vijf gemaakte deuntjes; wil je op je
+   eigen nummer pushen, dan kies je een bestand van je toestel. Dat bestand
+   blijft in de browser (IndexedDB) en gaat nergens heen — er is geen upload
+   en geen server in de buurt.
+
+   Het tempo zoekt het spel er zelf bij: het maakt een luidheidscurve van de
+   eerste minuut, kijkt waar de klappen zitten en zoekt met een autocorrelatie
+   welke afstand het vaakst terugkomt. Daarna bepaalt het nog de fase — waar
+   de eerste tel valt — zodat de ring precies op de beat inklapt. Zit hij een
+   octaaf ernaast, dan zet je hem met ½ of 2× goed.
+---------------------------------------------------------------- */
+let mzDb = null, eigenNummers = [], eigenBuffers = {};
+
+function mzOpen() {
+  if (mzDb) return Promise.resolve(mzDb);
+  return new Promise((klaar, fout) => {
+    const v = indexedDB.open('orbslayer-muziek', 1);
+    v.onupgradeneeded = () => {
+      if (!v.result.objectStoreNames.contains('nummers'))
+        v.result.createObjectStore('nummers', { keyPath: 'id', autoIncrement: true });
+    };
+    v.onsuccess = () => { mzDb = v.result; klaar(mzDb); };
+    v.onerror = () => fout(v.error);
+  });
+}
+
+function mzWinkel(schrijven) {
+  return mzOpen().then(db =>
+    db.transaction('nummers', schrijven ? 'readwrite' : 'readonly').objectStore('nummers'));
+}
+
+const mzVraag = verzoek => new Promise((klaar, fout) => {
+  verzoek.onsuccess = () => klaar(verzoek.result);
+  verzoek.onerror = () => fout(verzoek.error);
+});
+
+async function eigenLaden() {
+  try {
+    const winkel = await mzWinkel(false);
+    eigenNummers = (await mzVraag(winkel.getAll())) || [];
+  } catch (e) { eigenNummers = []; }
+}
+
+async function eigenBewaren(nummer) {
+  const winkel = await mzWinkel(true);
+  const id = await mzVraag(winkel.add(nummer));
+  return { ...nummer, id };
+}
+
+async function eigenBijwerken(nummer) {
+  const winkel = await mzWinkel(true);
+  await mzVraag(winkel.put(nummer));
+}
+
+async function eigenWeg(id) {
+  const winkel = await mzWinkel(true);
+  await mzVraag(winkel.delete(id));
+  eigenNummers = eigenNummers.filter(n => n.id !== id);
+  delete eigenBuffers[id];
+}
+
+/// Luidheidscurve → onsets → autocorrelatie. Geeft tempo en fase in seconden.
+function vindTempo(buffer) {
+  const hop = 512;
+  const fps = buffer.sampleRate / hop;
+  const eind = Math.min(buffer.length, Math.floor(buffer.sampleRate * 60));
+  const kanaal = buffer.getChannelData(0);
+  const kanaal2 = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : null;
+  const n = Math.floor(eind / hop);
+  const kracht = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    let som = 0;
+    for (let j = 0; j < hop; j++) {
+      const k = i * hop + j;
+      const v = kanaal2 ? (kanaal[k] + kanaal2[k]) / 2 : kanaal[k];
+      som += v * v;
+    }
+    kracht[i] = Math.sqrt(som / hop);
+  }
+  // Alleen het harder worden telt: dat zijn de klappen.
+  const onset = new Float32Array(n);
+  let gem = 0;
+  for (let i = 1; i < n; i++) { onset[i] = Math.max(0, kracht[i] - kracht[i - 1]); gem += onset[i]; }
+  gem /= Math.max(1, n - 1);
+  for (let i = 0; i < n; i++) onset[i] = Math.max(0, onset[i] - gem);
+
+  const lagMin = Math.floor(fps * 60 / 190), lagMax = Math.ceil(fps * 60 / 60);
+  let besteLag = 0, besteScore = -1;
+  for (let lag = lagMin; lag <= lagMax && lag < n; lag++) {
+    let score = 0;
+    for (let i = 0; i + lag < n; i++) score += onset[i] * onset[i + lag];
+    score /= (n - lag);
+    if (score > besteScore) { besteScore = score; besteLag = lag; }
+  }
+  if (!besteLag) return { bpm: 120, fase: 0 };
+  let bpm = 60 * fps / besteLag;
+  while (bpm < 80) bpm *= 2;
+  while (bpm > 180) bpm /= 2;
+  // Fase: welke startpositie vangt de meeste klappen?
+  const lag = Math.round(60 * fps / bpm);
+  let besteFase = 0, faseScore = -1;
+  for (let f = 0; f < lag; f++) {
+    let score = 0;
+    for (let i = f; i < n; i += lag) score += onset[i];
+    if (score > faseScore) { faseScore = score; besteFase = f; }
+  }
+  return { bpm: Math.round(bpm * 10) / 10, fase: besteFase / fps };
+}
+
+/// Hoeveel tellen er in één push-up gaan, zodat je tussen de 18 en 42 keer
+/// per minuut zakt. Op 140 BPM is dat een hele maat.
+function mzTellenPerRep(bpm) {
+  for (const tellen of [2, 4, 8, 16]) if (bpm / tellen <= 42) return tellen;
+  return 16;
+}
+
+/// Van een opgeslagen nummer een speelbaar 'lied' maken.
+function eigenLied(nummer) {
+  const tellen = mzTellenPerRep(nummer.bpm);
+  const periode = tellen * 60 / nummer.bpm;
+  const reps = Math.max(10, Math.min(40, Math.floor((nummer.duur - nummer.fase) / periode)));
+  return { id: 'e' + nummer.id, eigen: nummer, naam: nummer.naam,
+           tempo: 60 / periode, periode, reps };
+}
+
+async function eigenBuffer(nummer) {
+  if (eigenBuffers[nummer.id]) return eigenBuffers[nummer.id];
+  const ac = audioAan();
+  const data = await nummer.blob.arrayBuffer();
+  const buf = await ac.decodeAudioData(data);
+  eigenBuffers[nummer.id] = buf;
+  return buf;
+}
+
+/// Een gekozen bestand toevoegen: inlezen, tempo zoeken, bewaren.
+async function eigenToevoegen(bestand) {
+  if (!bestand) return;
+  bezig(t('mz_zoeken'));
+  try {
+    const ac = audioAan();
+    const data = await bestand.arrayBuffer();
+    const buffer = await ac.decodeAudioData(data.slice(0));
+    const { bpm, fase } = vindTempo(buffer);
+    const naam = bestand.name.replace(/\.[a-z0-9]+$/i, '').slice(0, 40) || 'Nummer';
+    const nummer = await eigenBewaren({
+      naam, blob: bestand, bpm, fase, duur: buffer.duration,
+    });
+    eigenNummers.push(nummer);
+    eigenBuffers[nummer.id] = buffer;
+    klaar();
+    melding(t('mz_eigen_erbij', naam), 3500);
+    tekenMuziekKeuze();
+  } catch (e) {
+    klaar();
+    melding(t('mz_eigen_fout'), 4000);
+  }
 }
 
 function toonMuziek() {
@@ -5557,33 +5741,96 @@ function toonMuziek() {
   $('mzKies').classList.add('aan');
   startCameraIndienNodig();
   tekenMuziekKeuze();
+  eigenLaden().then(tekenMuziekKeuze);
 }
 
 function tekenMuziekKeuze() {
   const mz = muziekStaat();
   $('mzKiesKop').textContent = t('mode_muziek').toUpperCase();
-  $('mzKiesUitleg').textContent = t('mz_uitleg');
+  $('mzKiesUitleg').textContent = '';   // de uitleg staat bij de knop zelf
   $('mzLijst').innerHTML = '';
+  const kop = tekst => {
+    const el = document.createElement('div');
+    el.className = 'mzKop';
+    el.textContent = tekst;
+    $('mzLijst').appendChild(el);
+  };
+  const beste = id => mz.beste[id] || 0;
+
+  kop(t('mz_kop_spel'));
   LIEDJES.forEach(lied => {
-    const beste = mz.beste[lied.id] || 0;
     const knop = document.createElement('button');
     knop.className = 'mzRij';
     knop.innerHTML = `<span style="flex:1;min-width:0"><b>${ontsmet(t('mz_lied' + lied.id))}</b>` +
       `<small>${ontsmet(t('mz_tempo', lied.tempo, lied.reps))}</small></span>` +
-      `<span class="mzBest">${beste ? ontsmet(t('mz_beste', beste)) : ontsmet(t('mz_nooit'))}</span>`;
+      `<span class="mzBest">${beste(lied.id) ? ontsmet(t('mz_beste', beste(lied.id))) : ontsmet(t('mz_nooit'))}</span>`;
     knop.onclick = e => { e.stopPropagation(); startLied(lied); };
     $('mzLijst').appendChild(knop);
   });
+
+  kop(t('mz_kop_eigen'));
+  eigenNummers.forEach(nummer => {
+    const lied = eigenLied(nummer);
+    const rij = document.createElement('div');
+    rij.className = 'mzRij mzEigenRij';
+    rij.innerHTML =
+      `<button class="mzSpeel"><b>${ontsmet(nummer.naam)}</b>` +
+      `<small>${ontsmet(t('mz_eigen_info', Math.round(nummer.bpm), lied.reps))}</small></button>` +
+      `<span class="mzBest">${beste(lied.id) ? ontsmet(t('mz_beste', beste(lied.id))) : ''}</span>` +
+      `<button class="mzKlein" data-doe="half" title="${ontsmet(t('mz_halveer'))}">½</button>` +
+      `<button class="mzKlein" data-doe="dubbel" title="${ontsmet(t('mz_verdubbel'))}">2×</button>` +
+      `<button class="mzKlein weg" data-doe="weg" title="${ontsmet(t('mz_verwijder'))}">✕</button>`;
+    rij.querySelector('.mzSpeel').onclick = e => { e.stopPropagation(); startLied(eigenLied(nummer)); };
+    rij.querySelectorAll('.mzKlein').forEach(k => {
+      k.onclick = async e => {
+        e.stopPropagation();
+        if (k.dataset.doe === 'weg') {
+          await eigenWeg(nummer.id);
+          melding(t('mz_eigen_weg'), 2500);
+        } else {
+          nummer.bpm = k.dataset.doe === 'half' ? nummer.bpm / 2 : nummer.bpm * 2;
+          if (nummer.bpm < 40 || nummer.bpm > 320) {
+            nummer.bpm = k.dataset.doe === 'half' ? nummer.bpm * 2 : nummer.bpm / 2;
+            return;
+          }
+          await eigenBijwerken(nummer);
+        }
+        tekenMuziekKeuze();
+      };
+    });
+    $('mzLijst').appendChild(rij);
+  });
+
+  const erbij = document.createElement('button');
+  erbij.className = 'mzRij mzErbij';
+  erbij.innerHTML = `<span class="mzPlus">＋</span><span style="flex:1;min-width:0">` +
+    `<b>${ontsmet(t('mz_toevoegen'))}</b><small>${ontsmet(t('mz_niet_mee'))}</small></span>`;
+  erbij.onclick = e => { e.stopPropagation(); $('mzBestand').click(); };
+  $('mzLijst').appendChild(erbij);
+
+  const uitleg = document.createElement('div');
+  uitleg.className = 'mzEigenUit';
+  uitleg.textContent = t('mz_eigen_uit');
+  $('mzLijst').appendChild(uitleg);
 }
 
-function startLied(lied) {
+async function startLied(lied) {
+  // Een eigen nummer moet eerst uitgepakt zijn, anders begint de klok voor
+  // de muziek er is.
+  let buffer = null;
+  if (lied.eigen) {
+    bezig(t('mz_uitpakken'));
+    try { buffer = await eigenBuffer(lied.eigen); }
+    catch (e) { klaar(); melding(t('mz_eigen_fout'), 4000); return; }
+    klaar();
+  }
   mzLied = lied;
   mzGedaan = 0; mzPunten = 0; mzRaak = 0;
   $('mzKies').classList.remove('aan');
   $('mz').classList.add('aan');
   $('mzBalkVak').appendChild($('nosebar'));
   camBalkBijwerken();
-  $('mzNaam').textContent = t('mz_lied' + lied.id);
+  $('mzNaam').textContent = lied.eigen ? lied.naam : t('mz_lied' + lied.id);
   $('mzStop').textContent = t('duel_to_menu');
   $('mzTeller').textContent = t('mz_klaarmaken');
   $('mzScore').textContent = '';
@@ -5592,10 +5839,24 @@ function startLied(lied) {
   setTimeout(() => {
     if (mzFase !== 'aftellen') return;
     mzFase = 'bezig';
-    mzVolgende = Date.now() + 60000 / lied.tempo;
     mzTik = 0;
     clearInterval(muziekLus); muziekLus = null;   // de menumuziek zwijgt nu even
-    liedMaat(lied, 0);
+    if (lied.eigen) {
+      // Het nummer zelf is de maat: de tellen liggen op fase + k × periode,
+      // en die rekenen we elke tik opnieuw uit zodat er niets wegloopt.
+      const ac = audioAan();
+      mzBron = ac.createBufferSource();
+      mzBron.buffer = buffer;
+      const knop = ac.createGain();
+      knop.gain.value = Math.max(0.25, volMuziek / 100);
+      mzBron.connect(knop).connect(ac.destination);
+      mzBron.start(ac.currentTime + 0.06);
+      mzAudioStart = Date.now() + 60;
+      mzVolgende = mzAudioStart + (lied.eigen.fase + lied.periode) * 1000;
+    } else {
+      mzVolgende = Date.now() + 60000 / lied.tempo;
+      liedMaat(lied, 0);
+    }
     clearInterval(mzTellerLus);
     mzTellerLus = setInterval(mzLoop, 40);
   }, 2000);
@@ -5607,9 +5868,14 @@ function mzLoop() {
   const stap = 60000 / mzLied.tempo;
   const over = mzVolgende - Date.now();
   if (over <= 0) {
-    mzVolgende += stap;
     mzTik++;
-    liedMaat(mzLied, mzTik);
+    if (mzLied.eigen) {
+      mzVolgende = mzAudioStart + (mzLied.eigen.fase + (mzTik + 1) * mzLied.periode) * 1000;
+      toon(660, 0.04, 'square', 0.25);
+    } else {
+      mzVolgende += stap;
+      liedMaat(mzLied, mzTik);
+    }
     // Een tik zonder herhaling telt als gemist.
     if (mzTik > mzGedaan + 1) { mzGedaan++; mzOordeel('mz_mis', '#f2263a'); mzBijwerken(); }
     if (mzGedaan >= mzLied.reps) { eindeLied(); return; }
@@ -5654,6 +5920,7 @@ function muziekRep() {
 function eindeLied() {
   clearInterval(mzTellerLus); mzTellerLus = null;
   mzFase = 'klaar';
+  mzStil();
   muziekBij();
   const pct = mzGedaan ? Math.round(mzRaak / mzGedaan * 100) : 0;
   const gehaald = pct >= MZ_HALEN;
@@ -5663,7 +5930,10 @@ function eindeLied() {
   if (pct > eerder) mz.beste[mzLied.id] = pct;
   mz.liedjes = LIEDJES.filter(l => (mz.beste[l.id] || 0) >= MZ_HALEN).length;
 
-  const xp = Math.round((30 + mzLied.id * 25) * (gehaald ? 1 : 0.3) * xpMaal());
+  // Eigen nummers tellen als een middelmatig nummer en niet voor het
+  // klassement: anders zet je er tien makkelijke bij en sta je bovenaan.
+  const rang = mzLied.eigen ? 3 : mzLied.id;
+  const xp = Math.round((30 + rang * 25) * (gehaald ? 1 : 0.3) * xpMaal());
   P.totalXP += xp;
   bpNakijken();
   if (gehaald) tikStreak();
@@ -5682,6 +5952,7 @@ function eindeLied() {
 
 function verlaatMuziek() {
   clearInterval(mzTellerLus); mzTellerLus = null;
+  mzStil();
   mzFase = 'uit'; mzLied = null;
   $('mzUit').classList.remove('aan');
   $('mz').classList.remove('aan');
@@ -5695,6 +5966,10 @@ function verlaatMuziek() {
 $('padAlles').addEventListener('click', e => { e.stopPropagation(); bpAllesOphalen(); });
 $('modeMuziek').addEventListener('click', e => { e.stopPropagation(); toonMuziek(); });
 $('mzKiesDicht').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
+$('mzBestand').addEventListener('change', e => {
+  eigenToevoegen(e.target.files && e.target.files[0]);
+  e.target.value = '';
+});
 $('mzStop').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
 $('mzNaarMenu').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
 $('mzNogmaals').addEventListener('click', e => {
