@@ -622,9 +622,9 @@
       "{0}% de ton amplitude"
     ],
     "depth_hint": [
-      "Hoe ver je moet zakken voordat een push-up telt. Hoger is strenger.",
-      "How far you must lower before a push-up counts. Higher is stricter.",
-      "Jusqu'où tu dois descendre pour qu'une pompe compte. Plus haut, plus strict."
+      "Hoger is strenger: je moet dieper zakken.",
+      "Higher is stricter: you drop deeper.",
+      "Plus haut, plus strict : tu descends plus bas."
     ],
     "calibrate_now": [
       "Kalibreren",
@@ -1782,14 +1782,14 @@
       "coupé"
     ],
     "geluid_uitleg": [
-      "De tonen bij elke push-up en de klikjes in de menu's.",
-      "The tone on every push-up and the clicks in the menus.",
-      "Le son de chaque pompe et les clics dans les menus."
+      "Tonen bij elke push-up en klikjes.",
+      "Tones on every push-up, and clicks.",
+      "Sons à chaque pompe et clics."
     ],
     "muziek_uitleg": [
-      "Een rustige lus op de achtergrond.",
-      "A calm loop in the background.",
-      "Une boucle tranquille en fond."
+      "Achtergrondmuziek in de menu’s.",
+      "Background music in the menus.",
+      "Musique de fond dans les menus."
     ],
     "menu_meer": [
       "Meer",
@@ -1832,9 +1832,9 @@
       "Le clicker : chaque vraie pompe est une pièce. Achète des aides, de la technique et des caisses."
     ],
     "les9": [
-      "En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Dat is alles — trainen maar!",
-      "And these are your quests: three a day and two a week, with XP and push-ups as rewards. That's everything — get training!",
-      "Et voici tes missions : trois par jour et deux par semaine, avec XP et pompes en récompense. C'est tout — à toi de jouer !"
+      "En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Je haalt ze zelf op.",
+      "And these are your quests: three a day and two a week, paying XP and push-ups. You claim them yourself.",
+      "Et voici tes missions : trois par jour et deux par semaine, en XP et en pompes. À toi de les récupérer."
     ],
     "trofee_nog": [
       "nog niet",
@@ -1912,9 +1912,9 @@
       "Calibrer pour {0}"
     ],
     "cal_nodig": [
-      "Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.",
-      "This exercise has not been calibrated yet. Do it once and it will remember.",
-      "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."
+      "Nog niet geijkt voor deze oefening.",
+      "Not calibrated for this exercise yet.",
+      "Pas encore calibré pour cet exercice."
     ],
     "krat_icoon_uit": [
       "Een monsterkop om naast je naam te dragen.",
@@ -2132,14 +2132,14 @@
       "Calibré pendant que tu bougeais — rien à régler."
     ],
     "houd_uitleg": [
-      "De camera kijkt globaal mee of je in de goede houding zit. Hij is er niet om te muggenziften.",
-      "The camera keeps a rough eye on your position. It is not there to nitpick.",
-      "La caméra surveille grossièrement ta position. Elle n'est pas là pour chipoter."
+      "Zet uit als de camera je niet goed ziet.",
+      "Turn off if the camera cannot see you well.",
+      "Désactive si la caméra te voit mal."
     ],
     "houd_label": [
-      "Meekijken met je houding",
-      "Watch my position",
-      "Vérifier ma position"
+      "Houdingscontrole",
+      "Posture check",
+      "Contrôle de posture"
     ],
     "houd_aan": [
       "Aan",
@@ -2182,14 +2182,14 @@
       "Palier {0}"
     ],
     "bp_voortgang": [
-      "{0} van {1} XP",
-      "{0} of {1} XP",
-      "{0} sur {1} XP"
+      "Arena {0} · {1} van 10 verslagen",
+      "Arena {0} · {1} of 10 beaten",
+      "Arène {0} · {1} sur 10 vaincus"
     ],
     "bp_klaar": [
-      "Je hebt het hele pad uitgelopen en alles opgehaald.",
-      "You walked the whole pass and claimed everything.",
-      "Tu as parcouru toute la passe et tout récupéré."
+      "Alles opgehaald. Vecht door voor de volgende arena.",
+      "All claimed. Fight on for the next arena.",
+      "Tout récupéré. Continue vers l’arène suivante."
     ],
     "bp_nog": [
       "Nog {0} XP tot de volgende trede.",
@@ -2197,9 +2197,9 @@
       "Encore {0} XP jusqu'au palier suivant."
     ],
     "bp_gehaald": [
-      "Trede {0} klaar om op te halen: {1}",
-      "Tier {0} ready to claim: {1}",
-      "Palier {0} à récupérer : {1}"
+      "Klaar om op te halen: {0}",
+      "Ready to claim: {0}",
+      "À récupérer : {0}"
     ],
     "bp_loon_punten": [
       "{0} push-ups",
@@ -2217,9 +2217,9 @@
       "{0}"
     ],
     "bp_uitleg": [
-      "Elke tweeduizend XP is een trede. Schuif opzij om te zien wat er komt, en haal zelf op wat je verdiend hebt.",
-      "Every two thousand XP is a tier. Swipe sideways to see what is coming, and claim what you have earned.",
-      "Chaque deux mille XP est un palier. Fais défiler pour voir la suite, et récupère toi-même ce que tu as gagné."
+      "Elke arena geeft drie kleine beloningen en een iets grotere voor de boss. Je haalt ze zelf op.",
+      "Every arena gives three small rewards and a slightly bigger one for the boss. You claim them yourself.",
+      "Chaque arène donne trois petites récompenses et une un peu plus grande pour le boss. À toi de les récupérer."
     ],
     "bp_slot": [
       "Nog niet",
@@ -2475,6 +2475,41 @@
       "Doe {0} schade aan de wereldboss",
       "Deal {0} damage to the world boss",
       "Inflige {0} dégâts au boss mondial"
+    ],
+    "pad_nog_vijand": [
+      "Nog {0} vijanden",
+      "{0} enemies to go",
+      "Encore {0} ennemis"
+    ],
+    "pad_nog_boss": [
+      "Versla de boss",
+      "Beat the boss",
+      "Bats le boss"
+    ],
+    "pad_nog_arena": [
+      "Nog niet hier",
+      "Not here yet",
+      "Pas encore ici"
+    ],
+    "pad_boss_label": [
+      "Boss",
+      "Boss",
+      "Boss"
+    ],
+    "pad_klein_label": [
+      "Beloning {0}",
+      "Reward {0}",
+      "Récompense {0}"
+    ],
+    "pad_nog_vijand_1": [
+      "Nog 1 vijand",
+      "1 enemy to go",
+      "Encore 1 ennemi"
+    ],
+    "les11": [
+      "Tik op je tegenstander voor je seizoenspad. Elke arena geeft daar drie kleine beloningen en een iets grotere voor de boss. Dat is alles — trainen maar!",
+      "Tap your opponent for your season pass. Every arena gives three small rewards there, and a slightly bigger one for the boss. That is all — go train!",
+      "Touche ton adversaire pour ta passe de saison. Chaque arène y donne trois petites récompenses et une un peu plus grande pour le boss. C’est tout — à l’entraînement !"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

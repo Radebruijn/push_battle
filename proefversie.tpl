@@ -163,7 +163,14 @@
   .mXpTekst { font-size: 11px; color: rgba(255,255,255,.45); text-align: center; margin-top: 5px; }
 
   .mKaart { text-align: center; padding: 0 20px; flex: 1; min-height: 0;
-            display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+            display: flex; flex-direction: column; justify-content: center; gap: 2px;
+            position: relative; }
+  /* Je tegenstander is tegelijk de deur naar je pad: tik erop. */
+  #mIcoon { cursor: pointer; }
+  .mPadTip { position: absolute; right: 14px; top: 0; display: flex; align-items: center;
+             gap: 5px; font-size: 11px; font-weight: 900; padding: 5px 10px; border-radius: 99px;
+             background: rgba(255,199,64,.16); color: #ffc740; pointer-events: none; }
+  .mPadTip[hidden] { display: none; }
   .mArenaLabel { font-size: 10px; font-weight: 900; letter-spacing: 2.5px; color: rgba(255,255,255,.5); }
   .mArenaNaam { font-size: 22px; font-weight: 900; margin-top: 4px; }
   .mIcoon { flex: 1; min-height: 0; width: 100%; margin: 6px auto; overflow: visible; }
@@ -174,6 +181,16 @@
 
   .mKop { font-size: 10px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.5);
           padding: 0 20px; margin: 10px 0 8px; }
+  /* Opdrachten staan linksonder, vlak boven de strook met wat er komt. */
+  .mOnder { display: flex; padding: 0 20px; margin-top: 6px; }
+  .mQuest { display: flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 99px;
+            border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05);
+            color: rgba(255,255,255,.8); font: inherit; font-size: 12px; font-weight: 800;
+            cursor: pointer; }
+  .mQuest i { font-style: normal; font-size: 10px; font-weight: 900; padding: 2px 7px;
+              border-radius: 99px; background: rgba(255,199,64,.2); color: #ffc740; }
+  .mQuest i.af { background: rgba(74,222,128,.2); color: #4ade80; }
+  .mQuest i:empty { display: none; }
   .mRij { display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 6px;
           scrollbar-width: none; }
   .mRij::-webkit-scrollbar { display: none; }
@@ -259,7 +276,15 @@
              pointer-events: none; text-align: center; }
 
   /* burgermenu en spelmodi */
-  .mBalk { display: flex; align-items: center; gap: 8px; padding: 0 12px 6px; }
+  /* De bovenbalk: menu links, je oefening in het midden, jij rechts. Alles
+     wat met jou te maken heeft hangt aan je foto, alles wat met spelen te
+     maken heeft aan het menu. */
+  .mBalk { display: flex; align-items: center; gap: 8px; padding: 0 12px 5px; }
+  .mBalk .sportKiezer { flex: 1; min-width: 0; padding: 0; }
+  .mBalk2 { display: flex; justify-content: space-between; padding: 0 12px 4px; }
+  .hoekKnop { width: 50px; height: 32px; border-radius: 12px; cursor: pointer; font-size: 16px;
+              border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05);
+              color: rgba(255,255,255,.75); line-height: 1; }
   /* De drie oefeningen bovenaan. Elke knop is een eigen wereld: eigen
      voortgang, eigen klassement, eigen opdrachten. */
   .sportKiezer { display: flex; gap: 6px; padding: 0 12px 10px; }
@@ -273,9 +298,11 @@
     flex: none; background: rgba(255,255,255,.07); border: 0; border-radius: 14px;
     color: rgba(255,255,255,.85); line-height: 1; cursor: pointer; width: 50px; height: 46px; }
   #burger { font-size: 30px; }
-  #accountKnop { font-size: 22px; position: relative; overflow: hidden; }
-  #accountKnop img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover;
-                     display: block; margin: 0 auto; }
+  /* Heb je een foto, dan is de knop je foto: rond en van rand tot rand. */
+  #accountKnop { font-size: 22px; position: relative; overflow: hidden; padding: 0; }
+  #accountKnop.foto { border-radius: 50%; width: 46px; }
+  #accountKnop img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
+                     display: block; }
   /* eigen foto */
   .fotoRond { border-radius: 50%; object-fit: cover; display: block;
               background: rgba(255,255,255,.08); }
@@ -322,7 +349,7 @@
   #cameraVraag .cvApparaat { font-size: 13px; color: rgba(255,255,255,.4); margin-bottom: 22px; }
   #cameraVraag .grotKnop { max-width: 340px; margin-left: auto; margin-right: auto; }
 
-  #klassement { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96);
+  #klassement { position: fixed; inset: 0; z-index: 12; background: #05060a;
                 display: none; padding: 30px 18px; overflow-y: auto; }
   #klassement.aan { display: block; }
   #klassement h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
@@ -355,7 +382,7 @@
                 display: flex; align-items: center; justify-content: center; gap: 8px; }
   .spelerRang .lbBadge { width: 20px; height: 20px; flex: none; }
 
-  #quests { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96); display: none;
+  #quests { position: fixed; inset: 0; z-index: 12; background: #05060a; display: none;
             padding: 30px 22px; overflow-y: auto; }
   #quests.aan { display: block; }
   #quests h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
@@ -378,7 +405,7 @@
   .qBalk i { display: block; height: 100%;
              background: linear-gradient(to right, #ffc740, #ff9d2e); }
 
-  #inventaris { position: fixed; inset: 0; z-index: 14; background: rgba(0,0,0,.96); display: none;
+  #inventaris { position: fixed; inset: 0; z-index: 14; background: #05060a; display: none;
                 padding: 30px 22px; overflow-y: auto; }
   #inventaris.aan { display: block; }
   #inventaris h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px;
@@ -496,9 +523,9 @@
   #mzUit .beloning { font-size: 24px; font-weight: 900; color: #ffc740; margin-top: 12px; }
 
   /* Het seizoenspad */
-  #pad { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
-         display: none; padding: 30px 20px; overflow-y: auto; }
-  #pad.aan { display: block; }
+  #pad { position: fixed; inset: 0; z-index: 13; background: #05060a;
+         display: none; padding: 30px 20px 16px; flex-direction: column; }
+  #pad.aan { display: flex; }
   #pad h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
             color: rgba(255,255,255,.5); margin: 0 0 16px; padding: 8px 46px 0; }
   .padBalk { height: 12px; border-radius: 99px; background: rgba(255,255,255,.08);
@@ -507,27 +534,40 @@
                background: linear-gradient(90deg, #ffc740, #ff7326); }
   .padBalkTekst { text-align: center; font-size: 13px; font-weight: 800; margin-top: 8px; }
   .padRest { text-align: center; font-size: 12px; color: rgba(255,255,255,.45); margin-bottom: 16px; }
-  #padLijst { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 14px;
-              scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
-  .padKaart { flex: none; width: 132px; scroll-snap-align: start; display: flex;
-              flex-direction: column; align-items: center; gap: 6px; padding: 14px 10px 12px;
-              border-radius: 16px; background: rgba(255,255,255,.04);
-              border: 1px solid rgba(255,255,255,.08); opacity: .55; }
-  .padKaart.open { opacity: 1; border-color: rgba(255,199,64,.45);
-                   background: rgba(255,199,64,.08); }
-  .padKaart.gehaald { opacity: .8; border-color: rgba(74,222,128,.35);
-                      background: rgba(74,222,128,.06); }
-  .padNr { font-size: 11px; font-weight: 900; color: rgba(255,255,255,.4); }
-  .padBeeld { font-size: 30px; line-height: 1; }
-  .padLoon { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.3;
-             min-height: 32px; }
-  .padXp { font-size: 10px; color: rgba(255,255,255,.45); }
-  .padHaal { margin-top: 4px; padding: 7px 16px; border-radius: 99px; border: 0; cursor: pointer;
+  /* Het pad loopt langs je arena's: per arena een blokje met vier vakjes,
+     drie kleine en de boss. Verticaal, want de reeks houdt nooit op. */
+  #padLijst { overflow-y: auto; flex: 1; min-height: 0; padding: 0 2px 10px; position: relative; }
+  .padArena { border-radius: 16px; padding: 10px 10px 12px; margin-bottom: 10px;
+              background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.07); }
+  .padArena.nu { border-color: rgba(255,199,64,.45); background: rgba(255,199,64,.06); }
+  .padArena.later { opacity: .5; }
+  .padArenaKop { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+  .padArenaIcoon { width: 30px; height: 30px; flex: none; }
+  .padArenaKop span { display: flex; flex-direction: column; line-height: 1.25;
+                      font-size: 13px; font-weight: 700; min-width: 0; }
+  .padArenaKop b { font-size: 10px; font-weight: 900; letter-spacing: 1.5px;
+                   color: rgba(255,255,255,.4); }
+  .padVakken { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .padVak { display: flex; flex-direction: column; align-items: center; gap: 3px;
+            padding: 8px 4px 9px; border-radius: 12px; background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.07); opacity: .6; }
+  .padVak.open { opacity: 1; border-color: rgba(255,199,64,.4); }
+  .padVak.gehaald { opacity: .85; border-color: rgba(74,222,128,.3); }
+  .padVak.boss { background: rgba(242,38,58,.07); }
+  .padVakKop { font-size: 8px; font-weight: 900; letter-spacing: 0;
+               color: rgba(255,255,255,.4); text-transform: uppercase; text-align: center;
+               white-space: nowrap; }
+  .padVak.boss .padVakKop { color: #f2263a; }
+  .padBeeld { font-size: 19px; line-height: 1; color: #ffc740; }
+  .padGetal { font-size: 17px; font-weight: 900; line-height: 1; color: #ffc740; }
+  .padEenheid { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.6); }
+  .padKrat { font-size: 9px; font-weight: 800; text-align: center; line-height: 1.2; }
+  .padHaal { margin-top: 2px; padding: 5px 12px; border-radius: 99px; border: 0; cursor: pointer;
              background: linear-gradient(180deg, #ffc740, #ff9426); color: #000;
-             font: inherit; font-size: 12px; font-weight: 900; }
-  .padStaat { margin-top: 4px; font-size: 10px; color: rgba(255,255,255,.45); text-align: center; }
+             font: inherit; font-size: 11px; font-weight: 900; }
+  .padStaat { margin-top: 2px; font-size: 9px; color: rgba(255,255,255,.45); text-align: center; }
   .padStaat.af { color: #4ade80; font-weight: 800; }
-  .padAlles { display: block; margin: 0 auto 12px; padding: 9px 22px; border-radius: 99px;
+  .padAlles { display: block; margin: 0 auto 10px; padding: 8px 20px; border-radius: 99px;
               border: 1px solid rgba(255,199,64,.5); background: rgba(255,199,64,.12);
               color: #ffc740; font: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
   .padAlles[hidden] { display: none; }
@@ -565,7 +605,7 @@
   .buitStatus { margin-top: 8px; font-size: 12px; color: rgba(255,255,255,.6); }
   .buitStatus b { color: #7dde7d; letter-spacing: 2px; }
 
-  #account { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96); display: none;
+  #account { position: fixed; inset: 0; z-index: 12; background: #05060a; display: none;
              padding: 30px 22px; overflow-y: auto; }
   #account.aan { display: block; }
   #account h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.5);
@@ -619,12 +659,11 @@
                   font-size: 15px; font-weight: 800; cursor: pointer; }
   /* Sluiten is een kruisje rechtsboven en blijft in beeld terwijl je scrolt.
      Uitloggen staat daardoor alleen onderaan, ver van alles vandaan. */
-  .sluitKruis { position: fixed; right: 12px; top: 12px; z-index: 3;
+  .sluitKruis { position: fixed; right: 12px; top: 12px; z-index: 4;
                 width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
                 border: 1px solid rgba(255,255,255,.14); background: rgba(18,18,22,.92);
                 color: rgba(255,255,255,.8); font-size: 19px; line-height: 1; }
   .sluitKruis:active { background: rgba(255,255,255,.14); }
-  .sluitKruis.links { left: 12px; right: auto; }
   .uitlogVak { display: flex; justify-content: center; margin-top: 54px; padding: 26px 0 12px;
                border-top: 1px solid rgba(255,255,255,.08); }
   .uitlogKnop { padding: 11px 28px; border-radius: 99px; cursor: pointer; font: inherit;
@@ -635,19 +674,19 @@
   .accMelding { font-size: 13px; text-align: center; min-height: 34px; line-height: 1.4;
                 color: #ffc740; padding: 6px 0; font-weight: 600; }
 
-  #instel { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.94); display: none;
+  #instel { position: fixed; inset: 0; z-index: 12; background: #05060a; display: none;
             padding: 60px 22px; }
   #instel.aan { display: block; }
   #instel h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.5);
                margin: 0 0 22px; text-align: center; }
   .instelLabel { font-size: 11px; font-weight: 900; letter-spacing: 3px;
                  color: rgba(255,255,255,.5); text-align: center; }
-  .instelWaarde { font-size: 26px; font-weight: 900; text-align: center; color: #ffc740; margin-top: 6px; }
+  .instelWaarde { font-size: 20px; font-weight: 900; text-align: center; color: #ffc740; margin-top: 6px; }
   .instelUitleg { font-size: 12px; color: rgba(255,255,255,.45); text-align: center;
                   margin-top: 8px; line-height: 1.45; }
   #diepte, #geluid, #muziek { width: 100%; margin: 16px 0 0; accent-color: #ffc740; height: 30px; }
 
-  #modes { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.92); display: none;
+  #modes { position: fixed; inset: 0; z-index: 12; background: #05060a; display: none;
            padding: 60px 20px; }
   #modes.aan { display: block; }
   #modes h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.5);
@@ -661,32 +700,6 @@
   .modeKaart.aan { border-color: #ffc740; background: rgba(255,199,64,.1); }
   .modeKaart b { display: block; font-size: 19px; font-weight: 900; }
   .modeKaart span { font-size: 13px; color: rgba(255,255,255,.5); }
-  /* De rest van het menu ziet er bewust anders uit dan de spelmodi: geen brede
-     kaarten maar drie vakjes naast elkaar, met een streep ertussen. */
-  .menuScheiding { display: flex; align-items: center; gap: 12px; margin: 20px 2px 12px;
-                   font-size: 11px; font-weight: 900; letter-spacing: 3px;
-                   color: rgba(255,255,255,.35); }
-  .menuScheiding::before, .menuScheiding::after {
-    content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.12); }
-  .menuExtra { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .extraKaart { position: relative; display: flex; flex-direction: column; align-items: center;
-                gap: 8px; padding: 16px 6px 13px; border-radius: 18px; cursor: pointer;
-                border: 1px solid rgba(255,255,255,.1); color: inherit; font: inherit;
-                background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)); }
-  .extraKaart:active { transform: scale(.97); }
-  .extraIcoon { font-size: 23px; line-height: 1; }
-  .extraNaam { font-size: 11px; font-weight: 800; letter-spacing: .5px;
-               color: rgba(255,255,255,.75); text-align: center; }
-  /* De badge stond over het icoon heen; hij hangt nu onder het label. */
-  .extraBadge { font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 99px;
-                background: rgba(255,199,64,.2); color: #ffc740; }
-  .extraBadge.af { background: rgba(74,222,128,.2); color: #4ade80; }
-  .extraBadge:empty { display: none; }
-  @media (prefers-reduced-motion: reduce) { .extraKaart:active { transform: none; } }
-
-  #modesDicht { display: block; margin: 18px auto 0; background: none; border: 0; font: inherit;
-                font-size: 14px; color: rgba(255,255,255,.45); cursor: pointer; }
-
   /* duel */
   #duel { position: fixed; inset: 0; z-index: 7; background: #000; display: none;
           flex-direction: column; padding: 20px 0 24px; }
@@ -784,9 +797,6 @@
           flex-direction: column; }
   #klik.aan { display: flex; }
   .klikKop { flex: none; text-align: center; padding: 14px 58px 8px; position: relative; }
-  #klikTerug { position: absolute; left: 8px; top: 8px; background: rgba(255,255,255,.07);
-               border: 0; border-radius: 14px; color: rgba(255,255,255,.85); font: inherit;
-               font-size: 26px; line-height: 1; width: 44px; height: 40px; cursor: pointer; }
   .klikSaldo { font-size: 40px; font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1.1; }
   .klikEenheid { font-size: 11px; font-weight: 900; letter-spacing: 3px;
                  color: rgba(255,255,255,.45); }
@@ -895,10 +905,13 @@
   <div class="menuVak">
     <div class="mBalk">
       <button id="burger" aria-label="menu">☰</button>
-      <div style="flex:1"></div>
+      <div class="sportKiezer" id="sportKiezer"></div>
       <button id="accountKnop" aria-label="account">👤</button>
     </div>
-    <div class="sportKiezer" id="sportKiezer"></div>
+    <div class="mBalk2">
+      <button class="hoekKnop" id="klassementKnop" aria-label="klassement">🏆</button>
+      <button class="hoekKnop" id="tandwiel" aria-label="instellingen">⚙</button>
+    </div>
     <h1 class="mTitel">PUSH BATTLE</h1>
     <div class="mRang" id="mRang"></div>
     <div class="mXp">
@@ -907,14 +920,18 @@
     </div>
 
     <div class="mKaart">
+      <div class="mPadTip" id="mPadTip" hidden>🎖️ <span id="mPadTipTal"></span></div>
       <div class="mArenaLabel" id="mArenaLabel"></div>
       <div class="mArenaNaam" id="mArenaNaam"></div>
-      <svg class="mIcoon" id="mIcoon" viewBox="0 0 100 100"></svg>
+      <svg class="mIcoon" id="mIcoon" viewBox="0 0 100 100" role="button"></svg>
       <div class="mVijand" id="mVijand"></div>
       <div class="mHp" id="mHp"></div>
       <div class="mPips" id="mPips"></div>
     </div>
 
+    <div class="mOnder">
+      <button class="mQuest" id="questKnop">📜 <span id="extraQuests"></span><i id="questBadge"></i></button>
+    </div>
     <div class="mKop">HIERNA</div>
     <div class="mRij" id="mRij"></div>
 
@@ -1006,6 +1023,7 @@
   </div>
 </div>
 <div id="modes">
+  <button class="sluitKruis" id="modesDicht" aria-label="sluiten">✕</button>
   <h2 id="modesKop"></h2>
   <button class="modeKaart" id="modeArena">
     <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
@@ -1032,56 +1050,34 @@
     <div class="modeTekst"><b></b><span></span></div>
   </button>
 
-  <div class="menuScheiding"><span id="menuMeerKop"></span></div>
-  <div class="menuExtra">
-    <button class="extraKaart" id="questKnop">
-      <span class="extraIcoon">📜</span>
-      <span class="extraNaam" id="extraQuests"></span>
-      <span class="extraBadge" id="questBadge"></span>
-    </button>
-    <button class="extraKaart" id="klassementKnop">
-      <span class="extraIcoon">🏆</span>
-      <span class="extraNaam" id="extraKlassement"></span>
-    </button>
-    <button class="extraKaart" id="padKnop">
-      <span class="extraIcoon">🎖️</span>
-      <span class="extraNaam" id="extraPad"></span>
-      <span class="extraBadge" id="padBadge"></span>
-    </button>
-    <button class="extraKaart" id="tandwiel">
-      <span class="extraIcoon">⚙</span>
-      <span class="extraNaam" id="extraInstel"></span>
-    </button>
-  </div>
-  <button id="modesDicht"></button>
 </div>
 
 <div id="klassement">
+  <button class="sluitKruis" id="lbDicht" aria-label="sluiten">✕</button>
   <h2 id="klassementKop"></h2>
   <div class="lbSoorten" id="lbSoorten"></div>
   <div class="lbLijst" id="lbLijst"></div>
-  <button class="tekstKnop" id="lbDicht"></button>
 </div>
 
 <div id="speler">
+  <button class="sluitKruis" id="spelerDicht" aria-label="sluiten">✕</button>
   <div class="spelerKaart">
     <div class="spelerBadge" id="spelerBadge"></div>
     <div class="spelerNaam" id="spelerNaam"></div>
     <div class="spelerRang" id="spelerRang"></div>
     <div class="accCijfers" id="spelerCijfers"></div>
     <button class="tekstKnop" id="spelerMeld"></button>
-    <button class="tekstKnop" id="spelerDicht"></button>
   </div>
 </div>
 
 <div id="quests">
+  <button class="sluitKruis" id="questsDicht" aria-label="sluiten">✕</button>
   <h2 id="questsKop"></h2>
   <div id="questsLijst"></div>
-  <button class="tekstKnop" id="questsDicht"></button>
 </div>
 
 <div id="inventaris">
-  <button class="sluitKruis links" id="invDicht" aria-label="sluiten">✕</button>
+  <button class="sluitKruis" id="invDicht" aria-label="sluiten">✕</button>
   <h2 id="invKop"></h2>
   <div id="invLijst"></div>
   <div class="trofeeKop" id="trofeeKop"></div>
@@ -1101,7 +1097,7 @@
 </div>
 
 <div id="wb">
-  <button class="sluitKruis links" id="wbDicht" aria-label="sluiten">✕</button>
+  <button class="sluitKruis" id="wbDicht" aria-label="sluiten">✕</button>
   <h2 id="wbKop"></h2>
   <div id="wbGeenAccount">
     <p class="olSub" id="wbAccountTekst"></p>
@@ -1119,7 +1115,7 @@
 </div>
 
 <div id="mzKies">
-  <button class="sluitKruis links" id="mzKiesDicht" aria-label="sluiten">✕</button>
+  <button class="sluitKruis" id="mzKiesDicht" aria-label="sluiten">✕</button>
   <h2 id="mzKiesKop"></h2>
   <div id="mzLijst"></div>
   <div class="padUitleg" id="mzKiesUitleg"></div>
@@ -1152,7 +1148,7 @@
 </div>
 
 <div id="pad">
-  <button class="sluitKruis links" id="padDicht" aria-label="sluiten">✕</button>
+  <button class="sluitKruis" id="padDicht" aria-label="sluiten">✕</button>
   <h2 id="padKop"></h2>
   <div class="padBalk"><i id="padVul"></i></div>
   <div class="padBalkTekst" id="padBalkTekst"></div>
@@ -1163,7 +1159,7 @@
 </div>
 
 <div id="kansen">
-  <button class="sluitKruis links" id="kansenDicht" aria-label="sluiten">✕</button>
+  <button class="sluitKruis" id="kansenDicht" aria-label="sluiten">✕</button>
   <h2 id="kansenKop"></h2>
   <div id="kansenLijst"></div>
 </div>
@@ -1248,6 +1244,7 @@
 </div>
 
 <div id="instel">
+  <button class="sluitKruis" id="instelDicht" aria-label="sluiten">✕</button>
   <h2 id="instelKop"></h2>
   <div class="instelLabel" id="diepteLabel"></div>
   <div class="instelWaarde" id="diepteWaarde"></div>
@@ -1269,7 +1266,6 @@
   <button class="grotKnop" id="kalibreerKnop" style="margin-top:30px"></button>
   <div class="instelUitleg" id="kalibreerUitleg"></div>
   <button class="tekstKnop" id="rondleidingKnop"></button>
-  <button class="tekstKnop" id="instelDicht"></button>
 </div>
 
 <div id="duelSetup">
@@ -1403,7 +1399,7 @@
 
 <div id="klik">
   <div class="klikKop">
-    <button id="klikTerug" aria-label="terug">‹</button>
+    <button class="sluitKruis" id="klikTerug" aria-label="sluiten">✕</button>
     <div class="klikSaldo" id="klikSaldo">0</div>
     <div class="klikEenheid" id="klikEenheid"></div>
     <div class="klikTempo" id="klikTempo"></div>
@@ -1818,7 +1814,7 @@ function questOphalen(id, week) {
   if (quest.klik) tekst += ' · +' + quest.klik + ' ' + t('stat_pushups');
   melding(tekst, 3000);
   renderQuests();
-  if ($('modes').classList.contains('aan')) toonModi();
+  menuKnoppenBij();
 }
 
 function questCheck() {
@@ -1866,7 +1862,7 @@ function renderQuests() {
       questOphalen(knop.dataset.quest, knop.dataset.week === '1');
     };
   });
-  $('questsDicht').textContent = t('close');
+  $('questsDicht').title = t('close');
 }
 
 function render() {
@@ -2346,6 +2342,7 @@ function melding(tekst, duur = 1900) {
 
 function renderMenu() {
   const arena = arenaAt(idxNu()), c = arena.rgb, f = enemy.hp / enemy.max;
+  menuKnoppenBij();
   $('menuAura').style.background =
     `radial-gradient(circle at 50% 0%, ${rgbCss(c, .18)}, transparent 60%)`;
   document.querySelector('.mTitel').style.textShadow = `0 0 22px ${rgbCss(c, .8)}`;
@@ -2936,21 +2933,21 @@ function toonModi() {
   vul('modeBoss', MODE_ICONEN.boss, t('mode_boss'), t('mode_boss_sub'), false);
   vul('modeMuziek', MODE_ICONEN.muziek, t('mode_muziek'), t('mode_muziek_sub'), false);
   vul('modeKlik', MODE_ICONEN.klik, t('mode_klik'), t('mode_klik_sub'), false);
-  $('menuMeerKop').textContent = t('menu_meer').toUpperCase();
+  $('modesDicht').title = t('close');
+}
+
+/// De knoppen om het speelveld heen: opdrachten linksonder en het lintje op
+/// je tegenstander. Allebei laten ze alleen zien hoeveel er klaarligt.
+function menuKnoppenBij() {
   $('extraQuests').textContent = t('quests_titel');
-  $('extraKlassement').textContent = t('leaderboard');
-  $('extraInstel').textContent = t('settings');
-  $('extraPad').textContent = t('bp_kort');
-  const padOp = bpTeHalen();
-  $('padBadge').textContent = padOp ? padOp : bpTrede() + '/' + BP_TREDEN;
-  $('padBadge').classList.toggle('af', padOp > 0);
-  // Op de opdrachtenkaart staat meteen hoever je vandaag bent.
   const q = questStaat(), dag = dagQuests();
   const af = dag.filter(x => q.dagKlaar.includes(x.id)).length;
   const teHalen = questTeHalen();
   $('questBadge').textContent = teHalen ? teHalen : af + '/' + dag.length;
   $('questBadge').classList.toggle('af', teHalen > 0);
-  $('modesDicht').textContent = t('cancel');
+  const padOp = bpTeHalen();
+  $('mPadTip').hidden = !padOp;
+  $('mPadTipTal').textContent = padOp;
 }
 
 function toonDuelSetup() {
@@ -3096,9 +3093,9 @@ function toonInstellingen() {
   $('kalibreerKnop').textContent = t('cal_voor', sportNaam(SPORT));
   $('kalibreerUitleg').textContent = isGeijkt() ? '' : t('cal_nodig');
   $('rondleidingKnop').textContent = t('tour_again');
-  $('instelDicht').textContent = t('close');
+  $('instelDicht').title = t('close');
   $('houdLabel').textContent = t('houd_label').toUpperCase();
-  $('houdUitleg').textContent = t('houd_uitleg') + ' ' + t('houd_instel_uit');
+  $('houdUitleg').textContent = t('houd_uitleg');
   $('houdRij').innerHTML = '';
   [[true, 'houd_aan'], [false, 'houd_uit']].forEach(([aan, sleutel]) => {
     const knop = document.createElement('button');
@@ -3434,9 +3431,7 @@ $('invDicht').addEventListener('click', e => {
 $('invOpen').addEventListener('click', e => {
   e.stopPropagation(); $('inventaris').classList.add('aan'); renderInventaris();
 });
-$('padKnop').addEventListener('click', e => {
-  e.stopPropagation(); $('modes').classList.remove('aan'); toonPad();
-});
+$('mIcoon').addEventListener('click', e => { e.stopPropagation(); toonPad(); });
 $('padDicht').addEventListener('click', e => {
   e.stopPropagation(); $('pad').classList.remove('aan');
 });
@@ -3646,6 +3641,7 @@ const LES_STAPPEN = [
   { doel: 'questKnop',  tekst: 'les9', knop: true, dood: true,
     bij: () => $('modes').classList.remove('aan') },
   { doel: 'sportKiezer', tekst: 'les10', knop: true, dood: true },
+  { doel: 'mIcoon',     tekst: 'les11', knop: true, dood: true },
 ];
 
 function lesStart() {
@@ -4024,42 +4020,66 @@ function toonBuit(item, terug) {
 }
 
 /* ---------------------------------------------------------------
-   Het seizoenspad: vijftig treden van tweeduizend XP, samen honderdduizend.
-   De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit
-   door te spelen. Wat een trede oplevert staat er met zoveel woorden op —
-   push-ups of een krat met naam — en je haalt het zelf op met een knop. Het
-   pad hoort bij de oefening waarin je speelt.
+   Het seizoenspad loopt langs je arena's. Elke arena heeft tien vijanden:
+   negen minions en een boss. Na elke derde minion ligt er een kleine
+   beloning, en de boss geeft iets meer — maar nooit veel. De bedragen zijn
+   met opzet klein: het pad is een lijntje dat meeloopt met waar je bent,
+   geen tweede spel. Je opent het door in het menu op je tegenstander te
+   tikken. Het pad hoort bij de oefening waarin je speelt.
 ---------------------------------------------------------------- */
-const BP_TREDEN = 50, BP_XP = 2000;
+const PAD_MINIONS = 9;            // minions per arena, daarna de boss
+const PAD_STAP = 3;               // om de drie minions een beloning
 
-/// Wat trede n oplevert. Elke derde trede een houten krat, elke vijfde een
-/// zilveren, elke tiende een gouden; de rest push-ups voor de clicker. Zo
-/// staat er altijd iets concreets op de kaart in plaats van 'zeldzaam'.
-function bpLoon(n) {
-  const srt = i => KRAT_SOORTEN[i % KRAT_SOORTEN.length].soort;
-  if (n % 10 === 0) return { krat: 'goud_' + srt(n / 10 - 1) };
-  if (n % 5 === 0) return { krat: 'zilver_' + srt(Math.floor(n / 5)) };
-  if (n % 3 === 0) return { krat: 'hout_' + srt(Math.floor(n / 3)) };
-  return { punten: 60 + n * 40 };
+/// Wat een kleine beloning in arena i waard is; groeit rustig mee.
+const padKlein = i => 8 + (i - 1) * 4;
+/// De boss geeft het drievoudige, en elke vijfde arena een houten krat.
+const padKrat = i => i % 5 === 0;
+
+function padLoon(i, n) {
+  if (n !== 'b') return { punten: padKlein(i) };
+  if (padKrat(i)) return { krat: 'hout_' + KRAT_SOORTEN[(i / 5 - 1) % KRAT_SOORTEN.length].soort };
+  return { punten: padKlein(i) * 3 };
 }
 
-function bpLoonTekst(n) {
-  const loon = bpLoon(n);
+function padLoonTekst(i, n) {
+  const loon = padLoon(i, n);
   return loon.krat ? t('krat_' + loon.krat) : t('bp_loon_punten', getal(loon.punten));
 }
 
-const bpTrede = () => Math.min(BP_TREDEN, Math.floor((P.totalXP || 0) / BP_XP));
-const bpOpgehaald = () => (Array.isArray(P.bpOp) ? P.bpOp : (P.bpOp = []));
-const bpTeHalen = () => Math.max(0, bpTrede() - bpOpgehaald().length);
+/// Heb je dit vakje al verdiend? Een arena die je uit hebt geeft alles; in de
+/// arena waar je nu staat tellen je kills mee, en de boss pas als je hem
+/// verslagen hebt — dat is precies het moment dat je verder mag.
+function padOpen(i, n) {
+  if (i < P.arenaIndex) return true;
+  if (i > P.arenaIndex) return false;
+  return n !== 'b' && P.killsThisArena >= n * PAD_STAP;
+}
 
-/// Alleen kijken of er iets bij is gekomen; ophalen doe je zelf.
+const padId = (i, n) => i + ':' + n;
+const PAD_VAKKEN = [1, 2, 3, 'b'];
+const padOpgehaald = () => (Array.isArray(P.padOp) ? P.padOp : (P.padOp = []));
+
+/// Hoeveel er klaarligt. Kijkt niet verder dan de arena waar je nu staat.
+function bpTeHalen() {
+  let n = 0;
+  for (let i = 1; i <= P.arenaIndex; i++)
+    PAD_VAKKEN.forEach(v => {
+      if (padOpen(i, v) && !padOpgehaald().includes(padId(i, v))) n++;
+    });
+  return n;
+}
+
+/// Alleen kijken of er iets bij is gekomen; ophalen doe je zelf. Draait na
+/// elke kill en elke XP, dus hij kijkt alleen naar de arena waar je nu bent.
 function bpNakijken(stil) {
-  const tot = bpTrede();
-  if (!Array.isArray(P.bpGehad)) P.bpGehad = [];
-  for (let n = 1; n <= tot; n++) {
-    if (P.bpGehad.includes(n)) continue;
-    P.bpGehad.push(n);
-    if (!stil) { melding(t('bp_gehaald', n, bpLoonTekst(n)), 4000); geluidWin(); }
+  if (!Array.isArray(P.padGehad)) P.padGehad = [];
+  for (let i = Math.max(1, P.arenaIndex - 1); i <= P.arenaIndex; i++) {
+    PAD_VAKKEN.forEach(v => {
+      const id = padId(i, v);
+      if (!padOpen(i, v) || P.padGehad.includes(id)) return;
+      P.padGehad.push(id);
+      if (!stil) { melding(t('bp_gehaald', padLoonTekst(i, v)), 3500); geluidWin(); }
+    });
   }
   if ($('pad').classList.contains('aan')) tekenPad();
 }
@@ -4067,21 +4087,23 @@ function bpNakijken(stil) {
 /// Alles tegelijk. De kratten gaan dan zonder rolletje open, anders zit je
 /// een minuut lang naar bandjes te kijken; wat erin zat lees je in de melding.
 function bpAllesOphalen() {
-  const tot = bpTrede();
   let punten = 0;
   const buit = [];
-  for (let n = 1; n <= tot; n++) {
-    if (bpOpgehaald().includes(n)) continue;
-    bpOpgehaald().push(n);
-    const loon = bpLoon(n);
-    if (loon.punten) { punten += loon.punten; continue; }
-    const krat = KRATTEN.find(k => k.id === loon.krat);
-    if (krat) buit.push(kratStil(krat));
+  for (let i = 1; i <= P.arenaIndex; i++) {
+    PAD_VAKKEN.forEach(v => {
+      const id = padId(i, v);
+      if (!padOpen(i, v) || padOpgehaald().includes(id)) return;
+      padOpgehaald().push(id);
+      const loon = padLoon(i, v);
+      if (loon.punten) { punten += loon.punten; return; }
+      const krat = KRATTEN.find(k => k.id === loon.krat);
+      if (krat) buit.push(kratStil(krat));
+    });
   }
   if (punten) klikVerdien(punten);
   save();
   tekenPad();
-  if ($('modes').classList.contains('aan')) toonModi();
+  menuKnoppenBij();
   geluidWin();
   const stukjes = [];
   if (punten) stukjes.push('+' + getal(punten) + ' ' + t('klik_kop'));
@@ -4102,11 +4124,12 @@ function kratStil(krat) {
   return item;
 }
 
-/// Eén trede ophalen. Een krat gaat meteen open, met rolletje en al.
-function bpOphalen(n) {
-  if (n > bpTrede() || bpOpgehaald().includes(n)) return;
-  bpOpgehaald().push(n);
-  const loon = bpLoon(n);
+/// Eén vakje ophalen. Een krat gaat meteen open, met rolletje en al.
+function padOphalen(i, n) {
+  const id = padId(i, n);
+  if (!padOpen(i, n) || padOpgehaald().includes(id)) return;
+  padOpgehaald().push(id);
+  const loon = padLoon(i, n);
   if (loon.punten) {
     klikVerdien(loon.punten);
     melding('+' + getal(loon.punten) + ' ' + t('klik_kop'), 3000);
@@ -4114,7 +4137,7 @@ function bpOphalen(n) {
   }
   save();
   tekenPad();
-  if ($('modes').classList.contains('aan')) toonModi();
+  menuKnoppenBij();
   if (loon.krat) {
     const krat = KRATTEN.find(k => k.id === loon.krat);
     if (krat) kratBuit(krat);
@@ -4127,46 +4150,63 @@ function toonPad() {
 }
 
 function tekenPad() {
-  const xp = P.totalXP || 0, tot = bpTrede();
   $('padKop').textContent = t('bp_titel').toUpperCase();
   $('padDicht').title = t('close');
-  $('padBalkTekst').textContent = t('bp_voortgang', getal(Math.min(xp, BP_TREDEN * BP_XP)),
-                                    getal(BP_TREDEN * BP_XP));
-  $('padVul').style.width = Math.min(100, xp / (BP_TREDEN * BP_XP) * 100) + '%';
+  const kills = P.killsThisArena || 0;
+  $('padBalkTekst').textContent = t('bp_voortgang', P.arenaIndex, kills);
+  $('padVul').style.width = Math.min(100, kills / (PAD_MINIONS + 1) * 100) + '%';
   const open = bpTeHalen();
   $('padAlles').hidden = open < 2;
   $('padAlles').textContent = t('claim_alles', open);
-  $('padRest').textContent = open ? t('bp_open', open)
-    : tot >= BP_TREDEN ? t('bp_klaar') : t('bp_nog', getal(BP_XP - (xp % BP_XP)));
+  $('padRest').textContent = open ? t('bp_open', open) : t('bp_klaar');
   $('padRest').style.color = open ? '#ffc740' : '';
   $('padUitleg').textContent = t('bp_uitleg');
 
+  // Je ziet je eigen arena's plus vier die nog komen; verder heeft geen zin,
+  // want de reeks gaat oneindig door.
   let html = '';
-  for (let n = 1; n <= BP_TREDEN; n++) {
-    const open = n <= tot, gehaald = bpOpgehaald().includes(n);
-    const loon = bpLoon(n);
-    const kleur = loon.krat ? (loon.krat.startsWith('goud') ? '#ffc740'
-                            : loon.krat.startsWith('zilver') ? '#c8cdd2' : '#b98a5a')
-                            : '#ffc740';
-    const beeld = loon.krat ? '▣' : '▲';
-    const knop = gehaald
-      ? `<span class="padStaat af">${ontsmet(t('claim_klaar'))}</span>`
-      : open ? `<button class="padHaal" data-trede="${n}">${ontsmet(t('claim'))}</button>`
-             : `<span class="padStaat">${ontsmet(t('bp_nodig', voluit(n * BP_XP - xp)))}</span>`;
-    html += `<div class="padKaart${open ? ' open' : ''}${gehaald ? ' gehaald' : ''}" data-n="${n}">` +
-      `<span class="padNr">${n}</span>` +
-      `<span class="padBeeld" style="color:${kleur}">${beeld}</span>` +
-      `<span class="padLoon">${ontsmet(bpLoonTekst(n))}</span>` +
-      `<span class="padXp">${voluit(n * BP_XP)} XP</span>${knop}</div>`;
+  for (let i = 1; i <= P.arenaIndex + 4; i++) {
+    const a = arenaAt(i);
+    html += `<div class="padArena${i === P.arenaIndex ? ' nu' : ''}` +
+      `${i > P.arenaIndex ? ' later' : ''}">` +
+      `<div class="padArenaKop">` +
+      `<svg class="padArenaIcoon" viewBox="0 0 100 100">` +
+      `<path d="${a.icon}" fill="${rgbCss(a.rgb, i <= P.arenaIndex ? .95 : .4)}"/></svg>` +
+      `<span><b>${ontsmet(t('arena_n', i))}</b>${ontsmet(tt(a.name))}</span></div>` +
+      `<div class="padVakken">`;
+    PAD_VAKKEN.forEach(v => {
+      const id = padId(i, v);
+      const uit = padOpen(i, v), gehaald = padOpgehaald().includes(id), boss = v === 'b';
+      const loon = padLoon(i, v);
+      const staat = gehaald ? `<span class="padStaat af">${ontsmet(t('claim_klaar'))}</span>`
+        : uit ? `<button class="padHaal" data-i="${i}" data-v="${v}">${ontsmet(t('claim'))}</button>`
+        : `<span class="padStaat">${ontsmet(
+             i > P.arenaIndex ? t('pad_nog_arena')
+             : boss ? t('pad_nog_boss')
+             : (v * PAD_STAP - kills === 1 ? t('pad_nog_vijand_1')
+                : t('pad_nog_vijand', v * PAD_STAP - kills)))}</span>`;
+      html += `<div class="padVak${uit ? ' open' : ''}${gehaald ? ' gehaald' : ''}` +
+        `${boss ? ' boss' : ''}">` +
+        `<span class="padVakKop">${ontsmet(boss ? t('pad_boss_label') : t('pad_klein_label', v))}</span>` +
+        (loon.krat
+          ? `<span class="padBeeld">▣</span>` +
+            `<span class="padKrat">${ontsmet(t('krat_' + loon.krat))}</span>`
+          : `<span class="padGetal">${getal(loon.punten)}</span>` +
+            `<span class="padEenheid">${ontsmet(t('klik_kop'))}</span>`) +
+        staat + '</div>';
+    });
+    html += '</div></div>';
   }
   $('padLijst').innerHTML = html;
   $('padLijst').querySelectorAll('.padHaal').forEach(k => {
-    k.onclick = e => { e.stopPropagation(); bpOphalen(+k.dataset.trede); };
+    k.onclick = e => {
+      e.stopPropagation();
+      padOphalen(+k.dataset.i, k.dataset.v === 'b' ? 'b' : +k.dataset.v);
+    };
   });
-  // Schuif naar de eerstvolgende trede die nog niet opgehaald is.
-  const doel = $('padLijst').querySelector('.padKaart.open:not(.gehaald)')
-            || $('padLijst').querySelector(`.padKaart[data-n="${Math.min(BP_TREDEN, tot + 1)}"]`);
-  if (doel) $('padLijst').scrollLeft = Math.max(0, doel.offsetLeft - 20);
+  // Zet de arena waar je nu bent bovenaan in beeld.
+  const nu = $('padLijst').querySelector('.padArena.nu');
+  if (nu) $('padLijst').scrollTop = Math.max(0, nu.offsetTop - 8);
 }
 
 function renderInventaris() {
@@ -4237,6 +4277,8 @@ function tekenFoto() {
   const knop = $('accountKnop');
   knop.innerHTML = fotoOk(mijnFoto)
     ? `<img src="${mijnFoto}" alt="">` : '\u{1F464}';
+  // Met een foto is de knop je gezicht: rond en zonder rand eromheen.
+  knop.classList.toggle('foto', fotoOk(mijnFoto));
   const vak = $('accFotoKnop');
   vak.classList.toggle('heeft', fotoOk(mijnFoto));
   vak.innerHTML = fotoOk(mijnFoto)
@@ -4315,7 +4357,7 @@ function lbWaarde(r) {
 async function toonKlassement() {
   $('klassement').classList.add('aan');
   $('klassementKop').textContent = t('leaderboard').toUpperCase();
-  $('lbDicht').textContent = t('close');
+  $('lbDicht').title = t('close');
   $('lbSoorten').innerHTML = '';
   LB_SOORTEN.forEach(srt => {
     const knop = document.createElement('button');
@@ -4427,7 +4469,7 @@ function toonSpeler(r) {
     [r.streak, t('stat_streak')],
     [r.xp, 'XP'],
   ].map(([w, l]) => `<div class="accCijfer"><b>${w}</b><span>${l}</span></div>`).join('');
-  $('spelerDicht').textContent = t('close');
+  $('spelerDicht').title = t('close');
 }
 
 $('klassementKnop').addEventListener('click', e => { e.stopPropagation(); toonKlassement(); });

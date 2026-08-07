@@ -159,7 +159,7 @@ Twee dingen die pas later kunnen gebeuren blijven kleine kaartjes onderin, omdat
 
 Bovenin staan vijf knoppen, want elk onderdeel heeft zijn eigen lijst: **XP** (je level), **Arena** (wie het verst is), **Clicker** (wie de meeste push-ups verzameld heeft), **Maat** (wie de meeste nummers uitspeelde) en **Boss** (wie de meeste schade deed). Alles per oefening, dus je squatlijst staat los van je push-uplijst.
 
-De beker in het burgermenu opent het klassement: iedereen met een account, hoogste level bovenaan. Elke speler krijgt het rangteken dat bij zijn level hoort, van een simpel streepje bij Rekruut tot een gevleugelde ster bij Onsterfelijke. Je eigen rij is goudomrand.
+De beker onder het burgermenu opent het klassement: iedereen met een account, hoogste level bovenaan. Elke speler krijgt het rangteken dat bij zijn level hoort, van een simpel streepje bij Rekruut tot een gevleugelde ster bij Onsterfelijke. Je eigen rij is goudomrand.
 
 Tik op iemand en je ziet zijn cijfers: push-ups, kills, uitgespeelde arena's, gewonnen duels, streak en XP.
 
@@ -175,21 +175,25 @@ De acht rangen: Rekruut (streep), Vuistvechter (strepen), Orbjager (zwaard), Sla
 
 ## Menu
 
-Je begint in het menu. Bovenaan staan je rang, level en XP, daaronder de arena waar je nu in zit met de vijand die op je wacht en hoeveel minions je in deze arena al gevloerd hebt.
+Je begint in het menu. In de bovenbalk staat alles naast elkaar: links het burgermenu (☰), in het midden de drie oefeningen (Push-ups, Sit-ups, Squats) en rechts jijzelf — met je eigen foto als je er een hebt, rond en van rand tot rand, zodat je jouw hoofd rechtsboven ziet staan.
+
+Daaronder hangen twee knoppen aan die twee kanten: **onder het burgermenu het klassement** (🏆) en **onder je foto de instellingen** (⚙). Wat met spelen te maken heeft hangt links, wat met jou te maken heeft rechts.
+
+Dan volgen je rang, level en XP, en daaronder de arena waar je nu in zit met de vijand die op je wacht en hoeveel minions je in deze arena al gevloerd hebt. **Tik op die vijand en je seizoenspad gaat open.** Ligt er iets klaar om op te halen, dan staat er een lintje met een getal naast hem.
+
+Linksonder, vlak boven de strook met wat er komt, staan je **opdrachten** met hoever je vandaag bent.
 
 Onder **Hierna** staat een rij die je opzij kunt scrollen. De eerste drie kaartjes tonen de arena's die na deze komen: hun naam, hun ras en hun icoon, maar op slot. Je kunt er niet naartoe springen — ze gaan alleen open door de boss van de arena ervoor te verslaan. Daarachter loopt de rij door met vijftien vraagtekens, zodat je ziet hoever de weg nog reikt zonder te weten wat je te wachten staat.
 
-Naast het burgermenu zit een tandwiel met de **instellingen**: je taal (Nederlands, Engels, Frans) en een schuifbalk voor hoe ver je moet zakken voordat een push-up telt, uitgedrukt als percentage van je gekalibreerde bereik. Standaard 60 procent; hoger is strenger, lager vergevingsgezinder. Daaronder zit de knop om opnieuw te kalibreren — die zet zo nodig eerst de camera aan.
+Het tandwiel onder je foto opent de **instellingen**: hoe ver je moet zakken voordat een push-up telt (percentage van je gekalibreerde bereik, standaard 60 — hoger is strenger), de houdingscontrole aan of uit, geluid, muziek, taal en de knop om opnieuw te kalibreren, die zo nodig eerst de camera aanzet. Elke instelling heeft één regel uitleg, niet meer.
 
 De knop **Vechten** brengt je in het gevecht; linksboven ga je weer terug naar het menu. Let op: teruggaan zet een boss weer op volle HP.
 
 ## Spelmodi
 
-Linksboven in het menu zit een burgermenu (☰). Bovenin staan de spelmodi als brede kaarten: Arena, Duel, Online, Wereldboss, Op de maat en Clicker. Daaronder, achter een streep met het kopje **Meer**, staan vier kleinere vakjes in een andere vorm: **Opdrachten**, **Klassement**, **Pad** en **Instellingen**. Die zien er met opzet anders uit dan de spelmodi — je gaat er niet spelen, je kijkt of stelt er iets in.
+Het burgermenu (☰) gaat alleen over spelen: zes brede kaarten — Arena, Duel, Online, Wereldboss, Op de maat en Clicker — en verder niets. Klassement, opdrachten, pad en instellingen staan buiten het menu, elk op de plek waar je ze verwacht.
 
-Op Opdrachten en Pad staat een badge, onder het label en dus niet over het icoon heen. Normaal laat hij zien hoever je bent (*0/3*, *12/50*); staat er iets klaar om op te halen, dan slaat hij om naar dat aantal en wordt hij groen. Zo zie je vanuit het menu in één oogopslag dat er nog iets voor je klaarligt.
-
-De bovenbalk is daardoor leeg op twee knoppen na: het menu links en je account (met je foto) rechts.
+**Elk scherm sluit met een kruisje rechtsboven.** Overal hetzelfde: het burgermenu, het klassement, de opdrachten, het pad, de instellingen, je inventaris, je account en de clicker. Alleen het menu zelf heeft er geen, want daar hoef je niet uit.
 
 **Arena** is de eindeloze modus die hierboven beschreven staat: minions, bosses en arena's.
 
@@ -295,22 +299,23 @@ Elke klap levert je twee XP en drie push-ups op, dus je beloning is precies je a
 
 Elke dag drie opdrachten en elke week twee, gekozen uit een vaste voorraad. De datum bepaalt de keuze, dus iedereen heeft dezelfde. Ze lopen mee met wat je toch al doet: push-ups, kills, bosses, duels, je snelste minuut, een nummer op de maat uitspelen en klappen op de wereldboss.
 
-**De beloning komt niet vanzelf binnen.** Een gehaalde opdracht krijgt een knop *Ophalen*; pas als je die indrukt gaan de XP en de push-ups naar je toe, en verandert de knop in een vinkje. Op de tegel in het menu staat hoeveel er klaarstaat. Wisselt de dag of de week, dan beginnen de tellers en de lijst opnieuw.
+**De beloning komt niet vanzelf binnen.** Een gehaalde opdracht krijgt een knop *Ophalen*; pas als je die indrukt gaan de XP en de push-ups naar je toe, en verandert de knop in een vinkje. Op de knop linksonder in het menu staat hoeveel er klaarstaat. Wisselt de dag of de week, dan beginnen de tellers en de lijst opnieuw.
 
 ## Het seizoenspad
 
-Vijftig treden van tweeduizend XP, samen honderdduizend. De XP die je toch al verdient telt mee, dus je loopt het pad vanzelf uit door te spelen — er is geen aparte munt. De treden staan naast elkaar in een rij die je opzij schuift, en op elke kaart staat precies wat erin zit en hoeveel XP je ervoor nodig hebt.
+Het pad loopt langs je arena's. Elke arena telt tien vijanden: negen minions en een boss. Na elke derde minion ligt er een kleine beloning, en de boss geeft iets meer — maar nooit veel. De bedragen zijn met opzet klein: het pad is een lijntje dat meeloopt met waar je bent, geen tweede spel.
 
-| Trede | Wat je krijgt |
+| Vakje | Wat je krijgt |
 |---|---|
-| de meeste | push-ups voor de clicker, oplopend van 100 tot ruim 2000 |
-| elke derde | een houten krat, met naam: *Houten titelkrat*, *Houten koppenkrat*, … |
-| elke vijfde | een zilveren krat |
-| elke tiende | een gouden krat |
+| beloning 1, 2 en 3 | push-ups voor de clicker: 8 in arena 1, 28 in arena 6, 88 in arena 21 |
+| de boss | drie keer zoveel |
+| de boss van elke vijfde arena | een houten krat in plaats daarvan |
 
-**Je haalt het zelf op.** Een gehaalde trede krijgt een knop *Ophalen*; pas dan is het van jou. Een krat gaat daarbij open met hetzelfde rolletje als in de winkel. Staat er meer klaar, dan haal je met één knop alles ineens op — de kratten gaan dan zonder show open en je leest in de melding wat erin zat. Krijg je iets wat je al hebt, dan wordt het omgezet in push-ups.
+Je opent het pad **door in het menu op je tegenstander te tikken**. Je ziet dan blok voor blok je arena's: de arena waar je nu bent staat bovenaan en licht op, de arena's erachter zijn afgevinkt en er staan er vier klaar die nog komen. Onder een vakje dat je nog niet hebt staat wat je ervoor moet doen: *Nog 2 vijanden* of *Versla de boss*.
 
-Het pad hoort bij de oefening waarin je speelt: je push-uppad staat los van je squatpad, net als al het andere. Je vindt het in het burgermenu onder **Pad**, met op de tegel hoeveel er klaarstaat om op te halen.
+**Je haalt het zelf op.** Een verdiend vakje krijgt een knop *Ophalen*; pas dan is het van jou. Een krat gaat daarbij open met hetzelfde rolletje als in de winkel. Staat er meer klaar, dan haal je met één knop alles ineens op — de kratten gaan dan zonder show open en je leest in de melding wat erin zat. Krijg je iets wat je al hebt, dan wordt het omgezet in push-ups.
+
+Het pad hoort bij de oefening waarin je speelt: je push-uppad staat los van je squatpad, net als al het andere.
 
 ## Crates
 

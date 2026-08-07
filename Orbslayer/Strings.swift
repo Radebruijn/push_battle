@@ -519,6 +519,13 @@ enum Tk: String {
     case quest_wbslag50
     case quest_wlied3
     case quest_wwb250
+    case pad_nog_vijand
+    case pad_nog_boss
+    case pad_nog_arena
+    case pad_boss_label
+    case pad_klein_label
+    case pad_nog_vijand_1
+    case les11
 }
 
 enum Strings {
@@ -647,7 +654,7 @@ enum Strings {
         "settings": ["Instellingen", "Settings", "Réglages"],
         "depth": ["Diepte", "Depth", "Profondeur"],
         "depth_value": ["{0}% van je bereik", "{0}% of your range", "{0}% de ton amplitude"],
-        "depth_hint": ["Hoe ver je moet zakken voordat een push-up telt. Hoger is strenger.", "How far you must lower before a push-up counts. Higher is stricter.", "Jusqu'où tu dois descendre pour qu'une pompe compte. Plus haut, plus strict."],
+        "depth_hint": ["Hoger is strenger: je moet dieper zakken.", "Higher is stricter: you drop deeper.", "Plus haut, plus strict : tu descends plus bas."],
         "calibrate_now": ["Kalibreren", "Calibrate", "Calibrer"],
         "close": ["Sluiten", "Close", "Fermer"],
         "account": ["Account", "Account", "Compte"],
@@ -879,8 +886,8 @@ enum Strings {
         "geluid_label": ["Geluid", "Sound", "Son"],
         "muziek_label": ["Muziek", "Music", "Musique"],
         "geluid_uit": ["uit", "off", "coupé"],
-        "geluid_uitleg": ["De tonen bij elke push-up en de klikjes in de menu's.", "The tone on every push-up and the clicks in the menus.", "Le son de chaque pompe et les clics dans les menus."],
-        "muziek_uitleg": ["Een rustige lus op de achtergrond.", "A calm loop in the background.", "Une boucle tranquille en fond."],
+        "geluid_uitleg": ["Tonen bij elke push-up en klikjes.", "Tones on every push-up, and clicks.", "Sons à chaque pompe et clics."],
+        "muziek_uitleg": ["Achtergrondmuziek in de menu’s.", "Background music in the menus.", "Musique de fond dans les menus."],
         "menu_meer": ["Meer", "More", "Plus"],
         "quest_stand": ["{0} van {1}", "{0} of {1}", "{0} sur {1}"],
         "sign_out_zeker": ["Zeker weten? Tik nog een keer.", "Are you sure? Tap once more.", "Tu es sûr ? Touche encore une fois."],
@@ -889,7 +896,7 @@ enum Strings {
         "les6": ["Duel: zestig seconden tegen een tegenstander. Jij kiest vooraf hoe zwaar hij is.", "Duel: sixty seconds against an opponent. You choose beforehand how tough it is.", "Duel : soixante secondes contre un adversaire. Tu choisis sa force à l'avance."],
         "les7": ["Online: zestig seconden tegen een echt mens. Hiervoor heb je een account nodig.", "Online: sixty seconds against a real person. You need an account for this.", "En ligne : soixante secondes contre une vraie personne. Il te faut un compte."],
         "les8": ["De clicker: elke echte push-up is een munt. Koop er helpers, techniek en crates van.", "The clicker: every real push-up is a coin. Spend them on helpers, technique and crates.", "Le clicker : chaque vraie pompe est une pièce. Achète des aides, de la technique et des caisses."],
-        "les9": ["En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Dat is alles — trainen maar!", "And these are your quests: three a day and two a week, with XP and push-ups as rewards. That's everything — get training!", "Et voici tes missions : trois par jour et deux par semaine, avec XP et pompes en récompense. C'est tout — à toi de jouer !"],
+        "les9": ["En dit zijn je opdrachten: elke dag drie en elke week twee, met XP en push-ups als beloning. Je haalt ze zelf op.", "And these are your quests: three a day and two a week, paying XP and push-ups. You claim them yourself.", "Et voici tes missions : trois par jour et deux par semaine, en XP et en pompes. À toi de les récupérer."],
         "trofee_nog": ["nog niet", "not yet", "pas encore"],
         "sport_pushup": ["Push-ups", "Push-ups", "Pompes"],
         "sport_situp": ["Sit-ups", "Sit-ups", "Abdos"],
@@ -905,7 +912,7 @@ enum Strings {
         "cal_beneden_squat": ["Zak door je knieën", "Squat all the way down", "Descends en flexion"],
         "les10": ["Bovenaan wissel je van oefening. Push-ups, sit-ups en squats zijn drie aparte werelden met eigen voortgang — en je ijkt ze allemaal één keer apart.", "At the top you switch exercise. Push-ups, sit-ups and squats are three separate worlds with their own progress — and you calibrate each of them once.", "En haut, tu changes d'exercice. Pompes, abdos et squats sont trois mondes séparés avec leur propre progression — et tu calibres chacun une fois."],
         "cal_voor": ["Kalibreren voor {0}", "Calibrate for {0}", "Calibrer pour {0}"],
-        "cal_nodig": ["Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.", "This exercise has not been calibrated yet. Do it once and it will remember.", "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."],
+        "cal_nodig": ["Nog niet geijkt voor deze oefening.", "Not calibrated for this exercise yet.", "Pas encore calibré pour cet exercice."],
         "krat_icoon_uit": ["Een monsterkop om naast je naam te dragen.", "A monster head to wear next to your name.", "Une tête de monstre à porter à côté de ton nom."],
         "krat_titel_uit": ["Een titel die onder je naam komt te staan.", "A title that appears under your name.", "Un titre qui s'affiche sous ton nom."],
         "krat_kleur_uit": ["Een kleur voor je naam in het klassement.", "A colour for your name in the leaderboard.", "Une couleur pour ton nom au classement."],
@@ -949,8 +956,8 @@ enum Strings {
         "houd_goed": ["Houding klopt", "Position looks right", "Position correcte"],
         "houd_ijkt": ["Zelf aan het ijken…", "Calibrating by itself…", "Calibrage automatique…"],
         "houd_geijkt": ["Geijkt terwijl je bezig was — je hoeft niets in te stellen.", "Calibrated while you were going — nothing for you to set.", "Calibré pendant que tu bougeais — rien à régler."],
-        "houd_uitleg": ["De camera kijkt globaal mee of je in de goede houding zit. Hij is er niet om te muggenziften.", "The camera keeps a rough eye on your position. It is not there to nitpick.", "La caméra surveille grossièrement ta position. Elle n'est pas là pour chipoter."],
-        "houd_label": ["Meekijken met je houding", "Watch my position", "Vérifier ma position"],
+        "houd_uitleg": ["Zet uit als de camera je niet goed ziet.", "Turn off if the camera cannot see you well.", "Désactive si la caméra te voit mal."],
+        "houd_label": ["Houdingscontrole", "Posture check", "Contrôle de posture"],
         "houd_aan": ["Aan", "On", "Activé"],
         "houd_uit": ["Uit", "Off", "Désactivé"],
         "houd_instel_uit": ["Zet dit uit als de camera je romp niet in beeld krijgt.", "Turn this off if the camera cannot see your torso.", "Désactive ceci si la caméra ne voit pas ton buste."],
@@ -959,14 +966,14 @@ enum Strings {
         "bp_titel": ["Seizoenspad", "Season Pass", "Passe de Saison"],
         "bp_kort": ["Pad", "Pass", "Passe"],
         "bp_trede": ["Trede {0}", "Tier {0}", "Palier {0}"],
-        "bp_voortgang": ["{0} van {1} XP", "{0} of {1} XP", "{0} sur {1} XP"],
-        "bp_klaar": ["Je hebt het hele pad uitgelopen en alles opgehaald.", "You walked the whole pass and claimed everything.", "Tu as parcouru toute la passe et tout récupéré."],
+        "bp_voortgang": ["Arena {0} · {1} van 10 verslagen", "Arena {0} · {1} of 10 beaten", "Arène {0} · {1} sur 10 vaincus"],
+        "bp_klaar": ["Alles opgehaald. Vecht door voor de volgende arena.", "All claimed. Fight on for the next arena.", "Tout récupéré. Continue vers l’arène suivante."],
         "bp_nog": ["Nog {0} XP tot de volgende trede.", "{0} XP to the next tier.", "Encore {0} XP jusqu'au palier suivant."],
-        "bp_gehaald": ["Trede {0} klaar om op te halen: {1}", "Tier {0} ready to claim: {1}", "Palier {0} à récupérer : {1}"],
+        "bp_gehaald": ["Klaar om op te halen: {0}", "Ready to claim: {0}", "À récupérer : {0}"],
         "bp_loon_punten": ["{0} push-ups", "{0} push-ups", "{0} pompes"],
         "bp_loon_spul": ["een {0}", "a {0}", "un {0}"],
         "bp_loon_boost": ["{0}", "{0}", "{0}"],
-        "bp_uitleg": ["Elke tweeduizend XP is een trede. Schuif opzij om te zien wat er komt, en haal zelf op wat je verdiend hebt.", "Every two thousand XP is a tier. Swipe sideways to see what is coming, and claim what you have earned.", "Chaque deux mille XP est un palier. Fais défiler pour voir la suite, et récupère toi-même ce que tu as gagné."],
+        "bp_uitleg": ["Elke arena geeft drie kleine beloningen en een iets grotere voor de boss. Je haalt ze zelf op.", "Every arena gives three small rewards and a slightly bigger one for the boss. You claim them yourself.", "Chaque arène donne trois petites récompenses et une un peu plus grande pour le boss. À toi de les récupérer."],
         "bp_slot": ["Nog niet", "Not yet", "Pas encore"],
         "mode_muziek": ["Op de maat", "On the Beat", "En Rythme"],
         "mode_muziek_sub": ["Push-ups op het ritme, hoe strakker hoe meer", "Push-ups on the beat, the tighter the better", "Des pompes en rythme, plus c'est précis mieux c'est"],
@@ -1018,6 +1025,13 @@ enum Strings {
         "quest_wbslag50": ["Sla {0} keer op de wereldboss", "Hit the world boss {0} times", "Frappe le boss mondial {0} fois"],
         "quest_wlied3": ["Speel 3 nummers uit", "Clear 3 songs", "Termine 3 morceaux"],
         "quest_wwb250": ["Doe {0} schade aan de wereldboss", "Deal {0} damage to the world boss", "Inflige {0} dégâts au boss mondial"],
+        "pad_nog_vijand": ["Nog {0} vijanden", "{0} enemies to go", "Encore {0} ennemis"],
+        "pad_nog_boss": ["Versla de boss", "Beat the boss", "Bats le boss"],
+        "pad_nog_arena": ["Nog niet hier", "Not here yet", "Pas encore ici"],
+        "pad_boss_label": ["Boss", "Boss", "Boss"],
+        "pad_klein_label": ["Beloning {0}", "Reward {0}", "Récompense {0}"],
+        "pad_nog_vijand_1": ["Nog 1 vijand", "1 enemy to go", "Encore 1 ennemi"],
+        "les11": ["Tik op je tegenstander voor je seizoenspad. Elke arena geeft daar drie kleine beloningen en een iets grotere voor de boss. Dat is alles — trainen maar!", "Tap your opponent for your season pass. Every arena gives three small rewards there, and a slightly bigger one for the boss. That is all — go train!", "Touche ton adversaire pour ta passe de saison. Chaque arène y donne trois petites récompenses et une un peu plus grande pour le boss. C’est tout — à l’entraînement !"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
