@@ -540,6 +540,12 @@ enum Tk: String {
     case mz_verdubbel
     case mz_verwijder
     case mz_uitpakken
+    case mz_online
+    case mz_online_uit
+    case mz_zoek_info
+    case mz_zoek_hint
+    case mz_zoek_ga
+    case mz_zoek_niks
 }
 
 enum Strings {
@@ -1060,6 +1066,12 @@ enum Strings {
         "mz_verdubbel": ["Dubbel tempo", "Double tempo", "Double tempo"],
         "mz_verwijder": ["Verwijderen", "Remove", "Supprimer"],
         "mz_uitpakken": ["Nummer klaarzetten…", "Getting the track ready…", "Préparation du morceau…"],
+        "mz_online": ["Zoek een nummer online", "Find a song online", "Cherche un titre en ligne"],
+        "mz_online_uit": ["Plak een link uit Spotify of Apple Music, of typ een naam.", "Paste a link from Spotify or Apple Music, or type a name.", "Colle un lien Spotify ou Apple Music, ou tape un nom."],
+        "mz_zoek_info": ["Je krijgt het officiële fragment van 30 seconden; de beat wordt er vanzelf onder gelegd.", "You get the official 30-second clip; the beat is laid under it automatically.", "Tu reçois l'extrait officiel de 30 secondes ; le rythme se cale automatiquement."],
+        "mz_zoek_hint": ["Naam of link…", "Name or link…", "Nom ou lien…"],
+        "mz_zoek_ga": ["Zoeken", "Search", "Chercher"],
+        "mz_zoek_niks": ["Niets gevonden. Probeer een andere naam.", "Nothing found. Try another name.", "Rien trouvé. Essaie un autre nom."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

@@ -500,6 +500,17 @@
   #mzKies.aan { display: block; }
   #mzKies h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
                color: rgba(255,255,255,.5); margin: 0 0 18px; padding: 8px 46px 0; }
+  #mzZoek { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
+            display: none; padding: 30px 20px; overflow-y: auto; }
+  #mzZoek.aan { display: block; }
+  #mzZoek h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+               color: rgba(255,255,255,.5); margin: 0 0 10px; padding: 8px 46px 0; }
+  .mzZoekUit { font-size: 12px; color: rgba(255,255,255,.5); text-align: center;
+               margin-bottom: 14px; line-height: 1.5; }
+  #mzZoek .naamRij { margin-bottom: 14px; }
+  #mzZoekGa { flex: none; border: 0; border-radius: 14px; font: inherit; font-size: 14px;
+              font-weight: 800; padding: 0 18px; cursor: pointer;
+              background: #ffc740; color: #000; }
   .mzRij { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
            border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; color: inherit;
@@ -1148,6 +1159,18 @@
   <input type="file" id="mzBestand" accept="audio/*" hidden>
   <div id="mzLijst"></div>
   <div class="padUitleg" id="mzKiesUitleg"></div>
+</div>
+
+<div id="mzZoek">
+  <button class="sluitKruis" id="mzZoekDicht" aria-label="sluiten">✕</button>
+  <h2 id="mzZoekKop"></h2>
+  <div class="mzZoekUit" id="mzZoekUitleg"></div>
+  <div class="naamRij">
+    <input type="text" id="mzZoekVeld" enterkeyhint="search" spellcheck="false"
+           autocomplete="off">
+    <button id="mzZoekGa"></button>
+  </div>
+  <div id="mzZoekLijst"></div>
 </div>
 
 <div id="mz">
@@ -5775,6 +5798,89 @@ async function eigenToevoegen(bestand) {
   }
 }
 
+/* Online zoeken: plak een link uit Spotify of Apple Music, of typ een naam.
+   Het spel zoekt het nummer op en haalt het officiële fragment van dertig
+   seconden op; daarna gaat het door dezelfde molen als een eigen bestand,
+   dus de beat wordt er vanzelf onder gelegd. Geen account of sleutel nodig:
+   de zoek- en fragmentendienst van iTunes is openbaar, en een Spotify-link
+   wordt eerst via hun openbare oEmbed omgezet naar de titel. */
+async function mzZoekOnline(vraag) {
+  vraag = vraag.trim();
+  if (!vraag) return [];
+  const apple = vraag.match(/music\.apple\.com\/[^?\s]+\?(?:[^#\s]*&)?i=(\d+)/) ||
+                vraag.match(/music\.apple\.com\/\w+\/(?:album|song)\/[^/]+\/(\d+)/);
+  if (apple) {
+    const a = await (await fetch('https://itunes.apple.com/lookup?id=' + apple[1] +
+                                 '&entity=song&limit=10')).json();
+    const raak = (a.results || []).filter(r => r.previewUrl);
+    if (raak.length) return raak;
+  }
+  const spotify = vraag.match(/open\.spotify\.com\/(?:intl-\w+\/)?track\/[A-Za-z0-9]+/);
+  if (spotify) {
+    try {
+      const o = await (await fetch('https://open.spotify.com/oembed?url=https://' +
+                                   spotify[0])).json();
+      if (o.title) vraag = o.title;
+    } catch (e) { /* dan zoeken we op wat er geplakt is */ }
+  }
+  const z = await (await fetch('https://itunes.apple.com/search?term=' +
+                               encodeURIComponent(vraag) + '&media=music&entity=song&limit=8')).json();
+  return (z.results || []).filter(r => r.previewUrl);
+}
+
+/// Een gevonden nummer ophalen en toevoegen alsof het een eigen bestand was.
+async function mzOnlineErbij(r) {
+  bezig(t('mz_zoeken'), true);
+  try {
+    const blob = await (await fetch(r.previewUrl)).blob();
+    const ac = audioAan();
+    const buffer = await ac.decodeAudioData(await blob.arrayBuffer());
+    const { bpm, fase } = vindTempo(buffer);
+    const naam = (r.artistName + ' — ' + r.trackName).slice(0, 48);
+    const nummer = await eigenBewaren({ naam, blob, bpm, fase, duur: buffer.duration });
+    eigenNummers.push(nummer);
+    eigenBuffers[nummer.id] = buffer;
+    klaar();
+    $('mzZoek').classList.remove('aan');
+    melding(t('mz_eigen_erbij', naam), 3500);
+    tekenMuziekKeuze();
+  } catch (e) { klaar(); melding(t('mz_eigen_fout'), 4000); }
+}
+
+function mzZoekOpen(vooraf) {
+  $('mzZoekKop').textContent = t('mz_online').toUpperCase();
+  $('mzZoekUitleg').textContent = t('mz_online_uit') + ' ' + t('mz_zoek_info');
+  $('mzZoekVeld').placeholder = t('mz_zoek_hint');
+  $('mzZoekGa').textContent = t('mz_zoek_ga');
+  $('mzZoekLijst').innerHTML = '';
+  $('mzZoek').classList.add('aan');
+  $('mzZoekVeld').value = vooraf || '';
+  if (vooraf) mzZoekDoe();
+  else $('mzZoekVeld').focus();
+}
+
+async function mzZoekDoe() {
+  const vraag = $('mzZoekVeld').value;
+  if (!vraag.trim()) return;
+  $('mzZoekLijst').innerHTML = `<div class="lbMelding">${ontsmet(t('lb_loading'))}</div>`;
+  let raak = [];
+  try { raak = await mzZoekOnline(vraag); }
+  catch (e) { raak = []; }
+  $('mzZoekLijst').innerHTML = '';
+  if (!raak.length) {
+    $('mzZoekLijst').innerHTML = `<div class="lbMelding">${ontsmet(t('mz_zoek_niks'))}</div>`;
+    return;
+  }
+  raak.forEach(r => {
+    const knop = document.createElement('button');
+    knop.className = 'mzRij';
+    knop.innerHTML = `<span style="flex:1;min-width:0"><b>${ontsmet(r.trackName)}</b>` +
+      `<small>${ontsmet(r.artistName)}</small></span><span class="mzPlus">＋</span>`;
+    knop.onclick = e => { e.stopPropagation(); mzOnlineErbij(r); };
+    $('mzZoekLijst').appendChild(knop);
+  });
+}
+
 function toonMuziek() {
   $('modes').classList.remove('aan');
   $('menu').classList.add('uit');
@@ -5848,6 +5954,13 @@ function tekenMuziekKeuze() {
     `<b>${ontsmet(t('mz_toevoegen'))}</b><small>${ontsmet(t('mz_niet_mee'))}</small></span>`;
   erbij.onclick = e => { e.stopPropagation(); $('mzBestand').click(); };
   $('mzLijst').appendChild(erbij);
+
+  const online = document.createElement('button');
+  online.className = 'mzRij mzErbij';
+  online.innerHTML = `<span class="mzPlus">♪</span><span style="flex:1;min-width:0">` +
+    `<b>${ontsmet(t('mz_online'))}</b><small>${ontsmet(t('mz_online_uit'))}</small></span>`;
+  online.onclick = e => { e.stopPropagation(); mzZoekOpen(); };
+  $('mzLijst').appendChild(online);
 
   const uitleg = document.createElement('div');
   uitleg.className = 'mzEigenUit';
@@ -6007,6 +6120,24 @@ function verlaatMuziek() {
 $('padAlles').addEventListener('click', e => { e.stopPropagation(); bpAllesOphalen(); });
 $('modeMuziek').addEventListener('click', e => { e.stopPropagation(); toonMuziek(); });
 $('mzKiesDicht').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
+$('mzZoekDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('mzZoek').classList.remove('aan');
+});
+$('mzZoekGa').addEventListener('click', e => { e.stopPropagation(); mzZoekDoe(); });
+$('mzZoekVeld').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); mzZoekDoe(); }
+});
+// Vanuit Spotify of Apple Music naar deze app gedeeld (Android, geïnstalleerde
+// app): de link komt als zoekparameter binnen en opent meteen de muziekzoeker.
+(() => {
+  const deel = new URLSearchParams(location.search);
+  const tekst = ['koppeling', 'tekst', 'titel'].map(k => deel.get(k) || '').join(' ');
+  const link = tekst.match(/https?:\/\/(?:open\.spotify\.com|music\.apple\.com)\/\S+/);
+  if (!link) return;
+  history.replaceState(null, '', location.pathname);
+  toonMuziek();
+  mzZoekOpen(link[0]);
+})();
 $('mzBestand').addEventListener('change', e => {
   eigenToevoegen(e.target.files && e.target.files[0]);
   e.target.value = '';
