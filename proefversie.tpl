@@ -2329,22 +2329,30 @@ let houdingOk = true, houdingSlecht = 0, houdingGoed = 0;
 let houdingAan = localStorage.getItem('orbslayer.houding') !== 'uit';
 let autoLaag = null, autoHoog = null, autoRijp = 0, autoGemeld = false;
 
-/// Klopt de houding voor deze oefening? Push-ups en sit-ups willen een
-/// liggende romp, squats een staande. Zonder schouders of heupen in beeld
-/// weten we het niet zeker en tellen we niets.
+/// Klopt de houding een beetje? Bewust grofmazig: hij grijpt alleen in als
+/// hij het zeker weet, want een controle die te streng is telt je goede
+/// herhalingen niet meer mee. Ziet hij weinig, dan gaat hij ervan uit dat
+/// het klopt — liever een keer te veel geteld dan een sessie voor niets.
 function houdingKlopt(keypoints) {
   if (!keypoints || !keypoints.length) return null;
   const schouder = eenVan(keypoints, 'left_shoulder', 'right_shoulder');
+  const arm = eenVan(keypoints, 'left_elbow', 'right_elbow')
+           || eenVan(keypoints, 'left_wrist', 'right_wrist');
   const heup = eenVan(keypoints, 'left_hip', 'right_hip');
-  if (!schouder || !heup) return false;
+
+  // Zien we je schouder en je arm, dan ben je met je bovenlichaam bezig en
+  // is dat genoeg bewijs. De rest hoeft niet in beeld.
+  if (SPORT !== 'squat' && schouder && arm) return true;
+
+  // Alleen als romp én heup goed zichtbaar zijn durven we iets af te keuren.
+  if (!schouder || !heup) return true;
   const dx = Math.abs(schouder.x - heup.x), dy = Math.abs(schouder.y - heup.y);
   if (SPORT === 'squat') {
-    // Staand: de romp loopt van boven naar beneden.
-    const knie = eenVan(keypoints, 'left_knee', 'right_knee');
-    return dy > dx * 1.2 && !!knie;
+    // Plat op de grond is geen squat; alle andere houdingen laten we door.
+    return !(dx > dy * 1.8);
   }
-  // Liggend: de romp loopt van links naar rechts.
-  return dx > dy * 1.1;
+  // Kaarsrecht overeind is geen push-up of sit-up; twijfelgevallen tellen wel.
+  return !(dy > dx * 1.8);
 }
 
 /// Zolang de houding klopt, onthoudt hij hoe hoog en hoe laag je komt en zet
@@ -2353,9 +2361,9 @@ function zelfIjken(waarde) {
   if (autoLaag === null) { autoLaag = autoHoog = waarde; return; }
   // Uitschieters pakken we meteen, terugkruipen gaat langzaam — zo blijft de
   // ijking meelopen als je een stukje verschuift.
-  autoLaag += (waarde - autoLaag) * (waarde < autoLaag ? 0.5 : 0.0015);
-  autoHoog += (waarde - autoHoog) * (waarde > autoHoog ? 0.5 : 0.0015);
-  if (autoHoog - autoLaag < 0.09) { autoRijp = 0; return; }
+  autoLaag += (waarde - autoLaag) * (waarde < autoLaag ? 0.4 : 0.006);
+  autoHoog += (waarde - autoHoog) * (waarde > autoHoog ? 0.4 : 0.006);
+  if (autoHoog - autoLaag < 0.10) { autoRijp = 0; return; }
   if (++autoRijp < 25) return;
   CAL = { top: autoHoog, bottom: autoLaag };
   localStorage.setItem('orbslayer.cal.' + SPORT, JSON.stringify(CAL));
@@ -2554,8 +2562,8 @@ function handleFace(height, punten, alles) {
     const klopt = houdingKlopt(alles);
     if (klopt === false) { houdingSlecht++; houdingGoed = 0; }
     else if (klopt === true) { houdingGoed++; houdingSlecht = 0; }
-    if (houdingSlecht > 12) houdingOk = false;
-    if (houdingGoed > 6) houdingOk = true;
+    if (houdingSlecht > 30) houdingOk = false;   // ruim een seconde echt fout
+    if (houdingGoed > 3) houdingOk = true;
     if (houdingOk) zelfIjken(value);
   }
 

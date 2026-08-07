@@ -2102,19 +2102,19 @@
       "Feu Solaire"
     ],
     "houd_fout_pushup": [
-      "De camera ziet je hoofd wel, maar geen plankhouding. Ga liggen met gestrekte armen.",
-      "The camera sees your head but no plank position. Get down with straight arms.",
-      "La caméra voit ta tête mais pas la position de planche. Mets-toi au sol, bras tendus."
+      "Kom in plankhouding.",
+      "Get into plank position.",
+      "Mets-toi en position de planche."
     ],
     "houd_fout_situp": [
-      "Ga plat liggen met je knieën gebogen — de camera moet je romp zien.",
-      "Lie down flat with your knees bent — the camera needs to see your torso.",
-      "Allonge-toi, genoux pliés — la caméra doit voir ton buste."
+      "Ga plat liggen.",
+      "Lie down flat.",
+      "Allonge-toi à plat."
     ],
     "houd_fout_squat": [
-      "Ga rechtop staan, zodat de camera je heupen en knieën ziet.",
-      "Stand up straight so the camera can see your hips and knees.",
-      "Tiens-toi droit, que la caméra voie tes hanches et tes genoux."
+      "Ga rechtop staan.",
+      "Stand up straight.",
+      "Tiens-toi droit."
     ],
     "houd_goed": [
       "Houding klopt",
@@ -2132,9 +2132,9 @@
       "Calibré pendant que tu bougeais — rien à régler."
     ],
     "houd_uitleg": [
-      "De camera kijkt mee of je echt in de goede houding zit. Alleen je hoofd bewegen telt niet.",
-      "The camera checks that you are really in position. Just moving your head does not count.",
-      "La caméra vérifie que tu es vraiment en position. Bouger la tête ne compte pas."
+      "De camera kijkt globaal mee of je in de goede houding zit. Hij is er niet om te muggenziften.",
+      "The camera keeps a rough eye on your position. It is not there to nitpick.",
+      "La caméra surveille grossièrement ta position. Elle n'est pas là pour chipoter."
     ],
     "houd_label": [
       "Meekijken met je houding",

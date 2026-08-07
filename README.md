@@ -63,9 +63,13 @@ Browsers laten geluid pas toe nadat je iets hebt aangeraakt — dat is een regel
 
 Het houdingsmodel geeft niet alleen je hoofd terug maar ook je schouders, heupen en knieën. Daar wordt nu naar gekeken.
 
-**Je moet echt in de houding liggen of staan.** Voor push-ups en sit-ups moet je romp horizontaal lopen — van schouder naar heup meer opzij dan omlaag. Voor squats juist verticaal, met je knieën in beeld. Zit je rechtop en knik je alleen met je hoofd, dan is je romp verticaal en telt er niets. Ziet de camera helemaal geen schouders of heupen, dan telt er ook niets: dan weten we het niet zeker.
+**Hij is met opzet grofmazig.** Een controle die te streng is telt je goede herhalingen niet meer mee, en dan heb je er alleen maar last van. Daarom grijpt hij alleen in als hij het zeker weet:
 
-Zodra het misgaat komt er onderin te staan wat je moet doen, bijvoorbeeld *"De camera ziet je hoofd wel, maar geen plankhouding."* Het duurt een halve seconde voor hij van gedachten verandert, dus één rare frame breekt je serie niet af.
+- Ziet hij je schouder en je arm, dan ben je met je bovenlichaam bezig en is dat genoeg. De rest hoeft niet in beeld.
+- Ziet hij weinig — alleen je hoofd, of je halve lijf — dan gaat hij ervan uit dat het klopt en telt hij gewoon door.
+- Alleen bij het duidelijke geval grijpt hij in: kaarsrecht overeind zitten en met je hoofd knikken telt niet als push-up, en plat op de grond liggen telt niet als squat.
+
+Gaat het mis, dan staat er onderin kort wat je moet doen: *"Kom in plankhouding."* Er moet ruim een seconde achter elkaar iets fout zijn voor hij ingrijpt, en drie goede beelden zetten het meteen weer aan.
 
 **Hij ijkt zichzelf.** Zolang je houding klopt, onthoudt hij hoe hoog en hoe laag je hoofd komt en zet hij de drempels daar vanzelf op. Uitschieters pakt hij meteen, terugkruipen gaat langzaam, zodat de ijking meeloopt als je een stukje verschuift. Na een paar herhalingen klopt het en krijg je één keer de melding dat hij het zelf gedaan heeft. Handmatig ijken kan nog steeds, en is nog nodig als het houdingsmodel niet geladen kan worden — dan draait de silhouet-terugval en zijn er geen schouders om naar te kijken.
 
