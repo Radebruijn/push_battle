@@ -546,6 +546,12 @@ enum Tk: String {
     case mz_zoek_hint
     case mz_zoek_ga
     case mz_zoek_niks
+    case mz_zoek_spotify
+    case mz_zoek_link_niet
+    case mz_zoek_gevonden
+    case mz_link_bestand
+    case mz_link_cors
+    case mz_link_groot
 }
 
 enum Strings {
@@ -1067,11 +1073,17 @@ enum Strings {
         "mz_verwijder": ["Verwijderen", "Remove", "Supprimer"],
         "mz_uitpakken": ["Nummer klaarzetten…", "Getting the track ready…", "Préparation du morceau…"],
         "mz_online": ["Zoek een nummer online", "Find a song online", "Cherche un titre en ligne"],
-        "mz_online_uit": ["Plak een link uit Spotify of Apple Music, of typ een naam.", "Paste a link from Spotify or Apple Music, or type a name.", "Colle un lien Spotify ou Apple Music, ou tape un nom."],
+        "mz_online_uit": ["Plak een link uit YouTube, Apple Music of SoundCloud, of typ gewoon de naam.", "Paste a link from YouTube, Apple Music or SoundCloud, or just type the name.", "Colle un lien de YouTube, Apple Music ou SoundCloud, ou tape simplement le nom."],
         "mz_zoek_info": ["Je krijgt het officiële fragment van 30 seconden; de beat wordt er vanzelf onder gelegd.", "You get the official 30-second clip; the beat is laid under it automatically.", "Tu reçois l'extrait officiel de 30 secondes ; le rythme se cale automatiquement."],
         "mz_zoek_hint": ["Naam of link…", "Name or link…", "Nom ou lien…"],
         "mz_zoek_ga": ["Zoeken", "Search", "Chercher"],
         "mz_zoek_niks": ["Niets gevonden. Probeer een andere naam.", "Nothing found. Try another name.", "Rien trouvé. Essaie un autre nom."],
+        "mz_zoek_spotify": ["Spotify geeft de titel niet vrij aan andere sites. Typ de naam van het nummer erbij — die vind ik wel.", "Spotify does not release the title to other sites. Type the name of the track and I will find it.", "Spotify ne donne pas le titre aux autres sites. Tape le nom du morceau et je le trouverai."],
+        "mz_zoek_link_niet": ["Deze link kan ik niet lezen. Typ de naam van het nummer.", "I cannot read this link. Type the name of the track instead.", "Je n’arrive pas à lire ce lien. Tape plutôt le nom du morceau."],
+        "mz_zoek_gevonden": ["Gevonden: {0}", "Found: {0}", "Trouvé : {0}"],
+        "mz_link_bestand": ["Bestand ophalen…", "Fetching the file…", "Récupération du fichier…"],
+        "mz_link_cors": ["Deze site geeft het bestand niet vrij aan andere sites. Download het en kies het met “Nummer van je toestel”.", "This site does not release the file to other sites. Download it and pick it with “Track from your device”.", "Ce site ne partage pas le fichier avec d’autres sites. Télécharge-le et choisis-le avec « Morceau de ton appareil »."],
+        "mz_link_groot": ["Dit bestand is groter dan 40 MB.", "This file is larger than 40 MB.", "Ce fichier dépasse 40 Mo."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

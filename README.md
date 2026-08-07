@@ -291,6 +291,19 @@ Er zijn vijf nummers die steeds sneller gaan, van twintig tot zesendertig herhal
 
 Onder de vijf nummers van het spel staat **Nummer van je toestel**. Daarmee kies je een muziekbestand van je telefoon of computer — je eigen mp3 of m4a — en push je op dát nummer.
 
+Daaronder staat **Zoek een nummer online**: typ een naam of plak een link, en je krijgt het officiële fragment van dertig seconden. Wat er met een link gebeurt hangt af van wie hem uitgeeft, want niet iedereen laat een andere site meekijken:
+
+| Wat je plakt | Wat er gebeurt |
+|---|---|
+| **YouTube** (`youtube.com`, `youtu.be`, Shorts, YouTube Music) | de titel komt via hun oEmbed binnen, wordt schoongeveegd — *(Official Video)*, *[4K]*, alles achter een streepje — en daarmee wordt gezocht |
+| **Apple Music** | het nummernummer staat in de link; één opzoeking is genoeg |
+| **SoundCloud** | net als YouTube: titel via oEmbed, dan zoeken |
+| **Spotify** | Spotify weigert elk verzoek van een andere site, dus uit de kale link valt niets te halen. Staat de titel naast de link — zoals bij delen vanuit de app — dan wordt daarop gezocht; staat hij er niet, dan vraagt het spel gewoon om de naam |
+| **een directe link naar een mp3 of m4a** | het bestand wordt meteen opgehaald en toegevoegd |
+| **iets anders** | de links worden eruit geknipt en er wordt gezocht op de woorden die overblijven |
+
+Vindt hij niets, dan probeert hij het nog een keer met alleen de eerste zes woorden. Lukt het dan nog niet, dan staat er waaróm — niet een lege lijst.
+
 Het spel zoekt het tempo er zelf bij. Het maakt van de eerste minuut een luidheidscurve, houdt alleen over wat harder wordt (dat zijn de klappen) en zoekt met een autocorrelatie welke afstand het vaakst terugkomt. Daarna bepaalt het ook nog de fase — waar de eerste tel valt — zodat de ring precies op de beat inklapt. Op een testnummer van 140 BPM komt hij op 140,6 uit, met de tel elf milliseconden na het begin.
 
 Eén push-up duurt geen tel maar een hele maat: het spel kiest 2, 4, 8 of 16 tellen per herhaling zodat je tussen de achttien en tweeënveertig keer per minuut zakt. Op 140 BPM is dat vier tellen, dus 35 push-ups per minuut. Hoeveel herhalingen een nummer telt volgt uit de lengte, met een dak op veertig. Zit het tempo een octaaf ernaast, dan zet je het met **½** of **2×** goed; met **✕** gooi je een nummer weg.

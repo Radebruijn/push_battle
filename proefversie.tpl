@@ -500,7 +500,7 @@
   #mzKies.aan { display: block; }
   #mzKies h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
                color: rgba(255,255,255,.5); margin: 0 0 18px; padding: 8px 46px 0; }
-  #mzZoek { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
+  #mzZoek { position: fixed; inset: 0; z-index: 13; background: #05060a;
             display: none; padding: 30px 20px; overflow-y: auto; }
   #mzZoek.aan { display: block; }
   #mzZoek h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
@@ -508,6 +508,11 @@
   .mzZoekUit { font-size: 12px; color: rgba(255,255,255,.5); text-align: center;
                margin-bottom: 14px; line-height: 1.5; }
   #mzZoek .naamRij { margin-bottom: 14px; }
+  /* Het zoekveld hoort er hetzelfde uit te zien als de andere invulvelden. */
+  #mzZoekVeld { flex: 1; min-width: 0; padding: 13px 16px; border-radius: 14px;
+                border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06);
+                color: #fff; font: inherit; font-size: 16px; }
+  #mzZoekVeld::placeholder { color: rgba(255,255,255,.35); }
   #mzZoekGa { flex: none; border: 0; border-radius: 14px; font: inherit; font-size: 14px;
               font-weight: 800; padding: 0 18px; cursor: pointer;
               background: #ffc740; color: #000; }
@@ -5798,15 +5803,71 @@ async function eigenToevoegen(bestand) {
   }
 }
 
-/* Online zoeken: plak een link uit Spotify of Apple Music, of typ een naam.
-   Het spel zoekt het nummer op en haalt het officiële fragment van dertig
-   seconden op; daarna gaat het door dezelfde molen als een eigen bestand,
-   dus de beat wordt er vanzelf onder gelegd. Geen account of sleutel nodig:
-   de zoek- en fragmentendienst van iTunes is openbaar, en een Spotify-link
-   wordt eerst via hun openbare oEmbed omgezet naar de titel. */
+/* Online zoeken: plak een link of typ een naam. Wat er met een link gebeurt
+   hangt af van wie hem uitgeeft, want niet iedereen laat een andere site
+   meekijken:
+
+   - Apple Music heeft het nummernummer in de link staan; daar is één opzoeking
+     genoeg.
+   - YouTube en SoundCloud geven hun titel netjes vrij via oEmbed. Die titel
+     wordt schoongeveegd — '(Official Video)', '[4K]', alles achter een streep —
+     en daarmee zoeken we verder.
+   - Spotify weigert elk verzoek van een andere site (CORS). Uit hun link valt
+     dus niets te halen; staat er tekst naast de link, dan zoeken we daarop, en
+     anders vragen we gewoon om de naam.
+   - Een rechtstreekse link naar een mp3 of m4a wordt meteen opgehaald.
+
+   Het gevonden fragment gaat door dezelfde molen als een eigen bestand, dus de
+   beat komt er vanzelf onder te liggen. Geen account of sleutel nodig: de zoek-
+   en fragmentendienst van iTunes is openbaar. */
+const AUDIO_STAART = /\.(mp3|m4a|aac|wav|ogg|oga|opus|flac|weba)(\?|#|$)/i;
+
+/// Haalt de ruis uit een videotitel zodat er een liedtitel overblijft.
+function schoonTitel(titel, auteur) {
+  const ruis = 'official|officiel|video|videoclip|audio|lyrics?|visuali[sz]er|remaster(?:ed)?|' +
+               'hd|4k|8k|mv|music video|clip|full song|explicit|prod\\.?';
+  let uit = titel
+    .replace(new RegExp('[\\(\\[][^\\)\\]]*\\b(?:' + ruis + ')\\b[^\\)\\]]*[\\)\\]]', 'gi'), ' ')
+    .replace(/\|.*$/, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const naam = (auteur || '').replace(/vevo$/i, '').replace(/\s*-\s*topic$/i, '').trim();
+  // Staat de artiest nog niet in de titel, dan helpt het om hem erbij te zetten.
+  if (naam && !uit.toLowerCase().includes(naam.toLowerCase())) uit = naam + ' ' + uit;
+  return uit.trim();
+}
+
+async function oembedTitel(dienst, link) {
+  const r = await fetch(dienst + '?format=json&url=' + encodeURIComponent(link));
+  if (!r.ok) throw new Error('oembed ' + r.status);
+  const j = await r.json();
+  return schoonTitel(j.title || '', j.author_name || '');
+}
+
+/// Zoekt bij iTunes, en probeert het bij niks korter en korter.
+async function itunesZoek(termen) {
+  for (const term of termen) {
+    if (!term || !term.trim()) continue;
+    const j = await (await fetch('https://itunes.apple.com/search?term=' +
+      encodeURIComponent(term.trim()) + '&media=music&entity=song&limit=8')).json();
+    const raak = (j.results || []).filter(r => r.previewUrl);
+    if (raak.length) return raak;
+  }
+  return [];
+}
+
+/// Een fout die de gebruiker mag lezen: de tekst staat er zelf in.
+function zoekFout(sleutel) {
+  const f = new Error(sleutel);
+  f.uitleg = t(sleutel);
+  return f;
+}
+
 async function mzZoekOnline(vraag) {
   vraag = vraag.trim();
   if (!vraag) return [];
+
+  // Apple Music: het nummernummer staat gewoon in de link.
   const apple = vraag.match(/music\.apple\.com\/[^?\s]+\?(?:[^#\s]*&)?i=(\d+)/) ||
                 vraag.match(/music\.apple\.com\/\w+\/(?:album|song)\/[^/]+\/(\d+)/);
   if (apple) {
@@ -5814,18 +5875,56 @@ async function mzZoekOnline(vraag) {
                                  '&entity=song&limit=10')).json();
     const raak = (a.results || []).filter(r => r.previewUrl);
     if (raak.length) return raak;
+    throw zoekFout('mz_zoek_niks');   // de link klopte, het nummer bestaat niet
   }
-  const spotify = vraag.match(/open\.spotify\.com\/(?:intl-\w+\/)?track\/[A-Za-z0-9]+/);
-  if (spotify) {
-    try {
-      const o = await (await fetch('https://open.spotify.com/oembed?url=https://' +
-                                   spotify[0])).json();
-      if (o.title) vraag = o.title;
-    } catch (e) { /* dan zoeken we op wat er geplakt is */ }
+
+  const jt = vraag.match(/(?:youtube\.com\/watch\?[^\s]*v=|youtu\.be\/|youtube\.com\/shorts\/)[\w-]+/);
+  if (jt) {
+    const link = 'https://www.' + jt[0].replace(/^youtu\.be\//, 'youtube.com/watch?v=')
+                                       .replace(/^www\./, '');
+    const titel = await oembedTitel('https://www.youtube.com/oembed',
+      jt[0].startsWith('youtu.be/') ? 'https://' + jt[0] : 'https://www.' + jt[0].replace(/^www\./, ''));
+    const raak = await itunesZoek([titel, titel.split(/\s+/).slice(0, 6).join(' ')]);
+    if (raak.length) return raak;
+    throw zoekFout('mz_zoek_niks');
   }
-  const z = await (await fetch('https://itunes.apple.com/search?term=' +
-                               encodeURIComponent(vraag) + '&media=music&entity=song&limit=8')).json();
-  return (z.results || []).filter(r => r.previewUrl);
+
+  const sc = vraag.match(/soundcloud\.com\/[\w-]+\/[\w-]+/);
+  if (sc) {
+    const titel = await oembedTitel('https://soundcloud.com/oembed', 'https://' + sc[0]);
+    const raak = await itunesZoek([titel, titel.split(/\s+/).slice(0, 6).join(' ')]);
+    if (raak.length) return raak;
+    throw zoekFout('mz_zoek_niks');
+  }
+
+  // Alles wat overblijft: haal de links eruit en zoek op de woorden ernaast.
+  const links = vraag.match(/https?:\/\/\S+/g) || [];
+  const woorden = vraag.replace(/https?:\/\/\S+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (links.length && !woorden) {
+    throw zoekFout(/open\.spotify\.com/.test(links[0]) ? 'mz_zoek_spotify' : 'mz_zoek_link_niet');
+  }
+  return itunesZoek([woorden || vraag, (woorden || vraag).split(/\s+/).slice(0, 6).join(' ')]);
+}
+
+/// Een rechtstreekse link naar een muziekbestand: ophalen en toevoegen.
+async function linkBestandErbij(url) {
+  bezig(t('mz_link_bestand'), true);
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('status ' + r.status);
+    const blob = await r.blob();
+    if (blob.size > 40 * 1024 * 1024) { klaar(); melding(t('mz_link_groot'), 4500); return true; }
+    const naam = decodeURIComponent((url.split(/[?#]/)[0].split('/').pop() || 'Nummer'))
+      .replace(/\.[a-z0-9]+$/i, '').slice(0, 48) || 'Nummer';
+    klaar();
+    await eigenToevoegen(new File([blob], naam + '.mp3', { type: blob.type || 'audio/mpeg' }));
+    $('mzZoek').classList.remove('aan');
+    return true;
+  } catch (e) {
+    klaar();
+    melding(t('mz_link_cors'), 6000);
+    return true;
+  }
 }
 
 /// Een gevonden nummer ophalen en toevoegen alsof het een eigen bestand was.
@@ -5860,15 +5959,19 @@ function mzZoekOpen(vooraf) {
 }
 
 async function mzZoekDoe() {
-  const vraag = $('mzZoekVeld').value;
-  if (!vraag.trim()) return;
+  const vraag = $('mzZoekVeld').value.trim();
+  if (!vraag) return;
+  // Wijst de link rechtstreeks naar een muziekbestand, dan hoeft er niets
+  // gezocht te worden.
+  const kaal = vraag.match(/https?:\/\/\S+/);
+  if (kaal && AUDIO_STAART.test(kaal[0])) { await linkBestandErbij(kaal[0]); return; }
   $('mzZoekLijst').innerHTML = `<div class="lbMelding">${ontsmet(t('lb_loading'))}</div>`;
-  let raak = [];
+  let raak = [], uitleg = '';
   try { raak = await mzZoekOnline(vraag); }
-  catch (e) { raak = []; }
+  catch (e) { raak = []; uitleg = e.uitleg || ''; }
   $('mzZoekLijst').innerHTML = '';
   if (!raak.length) {
-    $('mzZoekLijst').innerHTML = `<div class="lbMelding">${ontsmet(t('mz_zoek_niks'))}</div>`;
+    $('mzZoekLijst').innerHTML = `<div class="lbMelding">${ontsmet(uitleg || t('mz_zoek_niks'))}</div>`;
     return;
   }
   raak.forEach(r => {
@@ -6131,12 +6234,13 @@ $('mzZoekVeld').addEventListener('keydown', e => {
 // app): de link komt als zoekparameter binnen en opent meteen de muziekzoeker.
 (() => {
   const deel = new URLSearchParams(location.search);
-  const tekst = ['koppeling', 'tekst', 'titel'].map(k => deel.get(k) || '').join(' ');
-  const link = tekst.match(/https?:\/\/(?:open\.spotify\.com|music\.apple\.com)\/\S+/);
-  if (!link) return;
+  const tekst = ['koppeling', 'tekst', 'titel'].map(k => deel.get(k) || '').join(' ').trim();
+  if (!/https?:\/\//.test(tekst)) return;
   history.replaceState(null, '', location.pathname);
   toonMuziek();
-  mzZoekOpen(link[0]);
+  // De hele gedeelde tekst gaat mee: staat de titel naast de link, dan heeft
+  // de zoeker daar meer aan dan aan de link alleen.
+  mzZoekOpen(tekst);
 })();
 $('mzBestand').addEventListener('change', e => {
   eigenToevoegen(e.target.files && e.target.files[0]);
