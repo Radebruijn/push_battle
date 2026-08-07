@@ -455,6 +455,8 @@ enum Tk: String {
     case houd_aan
     case houd_uit
     case houd_instel_uit
+    case winkel_boosts
+    case winkel_boosts_uit
 }
 
 enum Strings {
@@ -890,6 +892,8 @@ enum Strings {
         "houd_aan": ["Aan", "On", "Activé"],
         "houd_uit": ["Uit", "Off", "Désactivé"],
         "houd_instel_uit": ["Zet dit uit als de camera je romp niet in beeld krijgt.", "Turn this off if the camera cannot see your torso.", "Désactive ceci si la caméra ne voit pas ton buste."],
+        "winkel_boosts": ["Voor even", "For a while", "Pour un moment"],
+        "winkel_boosts_uit": ["Gaat op zodra je het gebruikt.", "Used up once you spend it.", "Disparaît une fois utilisé."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

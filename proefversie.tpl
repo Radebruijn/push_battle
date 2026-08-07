@@ -1239,7 +1239,6 @@
     <button class="klikTab aan" id="tabHelpers" data-tab="helpers"></button>
     <button class="klikTab" id="tabUpgrades" data-tab="upgrades"></button>
     <button class="klikTab" id="tabWinkel" data-tab="winkel"></button>
-    <button class="klikTab" id="tabCrates" data-tab="crates"></button>
   </div>
   <div class="klikLijst" id="klikLijst"></div>
 </div>
@@ -4704,7 +4703,6 @@ function vertaalKlik() {
   $('tabHelpers').textContent = t('klik_helpers');
   $('tabUpgrades').textContent = t('klik_upgrades');
   $('tabWinkel').textContent = t('klik_winkel');
-  $('tabCrates').textContent = t('klik_crates');
 }
 
 function tekenKlik() {
@@ -4759,6 +4757,7 @@ const trapNaam = i => i ? ' ' + roman(i + 1) : '';
 function klikAanbod() {
   const k = klikStaat();
   let rijen = [];
+  if (klikTab === 'crates') klikTab = 'winkel';   // dat tabblad bestaat niet meer
   if (klikTab === 'helpers') {
     rijen = KLIK_HELPERS.map(h => ({
       id: 'h:' + h.id,
@@ -4806,8 +4805,20 @@ function klikAanbod() {
                    koop: () => { klikStaat().techniek[tk.id] = techniekAantal(tk.id) + 1; } });
     });
     rijen.sort((a, b) => a.prijs - b.prijs);
-  } else if (klikTab === 'crates') {
-    rijen = [];
+  } else {
+    // Eén winkel: bovenin wat je opmaakt, daaronder de kratten per soort.
+    rijen = [{ kop: t('winkel_boosts') }];
+    KLIK_WINKEL.forEach(w => rijen.push({
+      id: 'w:' + w.id,
+      titel: t('koop_' + w.id),
+      uitleg: w.reps ? t('koop_' + w.id + '_uit', w.reps) : t('koop_' + w.id + '_uit'),
+      extra: w.duur && boostActief(w.id) ? klokje(boostRest(w.id)) : '',
+      prijs: Math.ceil(Math.max(w.bodem, basisPerSec() * 3600 * w.uren)),
+      koop: () => {
+        if (w.reps) klikStaat().voer += w.reps;
+        else klikStaat().boosts[w.id] = Math.max(Date.now(), klikStaat().boosts[w.id] || 0) + w.duur * 1000;
+      },
+    }));
     KRAT_SOORTEN.forEach(srt => {
       rijen.push({ kop: t('kratgroep_' + srt.soort) });
       KRATTEN.filter(kr => kr.soort === srt.soort).forEach(kr => rijen.push({
@@ -4820,18 +4831,6 @@ function klikAanbod() {
         koop: () => kratBuit(kr),
       }));
     });
-  } else {
-    rijen = KLIK_WINKEL.map(w => ({
-      id: 'w:' + w.id,
-      titel: t('koop_' + w.id),
-      uitleg: w.reps ? t('koop_' + w.id + '_uit', w.reps) : t('koop_' + w.id + '_uit'),
-      extra: w.duur && boostActief(w.id) ? klokje(boostRest(w.id)) : '',
-      prijs: Math.ceil(Math.max(w.bodem, basisPerSec() * 3600 * w.uren)),
-      koop: () => {
-        if (w.reps) klikStaat().voer += w.reps;
-        else klikStaat().boosts[w.id] = Math.max(Date.now(), klikStaat().boosts[w.id] || 0) + w.duur * 1000;
-      },
-    }));
   }
   // Zodra je iets kunt betalen, weet je voorgoed wat het is.
   rijen.forEach(rij => {

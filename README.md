@@ -273,7 +273,7 @@ Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wor
 
 ## Crates
 
-In het clickerscherm zit een tabblad **Crates** met drie kratten, elk voor één soort:
+Het clickerscherm heeft drie tabbladen: **Helpers**, **Upgrades** en **Winkel**. In de winkel staat alles wat je opmaakt: bovenin de dingen die even werken (dubbele XP, dubbele push-ups, Sprint, Eiwitreep) en daaronder de negen kratten, gegroepeerd per soort:
 
 | | Hout | Zilver | Goud |
 |---|---|---|---|
