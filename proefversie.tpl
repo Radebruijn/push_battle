@@ -1348,6 +1348,8 @@
   <div class="instelWaarde" id="geluidWaarde"></div>
   <input type="range" id="geluid" min="0" max="100" value="70">
   <div class="instelUitleg" id="geluidUitleg"></div>
+  <button class="tekstKnop" id="geluidTest"></button>
+  <div class="instelUitleg" id="geluidStil"></div>
   <div class="instelLabel" id="muziekLabel" style="margin-top:22px"></div>
   <div class="instelWaarde" id="muziekWaarde"></div>
   <input type="range" id="muziek" min="0" max="100" value="35">
@@ -2336,6 +2338,43 @@ let audio = null, muziekLus = null, muziekStap = 0, laatsteToon = 0, toonTrap = 
 let volEffect = Math.min(100, Math.max(0, +(localStorage.getItem('orbslayer.geluid') ?? 70)));
 let volMuziek = Math.min(100, Math.max(0, +(localStorage.getItem('orbslayer.muziek') ?? 30)));
 
+/* Op een iPhone valt zelfgemaakt geluid standaard in de bak 'omgevingsgeluid'.
+   Staat het schuifje aan de zijkant op stil, dan hoor je dus niets — ook al
+   staat het volume vol open. Twee dingen halen het geluid naar het mediakanaal,
+   waar een filmpje ook uit komt:
+
+   - navigator.audioSession op 'playback' zetten. Dat is precies waarvoor die
+     schakelaar bedoeld is, maar hij bestaat pas vanaf iOS 16.4.
+   - Anders houden we een piepklein, vrijwel stil geluidje aan de gang met een
+     gewoon <audio>-element. Zolang dat speelt staat de sessie op media en gaat
+     de rest mee.
+
+   Allebei mag alleen na een echte aanraking, dus dit hangt aan audioAan(). */
+let stilHoudertje = null;
+
+function audioSessieMedia() {
+  try {
+    if (navigator.audioSession) { navigator.audioSession.type = 'playback'; return; }
+  } catch (e) { /* dan het geluidje hieronder */ }
+  if (stilHoudertje) return;
+  // Een halve seconde bijna-stilte als WAV, ter plekke gemaakt: geen bestand.
+  const sr = 8000, n = sr / 2;
+  const buf = new ArrayBuffer(44 + n * 2), dv = new DataView(buf);
+  const zet = (o, tekst) => { for (let i = 0; i < tekst.length; i++) dv.setUint8(o + i, tekst.charCodeAt(i)); };
+  zet(0, 'RIFF'); dv.setUint32(4, 36 + n * 2, true); zet(8, 'WAVEfmt ');
+  dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, sr, true); dv.setUint32(28, sr * 2, true);
+  dv.setUint16(32, 2, true); dv.setUint16(34, 16, true);
+  zet(36, 'data'); dv.setUint32(40, n * 2, true);
+  for (let i = 0; i < n; i++) dv.setInt16(44 + i * 2, i % 2 ? 1 : -1, true);
+  stilHoudertje = document.createElement('audio');
+  stilHoudertje.src = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+  stilHoudertje.loop = true;
+  stilHoudertje.volume = 0.001;
+  stilHoudertje.setAttribute('playsinline', '');
+  stilHoudertje.play().catch(() => {});
+}
+
 /// Browsers laten geluid pas toe na een echte aanraking; daarom wordt de
 /// audio pas bij de eerste tik wakker gemaakt.
 function audioAan() {
@@ -2344,6 +2383,7 @@ function audioAan() {
       const Bouw = window.AudioContext || window.webkitAudioContext;
       if (!Bouw) return null;
       audio = new Bouw();
+      audioSessieMedia();
     }
     if (audio.state === 'suspended') audio.resume();
     return audio;
@@ -2414,6 +2454,13 @@ function muziekBij() {
   if (volMuziek > 0 && !document.hidden) muziekLus = setInterval(muziekTik, 460);
 }
 document.addEventListener('visibilitychange', muziekBij);
+// Het stille houdertje hoeft niet door te draaien als je het spel wegklikt;
+// dan geeft het de audiosessie netjes terug aan de rest van je telefoon.
+document.addEventListener('visibilitychange', () => {
+  if (!stilHoudertje) return;
+  if (document.hidden) stilHoudertje.pause();
+  else stilHoudertje.play().catch(() => {});
+});
 
 // Elke knop in het spel geeft hetzelfde klikje; zo klinkt overal hetzelfde.
 document.addEventListener('click', e => {
@@ -3233,6 +3280,8 @@ function toonInstellingen() {
   $('geluidLabel').textContent = t('geluid_label').toUpperCase();
   $('muziekLabel').textContent = t('muziek_label').toUpperCase();
   $('geluidUitleg').textContent = t('geluid_uitleg');
+  $('geluidTest').textContent = t('geluid_test');
+  $('geluidStil').textContent = t('geluid_stil');
   $('muziekUitleg').textContent = t('muziek_uitleg');
   $('geluid').value = volEffect;
   $('muziek').value = volMuziek;
@@ -3249,6 +3298,12 @@ function werkDiepteBij() {
 }
 
 $('tandwiel').addEventListener('click', e => { e.stopPropagation(); toonInstellingen(); });
+// Een duidelijk deuntje om te horen of er überhaupt geluid uit komt.
+$('geluidTest').addEventListener('click', e => {
+  e.stopPropagation();
+  audioAan();
+  [523, 659, 784, 1047].forEach((hz, i) => toon(hz, 0.3, 'triangle', 1, i * 0.16));
+});
 /// De schuiven voor geluid en muziek. Op nul is het echt stil.
 function werkGeluidBij() {
   volEffect = +$('geluid').value;

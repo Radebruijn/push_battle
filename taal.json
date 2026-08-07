@@ -2710,6 +2710,16 @@
       "Nu: {0} BPM · {1} push-ups per minuut",
       "Now: {0} BPM · {1} push-ups per minute",
       "Actuel : {0} BPM · {1} pompes par minute"
+    ],
+    "geluid_test": [
+      "Geluid testen",
+      "Test the sound",
+      "Tester le son"
+    ],
+    "geluid_stil": [
+      "Hoor je niets op een iPhone? Zet het schuifje aan de zijkant om, zodat de bel aanstaat.",
+      "Hear nothing on an iPhone? Flip the switch on the side so the ringer is on.",
+      "Rien sur un iPhone ? Bascule le bouton sur le côté pour activer la sonnerie."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

@@ -55,6 +55,10 @@ Alle geluiden worden in de pagina zelf gemaakt met de Web Audio API — er wordt
 - **Bij een kill, een verslagen boss, een levelstijging en een gewonnen duel** klinkt een klein loopje; verlies je, dan zakt het juist.
 - **Op de achtergrond loopt een rustige lus** in mineur: een bas eronder en af en toe een noot erboven. Hij stopt vanzelf als je naar een ander tabblad gaat.
 
+**Het schuifje van je iPhone.** Zelfgemaakt geluid valt op iOS standaard in de bak *omgevingsgeluid*: staat het schuifje aan de zijkant op stil, dan hoor je niets, ook al staat het volume vol open. Het spel zet de audiosessie daarom op *playback*, waar een filmpje ook uit komt. Vanaf iOS 16.4 gaat dat met één regel (`navigator.audioSession.type`); op oudere toestellen houdt het spel een piepklein, vrijwel stil geluidje aan de gang met een gewoon `<audio>`-element, want zolang dat speelt staat de sessie goed. Dat geluidje wordt ter plekke als WAV in elkaar gezet — nog steeds geen bestand in het spel — en gaat op pauze zodra je het spel wegklikt.
+
+Onder de geluidsschuif zit **Geluid testen**: vier duidelijke tonen, zodat je meteen weet of er iets uit komt. Blijft het stil, dan staat eronder waar je op een iPhone moet kijken.
+
 Bij de instellingen staan twee schuiven: **Geluid** voor de tonen en klikjes, **Muziek** voor de lus. Allebei van 0 tot 100; op nul wordt er letterlijk niets meer aangemaakt. De stand blijft op je apparaat staan.
 
 Browsers laten geluid pas toe nadat je iets hebt aangeraakt — dat is een regel van de browser, geen instelling. De eerste tik in het spel maakt de audio wakker.

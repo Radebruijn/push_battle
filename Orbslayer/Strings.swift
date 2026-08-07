@@ -566,6 +566,8 @@ enum Tk: String {
     case mz_tik_opnieuw
     case mz_tempo_klaar
     case mz_tempo_nu
+    case geluid_test
+    case geluid_stil
 }
 
 enum Strings {
@@ -1112,6 +1114,8 @@ enum Strings {
         "mz_tik_opnieuw": ["Opnieuw tikken", "Tap again", "Retaper"],
         "mz_tempo_klaar": ["Tempo bewaard: {0} BPM", "Tempo saved: {0} BPM", "Tempo enregistré : {0} BPM"],
         "mz_tempo_nu": ["Nu: {0} BPM · {1} push-ups per minuut", "Now: {0} BPM · {1} push-ups per minute", "Actuel : {0} BPM · {1} pompes par minute"],
+        "geluid_test": ["Geluid testen", "Test the sound", "Tester le son"],
+        "geluid_stil": ["Hoor je niets op een iPhone? Zet het schuifje aan de zijkant om, zodat de bel aanstaat.", "Hear nothing on an iPhone? Flip the switch on the side so the ringer is on.", "Rien sur un iPhone ? Bascule le bouton sur le côté pour activer la sonnerie."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
