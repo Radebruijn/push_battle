@@ -717,10 +717,14 @@
   .klikTab.aan { background: rgba(255,199,64,.16); color: #ffc740; }
   .klikLijst { flex: 1; overflow-y: auto; padding: 0 12px 20px;
                -webkit-overflow-scrolling: touch; }
-  .kratVraag { position: absolute; right: 8px; top: 8px; width: 24px; height: 24px;
+  /* Het vraagteken zit in de bovenhoek; de prijs schuift eronder, zodat ze
+     elkaar niet raken. */
+  .kratVraag { position: absolute; right: 10px; top: 10px; width: 26px; height: 26px;
                border-radius: 50%; display: grid; place-items: center; cursor: pointer;
-               background: rgba(255,255,255,.1); color: rgba(255,255,255,.75);
-               font-size: 13px; font-weight: 900; }
+               background: rgba(255,255,255,.12); color: rgba(255,255,255,.8);
+               font-size: 14px; font-weight: 900; line-height: 1; }
+  .klikItem.metVraag { padding-top: 16px; padding-bottom: 14px; }
+  .klikItem.metVraag .klikPrijs { align-self: flex-end; padding-top: 22px; }
   .klikItem { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
               background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.07);
               border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; color: inherit;
@@ -1064,6 +1068,9 @@
   <div class="instelWaarde" id="diepteWaarde"></div>
   <input type="range" id="diepte" min="30" max="85" value="60">
   <div class="instelUitleg" id="diepteUitleg"></div>
+  <div class="instelLabel" id="houdLabel" style="margin-top:24px"></div>
+  <div class="sportKiezer accSportRij" id="houdRij"></div>
+  <div class="instelUitleg" id="houdUitleg"></div>
   <div class="instelLabel" id="geluidLabel" style="margin-top:26px"></div>
   <div class="instelWaarde" id="geluidWaarde"></div>
   <input type="range" id="geluid" min="0" max="100" value="70">
@@ -1904,6 +1911,8 @@ function wisselSport(nieuweSport) {
   combo = 0; sessionReps = 0;
   CAL = leesCal();
   updateMarks();
+  autoLaag = autoHoog = null; autoRijp = 0; autoGemeld = false;
+  houdingOk = true; houdingSlecht = houdingGoed = 0;
   if (cameraOn && !isGeijkt()) melding(t('cal_nodig'), 5000);
   spawn();
   bewaarAlles();
@@ -2299,6 +2308,61 @@ function silhouetHoogte(bron) {
   return 1 - bovensteRij / (RASTER_H - 1);
 }
 
+/* ---------------------------------------------------------------
+   Meekijken met je houding.
+
+   Het houdingsmodel geeft niet alleen je hoofd terug maar ook je schouders,
+   heupen en knieën. Daarmee kunnen we zien of je écht in de goede houding
+   ligt of staat. Wie rechtop zit en alleen met zijn hoofd knikt, heeft een
+   rechtopstaande romp — en dat telt dus niet.
+
+   Tegelijk ijkt hij zichzelf: zolang je houding klopt onthoudt hij hoe hoog
+   en hoe laag je hoofd komt, en daar worden de drempels vanzelf op gezet.
+   Je hoeft dus niets meer in te stellen.
+---------------------------------------------------------------- */
+const punt = (kp, naam) => kp.find(k => k.name === naam && (k.score ?? 1) > 0.3) || null;
+const eenVan = (kp, a, b) => punt(kp, a) || punt(kp, b);
+
+let houdingOk = true, houdingSlecht = 0, houdingGoed = 0;
+/// Sommige opstellingen krijgen je romp niet in beeld; dan kun je het
+/// meekijken uitzetten. Standaard staat het aan.
+let houdingAan = localStorage.getItem('orbslayer.houding') !== 'uit';
+let autoLaag = null, autoHoog = null, autoRijp = 0, autoGemeld = false;
+
+/// Klopt de houding voor deze oefening? Push-ups en sit-ups willen een
+/// liggende romp, squats een staande. Zonder schouders of heupen in beeld
+/// weten we het niet zeker en tellen we niets.
+function houdingKlopt(keypoints) {
+  if (!keypoints || !keypoints.length) return null;
+  const schouder = eenVan(keypoints, 'left_shoulder', 'right_shoulder');
+  const heup = eenVan(keypoints, 'left_hip', 'right_hip');
+  if (!schouder || !heup) return false;
+  const dx = Math.abs(schouder.x - heup.x), dy = Math.abs(schouder.y - heup.y);
+  if (SPORT === 'squat') {
+    // Staand: de romp loopt van boven naar beneden.
+    const knie = eenVan(keypoints, 'left_knee', 'right_knee');
+    return dy > dx * 1.2 && !!knie;
+  }
+  // Liggend: de romp loopt van links naar rechts.
+  return dx > dy * 1.1;
+}
+
+/// Zolang de houding klopt, onthoudt hij hoe hoog en hoe laag je komt en zet
+/// hij de drempels daar vanzelf op.
+function zelfIjken(waarde) {
+  if (autoLaag === null) { autoLaag = autoHoog = waarde; return; }
+  // Uitschieters pakken we meteen, terugkruipen gaat langzaam — zo blijft de
+  // ijking meelopen als je een stukje verschuift.
+  autoLaag += (waarde - autoLaag) * (waarde < autoLaag ? 0.5 : 0.0015);
+  autoHoog += (waarde - autoHoog) * (waarde > autoHoog ? 0.5 : 0.0015);
+  if (autoHoog - autoLaag < 0.09) { autoRijp = 0; return; }
+  if (++autoRijp < 25) return;
+  CAL = { top: autoHoog, bottom: autoLaag };
+  localStorage.setItem('orbslayer.cal.' + SPORT, JSON.stringify(CAL));
+  updateMarks();
+  if (!autoGemeld) { autoGemeld = true; melding(t('houd_geijkt'), 4000); }
+}
+
 function hoofdPunten(keypoints) {
   if (!keypoints || !keypoints.length) return null;
   const genoeg = k => (k.score ?? 1) > 0.3;
@@ -2424,11 +2488,12 @@ async function trackLoop() {
   if (!cameraOn) return;
   const v = $('video');
   if (v.videoWidth) {
-    let height = null, punten = null;
+    let height = null, punten = null, alles = null;
     try {
       if (volgWijze === 'model') {
         const poses = await model.estimatePoses(v, { maxPoses: 1, flipHorizontal: false });
-        const kp = hoofdPunten(poses[0]?.keypoints);
+        alles = poses[0]?.keypoints || null;
+        const kp = hoofdPunten(alles);
         if (kp && kp.length) {
           punten = kp;
           // Het midden van alles wat we van je hoofd zien: neus, ogen, oren.
@@ -2439,12 +2504,12 @@ async function trackLoop() {
         height = silhouetHoogte(v);
       }
     } catch (e) { /* een enkel mislukt frame slaan we over */ }
-    handleFace(height, punten);
+    handleFace(height, punten, alles);
   }
   requestAnimationFrame(trackLoop);
 }
 
-function handleFace(height, punten) {
+function handleFace(height, punten, alles) {
   const c = $('dot'), v = $('video');
   c.width = v.videoWidth || 120; c.height = v.videoHeight || 90;
   c.style.height = (c.height / c.width * 120) + 'px';
@@ -2483,8 +2548,24 @@ function handleFace(height, punten) {
 
   if (calStep > 0) { calValue = value; setNose(value, false); camState(t('cam_searching')); return; }
 
+  // Meekijken met de houding. Zonder model (silhouet) kan dat niet, dan
+  // vertrouwen we op de ijking zoals vroeger.
+  if (alles && houdingAan) {
+    const klopt = houdingKlopt(alles);
+    if (klopt === false) { houdingSlecht++; houdingGoed = 0; }
+    else if (klopt === true) { houdingGoed++; houdingSlecht = 0; }
+    if (houdingSlecht > 12) houdingOk = false;
+    if (houdingGoed > 6) houdingOk = true;
+    if (houdingOk) zelfIjken(value);
+  }
+
   setNose(value, value <= DOWN);
-  camState(t('cam_height', Math.round(value * 100)));
+  camState(houdingOk ? t('cam_height', Math.round(value * 100)) : t('houd_goed'));
+  if (!houdingOk && houdingAan) {
+    $('hint').textContent = t('houd_fout_' + SPORT);
+    wentDown = false;
+    return;
+  }
 
   if (value <= DOWN) {
     wentDown = true;
@@ -2770,6 +2851,22 @@ function toonInstellingen() {
   $('kalibreerUitleg').textContent = isGeijkt() ? '' : t('cal_nodig');
   $('rondleidingKnop').textContent = t('tour_again');
   $('instelDicht').textContent = t('close');
+  $('houdLabel').textContent = t('houd_label').toUpperCase();
+  $('houdUitleg').textContent = t('houd_uitleg') + ' ' + t('houd_instel_uit');
+  $('houdRij').innerHTML = '';
+  [[true, 'houd_aan'], [false, 'houd_uit']].forEach(([aan, sleutel]) => {
+    const knop = document.createElement('button');
+    knop.className = 'sportKnop' + (houdingAan === aan ? ' aan' : '');
+    knop.textContent = t(sleutel);
+    knop.onclick = e => {
+      e.stopPropagation();
+      houdingAan = aan;
+      localStorage.setItem('orbslayer.houding', aan ? 'aan' : 'uit');
+      if (!aan) houdingOk = true;
+      toonInstellingen();
+    };
+    $('houdRij').appendChild(knop);
+  });
   $('geluidLabel').textContent = t('geluid_label').toUpperCase();
   $('muziekLabel').textContent = t('muziek_label').toUpperCase();
   $('geluidUitleg').textContent = t('geluid_uitleg');
@@ -3469,11 +3566,25 @@ async function zetFoto(nieuw) {
 /* Drie kratten, elk voor één soort. Zo weet je waarvoor je betaalt: een
    koppenkrat geeft altijd een kop, een kleurenkrat altijd een kleur. Welke
    graad je krijgt is wél gokken, en die kansen staan op het vraagteken. */
-const KRATTEN = [
-  { id: 'icoon', soort: 'icoon', prijs: 50, kans: [55, 33, 12] },
-  { id: 'titel', soort: 'titel', prijs: 45, kans: [55, 33, 12] },
-  { id: 'kleur', soort: 'kleur', prijs: 45, kans: [55, 33, 12] },
+const KRAT_SOORTEN = [
+  { soort: 'icoon', basis: 50 },
+  { soort: 'titel', basis: 45 },
+  { soort: 'kleur', basis: 45 },
 ];
+/// Hout is goedkoop en meestal gewoon, goud is duur en vaak episch.
+const KRAT_KWALITEIT = [
+  { id: 'hout',   maal: 1,   kans: [72, 24, 4] },
+  { id: 'zilver', maal: 2.2, kans: [45, 42, 13] },
+  { id: 'goud',   maal: 4.5, kans: [18, 45, 37] },
+];
+const KRATTEN = [];
+KRAT_SOORTEN.forEach(srt => KRAT_KWALITEIT.forEach(kw => KRATTEN.push({
+  id: kw.id + '_' + srt.soort,
+  soort: srt.soort,
+  kwaliteit: kw.id,
+  prijs: Math.round(srt.basis * kw.maal),
+  kans: kw.kans,
+})));
 const COSMETICA = [
   // titels
   { id: 'vroegevogel',    soort: 'titel', graad: 1 },
@@ -3486,6 +3597,14 @@ const COSMETICA = [
   { id: 'combokoning',    soort: 'titel', graad: 2 },
   { id: 'demachine',      soort: 'titel', graad: 3 },
   { id: 'onverwoestbaar', soort: 'titel', graad: 3 },
+  { id: 'koudestart',     soort: 'titel', graad: 1 },
+  { id: 'dagploeg',       soort: 'titel', graad: 1 },
+  { id: 'vloerheld',      soort: 'titel', graad: 1 },
+  { id: 'ademmeester',    soort: 'titel', graad: 2 },
+  { id: 'staalvreter',    soort: 'titel', graad: 2 },
+  { id: 'bergbeklimmer',  soort: 'titel', graad: 2 },
+  { id: 'zwaartekracht',  soort: 'titel', graad: 3 },
+  { id: 'laatstelans',    soort: 'titel', graad: 3 },
   // monsterkoppen als icoon (arena-nummer bepaalt kop en kleur)
   { id: 'kop1', soort: 'icoon', graad: 1, arena: 1 },
   { id: 'kop2', soort: 'icoon', graad: 1, arena: 2 },
@@ -3496,6 +3615,14 @@ const COSMETICA = [
   { id: 'kop7', soort: 'icoon', graad: 3, arena: 7 },
   { id: 'kop8', soort: 'icoon', graad: 3, arena: 8 },
   { id: 'kop9', soort: 'icoon', graad: 3, arena: 9 },
+  { id: 'kop10', soort: 'icoon', graad: 1, arena: 10 },
+  { id: 'kop11', soort: 'icoon', graad: 1, arena: 11 },
+  { id: 'kop12', soort: 'icoon', graad: 2, arena: 12 },
+  { id: 'kop13', soort: 'icoon', graad: 2, arena: 13 },
+  { id: 'kop14', soort: 'icoon', graad: 2, arena: 14 },
+  { id: 'kop15', soort: 'icoon', graad: 3, arena: 15 },
+  { id: 'kop16', soort: 'icoon', graad: 3, arena: 16 },
+  { id: 'kop17', soort: 'icoon', graad: 3, arena: 17 },
   // naamkleuren
   { id: 'goud',  soort: 'kleur', graad: 1, hex: '#ffc740' },
   { id: 'gras',  soort: 'kleur', graad: 1, hex: '#63e063' },
@@ -3505,6 +3632,14 @@ const COSMETICA = [
   { id: 'vuur',  soort: 'kleur', graad: 2, hex: '#ff9d2e' },
   { id: 'bloed', soort: 'kleur', graad: 3, hex: '#f2263a' },
   { id: 'ijs',   soort: 'kleur', graad: 3, hex: '#35f0d0' },
+  { id: 'mint',      soort: 'kleur', graad: 1, hex: '#4fe0b0' },
+  { id: 'zand',      soort: 'kleur', graad: 1, hex: '#e6c88a' },
+  { id: 'staal',     soort: 'kleur', graad: 1, hex: '#9fb4c9' },
+  { id: 'koraal',    soort: 'kleur', graad: 2, hex: '#ff7f6b' },
+  { id: 'limoen',    soort: 'kleur', graad: 2, hex: '#b6ff3a' },
+  { id: 'indigo',    soort: 'kleur', graad: 2, hex: '#6b7bff' },
+  { id: 'magenta',   soort: 'kleur', graad: 3, hex: '#ff3ad0' },
+  { id: 'zonnevuur', soort: 'kleur', graad: 3, hex: '#ffd23a' },
 ];
 const COS_GRAADKLEUR = ['#c8cdd2', '#58b6ff', '#b06dff'];
 const cosVind = id => COSMETICA.find(c => c.id === id) || null;
@@ -4664,15 +4799,19 @@ function klikAanbod() {
     });
     rijen.sort((a, b) => a.prijs - b.prijs);
   } else if (klikTab === 'crates') {
-    rijen = KRATTEN.map(kr => ({
-      id: 'kr:' + kr.id,
-      titel: t('krat_' + kr.id),
-      uitleg: t('krat_' + kr.id + '_uit'),
-      extra: '',
-      prijs: kr.prijs,
-      vraag: kr.id,
-      koop: () => kratBuit(kr),
-    }));
+    rijen = [];
+    KRAT_SOORTEN.forEach(srt => {
+      rijen.push({ kop: t('kratgroep_' + srt.soort) });
+      KRATTEN.filter(kr => kr.soort === srt.soort).forEach(kr => rijen.push({
+        id: 'kr:' + kr.id,
+        titel: t('krat_' + kr.id),
+        uitleg: t('krat_' + srt.soort + '_uit'),
+        extra: '',
+        prijs: kr.prijs,
+        vraag: kr.id,
+        koop: () => kratBuit(kr),
+      }));
+    });
   } else {
     rijen = KLIK_WINKEL.map(w => ({
       id: 'w:' + w.id,
@@ -4688,6 +4827,7 @@ function klikAanbod() {
   }
   // Zodra je iets kunt betalen, weet je voorgoed wat het is.
   rijen.forEach(rij => {
+    if (rij.kop) return;
     if (k.punten >= rij.prijs && !k.gezien.includes(rij.id)) k.gezien.push(rij.id);
     rij.open = k.gezien.includes(rij.id);
   });
@@ -4708,8 +4848,16 @@ function tekenKlikLijst(altijd = false) {
     return;
   }
   aanbod.forEach(rij => {
+    // Kopjes verdelen de kratten in koppen, titels en kleuren.
+    if (rij.kop) {
+      const kop = document.createElement('div');
+      kop.className = 'qKop';
+      kop.textContent = rij.kop;
+      lijst.appendChild(kop);
+      return;
+    }
     const knop = document.createElement('button');
-    knop.className = 'klikItem' + (rij.open ? '' : ' dicht');
+    knop.className = 'klikItem' + (rij.open ? '' : ' dicht') + (rij.vraag ? ' metVraag' : '');
     knop.dataset.prijs = rij.prijs;
     const titel = rij.open ? rij.titel : t('klik_slot');
     const uitleg = rij.open ? rij.uitleg : t('klik_slot_uit');

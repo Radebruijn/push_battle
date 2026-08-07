@@ -407,11 +407,8 @@ enum Tk: String {
     case les10
     case cal_voor
     case cal_nodig
-    case krat_icoon
     case krat_icoon_uit
-    case krat_titel
     case krat_titel_uit
-    case krat_kleur
     case krat_kleur_uit
     case kans_kop
     case kans_regel
@@ -419,6 +416,45 @@ enum Tk: String {
     case kans_dubbel
     case krat_rollen
     case krat_apart
+    case krat_hout_icoon
+    case krat_zilver_icoon
+    case krat_goud_icoon
+    case krat_hout_titel
+    case krat_zilver_titel
+    case krat_goud_titel
+    case krat_hout_kleur
+    case krat_zilver_kleur
+    case krat_goud_kleur
+    case kratgroep_icoon
+    case kratgroep_titel
+    case kratgroep_kleur
+    case cos_koudestart
+    case cos_dagploeg
+    case cos_vloerheld
+    case cos_ademmeester
+    case cos_staalvreter
+    case cos_bergbeklimmer
+    case cos_zwaartekracht
+    case cos_laatstelans
+    case cos_mint
+    case cos_zand
+    case cos_staal
+    case cos_koraal
+    case cos_limoen
+    case cos_indigo
+    case cos_magenta
+    case cos_zonnevuur
+    case houd_fout_pushup
+    case houd_fout_situp
+    case houd_fout_squat
+    case houd_goed
+    case houd_ijkt
+    case houd_geijkt
+    case houd_uitleg
+    case houd_label
+    case houd_aan
+    case houd_uit
+    case houd_instel_uit
 }
 
 enum Strings {
@@ -806,11 +842,8 @@ enum Strings {
         "les10": ["Bovenaan wissel je van oefening. Push-ups, sit-ups en squats zijn drie aparte werelden met eigen voortgang — en je ijkt ze allemaal één keer apart.", "At the top you switch exercise. Push-ups, sit-ups and squats are three separate worlds with their own progress — and you calibrate each of them once.", "En haut, tu changes d'exercice. Pompes, abdos et squats sont trois mondes séparés avec leur propre progression — et tu calibres chacun une fois."],
         "cal_voor": ["Kalibreren voor {0}", "Calibrate for {0}", "Calibrer pour {0}"],
         "cal_nodig": ["Deze oefening is nog niet geijkt. Doe dat één keer, dan onthoudt hij het.", "This exercise has not been calibrated yet. Do it once and it will remember.", "Cet exercice n'est pas encore calibré. Fais-le une fois, il s'en souviendra."],
-        "krat_icoon": ["Koppenkrat", "Head Crate", "Caisse à Têtes"],
         "krat_icoon_uit": ["Een monsterkop om naast je naam te dragen.", "A monster head to wear next to your name.", "Une tête de monstre à porter à côté de ton nom."],
-        "krat_titel": ["Titelkrat", "Title Crate", "Caisse à Titres"],
         "krat_titel_uit": ["Een titel die onder je naam komt te staan.", "A title that appears under your name.", "Un titre qui s'affiche sous ton nom."],
-        "krat_kleur": ["Kleurenkrat", "Colour Crate", "Caisse à Couleurs"],
         "krat_kleur_uit": ["Een kleur voor je naam in het klassement.", "A colour for your name in the leaderboard.", "Une couleur pour ton nom au classement."],
         "kans_kop": ["Wat zit erin?", "What's inside?", "Qu'y a-t-il dedans ?"],
         "kans_regel": ["{0}% kans · {1} stuks", "{0}% chance · {1} items", "{0} % de chance · {1} objets"],
@@ -818,6 +851,45 @@ enum Strings {
         "kans_dubbel": ["Heb je hem al, dan krijg je {0} push-ups terug.", "If you already own it you get {0} push-ups back.", "Si tu l'as déjà, tu récupères {0} pompes."],
         "krat_rollen": ["Rollen…", "Rolling…", "Ça tourne…"],
         "krat_apart": ["Wat je hier wint hoort bij deze oefening en gaat niet mee naar de andere.", "What you win here belongs to this exercise and does not carry over.", "Ce que tu gagnes ici appartient à cet exercice et ne suit pas ailleurs."],
+        "krat_hout_icoon": ["Houten koppenkrat", "Wooden Head Crate", "Caisse à têtes en bois"],
+        "krat_zilver_icoon": ["Zilveren koppenkrat", "Silver Head Crate", "Caisse à têtes en argent"],
+        "krat_goud_icoon": ["Gouden koppenkrat", "Golden Head Crate", "Caisse à têtes en or"],
+        "krat_hout_titel": ["Houten titelkrat", "Wooden Title Crate", "Caisse à titres en bois"],
+        "krat_zilver_titel": ["Zilveren titelkrat", "Silver Title Crate", "Caisse à titres en argent"],
+        "krat_goud_titel": ["Gouden titelkrat", "Golden Title Crate", "Caisse à titres en or"],
+        "krat_hout_kleur": ["Houten kleurenkrat", "Wooden Colour Crate", "Caisse à couleurs en bois"],
+        "krat_zilver_kleur": ["Zilveren kleurenkrat", "Silver Colour Crate", "Caisse à couleurs en argent"],
+        "krat_goud_kleur": ["Gouden kleurenkrat", "Golden Colour Crate", "Caisse à couleurs en or"],
+        "kratgroep_icoon": ["Koppen", "Heads", "Têtes"],
+        "kratgroep_titel": ["Titels", "Titles", "Titres"],
+        "kratgroep_kleur": ["Naamkleuren", "Name colours", "Couleurs de nom"],
+        "cos_koudestart": ["Koude Start", "Cold Start", "Départ à Froid"],
+        "cos_dagploeg": ["Dagploeg", "Day Shift", "Équipe de Jour"],
+        "cos_vloerheld": ["Vloerheld", "Floor Hero", "Héros du Sol"],
+        "cos_ademmeester": ["Ademmeester", "Breath Master", "Maître du Souffle"],
+        "cos_staalvreter": ["Staalvreter", "Steel Eater", "Mangeur d'Acier"],
+        "cos_bergbeklimmer": ["Bergbeklimmer", "Mountaineer", "Alpiniste"],
+        "cos_zwaartekracht": ["Zwaartekracht", "Gravity", "Gravité"],
+        "cos_laatstelans": ["Laatste Lans", "Last Lance", "Dernière Lance"],
+        "cos_mint": ["Mint", "Mint", "Menthe"],
+        "cos_zand": ["Zand", "Sand", "Sable"],
+        "cos_staal": ["Staal", "Steel", "Acier"],
+        "cos_koraal": ["Koraal", "Coral", "Corail"],
+        "cos_limoen": ["Limoen", "Lime", "Citron Vert"],
+        "cos_indigo": ["Indigo", "Indigo", "Indigo"],
+        "cos_magenta": ["Magenta", "Magenta", "Magenta"],
+        "cos_zonnevuur": ["Zonnevuur", "Sunfire", "Feu Solaire"],
+        "houd_fout_pushup": ["De camera ziet je hoofd wel, maar geen plankhouding. Ga liggen met gestrekte armen.", "The camera sees your head but no plank position. Get down with straight arms.", "La caméra voit ta tête mais pas la position de planche. Mets-toi au sol, bras tendus."],
+        "houd_fout_situp": ["Ga plat liggen met je knieën gebogen — de camera moet je romp zien.", "Lie down flat with your knees bent — the camera needs to see your torso.", "Allonge-toi, genoux pliés — la caméra doit voir ton buste."],
+        "houd_fout_squat": ["Ga rechtop staan, zodat de camera je heupen en knieën ziet.", "Stand up straight so the camera can see your hips and knees.", "Tiens-toi droit, que la caméra voie tes hanches et tes genoux."],
+        "houd_goed": ["Houding klopt", "Position looks right", "Position correcte"],
+        "houd_ijkt": ["Zelf aan het ijken…", "Calibrating by itself…", "Calibrage automatique…"],
+        "houd_geijkt": ["Geijkt terwijl je bezig was — je hoeft niets in te stellen.", "Calibrated while you were going — nothing for you to set.", "Calibré pendant que tu bougeais — rien à régler."],
+        "houd_uitleg": ["De camera kijkt mee of je echt in de goede houding zit. Alleen je hoofd bewegen telt niet.", "The camera checks that you are really in position. Just moving your head does not count.", "La caméra vérifie que tu es vraiment en position. Bouger la tête ne compte pas."],
+        "houd_label": ["Meekijken met je houding", "Watch my position", "Vérifier ma position"],
+        "houd_aan": ["Aan", "On", "Activé"],
+        "houd_uit": ["Uit", "Off", "Désactivé"],
+        "houd_instel_uit": ["Zet dit uit als de camera je romp niet in beeld krijgt.", "Turn this off if the camera cannot see your torso.", "Désactive ceci si la caméra ne voit pas ton buste."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

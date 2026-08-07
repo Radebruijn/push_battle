@@ -59,6 +59,18 @@ Bij de instellingen staan twee schuiven: **Geluid** voor de tonen en klikjes, **
 
 Browsers laten geluid pas toe nadat je iets hebt aangeraakt — dat is een regel van de browser, geen instelling. De eerste tik in het spel maakt de audio wakker.
 
+## De camera kijkt mee met je houding
+
+Het houdingsmodel geeft niet alleen je hoofd terug maar ook je schouders, heupen en knieën. Daar wordt nu naar gekeken.
+
+**Je moet echt in de houding liggen of staan.** Voor push-ups en sit-ups moet je romp horizontaal lopen — van schouder naar heup meer opzij dan omlaag. Voor squats juist verticaal, met je knieën in beeld. Zit je rechtop en knik je alleen met je hoofd, dan is je romp verticaal en telt er niets. Ziet de camera helemaal geen schouders of heupen, dan telt er ook niets: dan weten we het niet zeker.
+
+Zodra het misgaat komt er onderin te staan wat je moet doen, bijvoorbeeld *"De camera ziet je hoofd wel, maar geen plankhouding."* Het duurt een halve seconde voor hij van gedachten verandert, dus één rare frame breekt je serie niet af.
+
+**Hij ijkt zichzelf.** Zolang je houding klopt, onthoudt hij hoe hoog en hoe laag je hoofd komt en zet hij de drempels daar vanzelf op. Uitschieters pakt hij meteen, terugkruipen gaat langzaam, zodat de ijking meeloopt als je een stukje verschuift. Na een paar herhalingen klopt het en krijg je één keer de melding dat hij het zelf gedaan heeft. Handmatig ijken kan nog steeds, en is nog nodig als het houdingsmodel niet geladen kan worden — dan draait de silhouet-terugval en zijn er geen schouders om naar te kijken.
+
+Krijgt jouw opstelling je romp niet in beeld, dan kun je het meekijken uitzetten bij de instellingen.
+
 ## Talen
 
 Het spel spreekt Nederlands, Engels en Frans. De keuze staat bij de instellingen, achter het tandwiel. Bij de eerste start volgt hij de taal van je toestel; kies je zelf iets, dan onthoudt hij dat. Arenanamen, rassen, bossen en de sfeerzinnen zijn allemaal vertaald — alleen de namen van de minions blijven overal gelijk, want dat zijn eigennamen.
@@ -259,13 +271,15 @@ Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wor
 
 In het clickerscherm zit een tabblad **Crates** met drie kratten, elk voor één soort:
 
-| Krat | Wat erin zit | Prijs |
-|---|---|---|
-| Koppenkrat | een monsterkop om naast je naam te dragen | 50 |
-| Titelkrat | een titel onder je naam | 45 |
-| Kleurenkrat | een kleur voor je naam | 45 |
+| | Hout | Zilver | Goud |
+|---|---|---|---|
+| **Koppen** — een monsterkop naast je naam | 50 | 110 | 225 |
+| **Titels** — een titel onder je naam | 45 | 99 | 203 |
+| **Naamkleuren** — een kleur voor je naam | 45 | 99 | 203 |
 
-Je weet dus altijd wélk soort je koopt; alleen de zeldzaamheid is gokken: 55 procent gewoon, 33 procent zeldzaam, 12 procent episch.
+Je weet dus altijd wélk soort je koopt. De kwaliteit bepaalt hoe groot je kans op iets zeldzaams is: hout 72/24/4 procent, zilver 45/42/13, goud 18/45/37 voor gewoon, zeldzaam en episch.
+
+Er zijn 17 koppen, 18 titels en 16 naamkleuren te verzamelen.
 
 **Het vraagteken rechtsboven op elke krat** laat precies zien wat erin zit: per zeldzaamheid het percentage met een balkje, alle stukken die je kunt krijgen met hun tekening en naam, hoeveel je er al van hebt, en wat je terugkrijgt als je iets dubbel trekt.
 
