@@ -425,6 +425,73 @@
                margin-left: -1.5px; background: #ffc740;
                box-shadow: 0 0 14px rgba(255,199,64,.9); }
 
+  /* Wereldboss */
+  #wb { position: fixed; inset: 0; z-index: 12; background: #08080a; display: none;
+        flex-direction: column; align-items: center; padding: 24px 18px 118px; overflow-y: auto; }
+  #wb.aan { display: flex; }
+  #wb h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.5);
+           margin: 6px 0 14px; }
+  #wbVak { width: 100%; max-width: 420px; display: flex; flex-direction: column;
+           align-items: center; flex: 1; min-height: 0; }
+  .wbBeeld svg { width: 190px; height: 190px; }
+  .wbBalk { width: 100%; height: 16px; border-radius: 99px; background: rgba(255,255,255,.08);
+            overflow: hidden; }
+  .wbBalk i { display: block; height: 100%; border-radius: 99px;
+              background: linear-gradient(90deg, #f2263a, #ff9426); transition: width .3s; }
+  .wbHp { font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; margin-top: 8px; }
+  .wbMee { font-size: 12px; color: rgba(255,255,255,.5); }
+  .wbJij { font-size: 14px; font-weight: 800; color: #ffc740; margin-top: 6px; }
+  #wbBalkVak { flex: 1; min-height: 0; display: flex; align-items: center; }
+  #wbBalkVak .nosebar { height: 100%; max-height: 30vh; margin: 8px 0 0; }
+  /* Knoppen boven het klassement om te kiezen waarop gesorteerd wordt */
+  .lbSoorten { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap;
+               justify-content: center; }
+  .lbSoort { padding: 7px 12px; border-radius: 99px; cursor: pointer; font: inherit;
+             font-size: 12px; font-weight: 800; border: 1px solid rgba(255,255,255,.1);
+             background: rgba(255,255,255,.05); color: rgba(255,255,255,.55); }
+  .lbSoort.aan { background: rgba(255,199,64,.16); border-color: rgba(255,199,64,.5);
+                 color: #ffc740; }
+
+  /* Op de maat */
+  #mzKies { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96);
+            display: none; padding: 30px 20px; overflow-y: auto; }
+  #mzKies.aan { display: block; }
+  #mzKies h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+               color: rgba(255,255,255,.5); margin: 0 0 18px; padding: 8px 46px 0; }
+  .mzRij { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+           background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+           border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; color: inherit;
+           font: inherit; cursor: pointer; }
+  .mzRij b { display: block; font-size: 16px; font-weight: 900; }
+  .mzRij small { display: block; font-size: 11px; color: rgba(255,255,255,.45); margin-top: 3px; }
+  .mzRij .mzBest { flex: none; font-size: 12px; font-weight: 800; color: #ffc740; }
+  #mz { position: fixed; inset: 0; z-index: 12; background: #08080a; display: none;
+        flex-direction: column; align-items: center; padding: 22px 16px 118px; }
+  #mz.aan { display: flex; }
+  .mzKop { text-align: center; }
+  .mzNaam { font-size: 13px; font-weight: 900; letter-spacing: 3px; color: rgba(255,255,255,.55); }
+  .mzTeller { font-size: 44px; font-weight: 900; font-variant-numeric: tabular-nums; }
+  .mzRingVak { position: relative; width: 220px; height: 220px; display: grid;
+               place-items: center; margin: 10px 0; }
+  .mzDoel { position: absolute; width: 96px; height: 96px; border-radius: 50%;
+            border: 3px solid rgba(255,199,64,.75); }
+  .mzRing { position: absolute; width: 96px; height: 96px; border-radius: 50%;
+            border: 5px solid #58b6ff; will-change: transform; }
+  .mzOordeel { position: absolute; font-size: 20px; font-weight: 900; opacity: 0;
+               transition: opacity .25s; }
+  .mzBalk { width: min(90%, 360px); height: 8px; border-radius: 99px;
+            background: rgba(255,255,255,.08); overflow: hidden; }
+  .mzBalk i { display: block; height: 100%; border-radius: 99px; background: #ffc740; width: 0; }
+  .mzScore { font-size: 13px; color: rgba(255,255,255,.5); margin-top: 10px; }
+  #mzBalkVak { flex: 1; min-height: 0; display: flex; align-items: center; }
+  #mzBalkVak .nosebar { height: 100%; max-height: 34vh; margin: 0; }
+  #mzUit { position: fixed; inset: 0; z-index: 13; display: none; place-items: center;
+           background: rgba(0,0,0,.93); text-align: center; padding: 24px; }
+  #mzUit.aan { display: grid; }
+  #mzUit .kop { font-size: 36px; font-weight: 900; }
+  #mzUit .score { font-size: 18px; font-weight: 700; margin-top: 10px; }
+  #mzUit .beloning { font-size: 24px; font-weight: 900; color: #ffc740; margin-top: 12px; }
+
   /* Het seizoenspad */
   #pad { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
          display: none; padding: 30px 20px; overflow-y: auto; }
@@ -937,6 +1004,14 @@
     <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
     <div class="modeTekst"><b></b><span></span></div>
   </button>
+  <button class="modeKaart" id="modeBoss">
+    <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
+    <div class="modeTekst"><b></b><span></span></div>
+  </button>
+  <button class="modeKaart" id="modeMuziek">
+    <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
+    <div class="modeTekst"><b></b><span></span></div>
+  </button>
   <button class="modeKaart" id="modeKlik">
     <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
     <div class="modeTekst"><b></b><span></span></div>
@@ -968,6 +1043,7 @@
 
 <div id="klassement">
   <h2 id="klassementKop"></h2>
+  <div class="lbSoorten" id="lbSoorten"></div>
   <div class="lbLijst" id="lbLijst"></div>
   <button class="tekstKnop" id="lbDicht"></button>
 </div>
@@ -1006,6 +1082,57 @@
   <div class="rolVenster" id="rolVenster">
     <div class="rolBand" id="rolBand"></div>
     <div class="rolWijzer"></div>
+  </div>
+</div>
+
+<div id="wb">
+  <button class="sluitKruis links" id="wbDicht" aria-label="sluiten">✕</button>
+  <h2 id="wbKop"></h2>
+  <div id="wbGeenAccount">
+    <p class="olSub" id="wbAccountTekst"></p>
+    <button class="grotKnop" id="wbNaarAccount"></button>
+  </div>
+  <div id="wbVak">
+    <div class="wbBeeld"><svg viewBox="0 0 100 100" id="wbSvg"></svg></div>
+    <div class="wbBalk"><i id="wbVul"></i></div>
+    <div class="wbHp" id="wbHp"></div>
+    <div class="wbMee" id="wbMee"></div>
+    <div class="wbJij" id="wbJij"></div>
+    <div id="wbBalkVak"></div>
+    <div class="padUitleg" id="wbUitleg"></div>
+  </div>
+</div>
+
+<div id="mzKies">
+  <button class="sluitKruis links" id="mzKiesDicht" aria-label="sluiten">✕</button>
+  <h2 id="mzKiesKop"></h2>
+  <div id="mzLijst"></div>
+  <div class="padUitleg" id="mzKiesUitleg"></div>
+</div>
+
+<div id="mz">
+  <div class="mzKop">
+    <div class="mzNaam" id="mzNaam"></div>
+    <div class="mzTeller" id="mzTeller"></div>
+  </div>
+  <div class="mzRingVak">
+    <div class="mzDoel"></div>
+    <div class="mzRing" id="mzRing"></div>
+    <div class="mzOordeel" id="mzOordeel"></div>
+  </div>
+  <div class="mzBalk"><i id="mzVul"></i></div>
+  <div class="mzScore" id="mzScore"></div>
+  <div id="mzBalkVak"></div>
+  <button class="tekstKnop" id="mzStop"></button>
+</div>
+
+<div id="mzUit">
+  <div>
+    <div class="kop" id="mzUitKop"></div>
+    <div class="score" id="mzUitScore"></div>
+    <div class="beloning" id="mzUitLoon"></div>
+    <button class="grotKnop" id="mzNogmaals" style="margin-top:26px"></button>
+    <button class="tekstKnop" id="mzNaarMenu"></button>
   </div>
 </div>
 
@@ -1899,6 +2026,8 @@ function rep() {
 /// een tik op het scherm is dat niet, en telt in de clicker dus niet mee.
 function pushup(echt = false) {
   geluidPush();
+  if ($('wb').classList.contains('aan')) { bossRep(); return; }
+  if ($('mz').classList.contains('aan')) { muziekRep(); return; }
   if ($('klik').classList.contains('aan')) {
     if (echt) { P.totalReps++; questRep(); klikRepBonus(); save(); }
     return;
@@ -1937,7 +2066,8 @@ const VOORUIT = 3, RAADSELS = 15;
 function camBalkBijwerken() {
   const inGevecht = !$('stage').classList.contains('uit');
   const inDuel = $('duel').classList.contains('aan') || $('duelSetup').classList.contains('aan');
-  const inOnline = $('odu').classList.contains('aan');
+  const inOnline = $('odu').classList.contains('aan') || $('mz').classList.contains('aan')
+                || $('wb').classList.contains('aan');
   $('cambalk').classList.toggle('aan', inGevecht || inDuel || inOnline);
 }
 
@@ -2745,6 +2875,8 @@ function toonModi() {
   vul('modeArena', MODE_ICONEN.arena, t('mode_arena'), t('mode_arena_sub'), true);
   vul('modeDuel', MODE_ICONEN.duel, t('mode_duel'), t('mode_duel_sub'), false);
   vul('modeOnline', MODE_ICONEN.online, t('mode_online'), t('mode_online_sub'), false);
+  vul('modeBoss', MODE_ICONEN.boss, t('mode_boss'), t('mode_boss_sub'), false);
+  vul('modeMuziek', MODE_ICONEN.muziek, t('mode_muziek'), t('mode_muziek_sub'), false);
   vul('modeKlik', MODE_ICONEN.klik, t('mode_klik'), t('mode_klik_sub'), false);
   $('menuMeerKop').textContent = t('menu_meer').toUpperCase();
   $('extraQuests').textContent = t('quests_titel');
@@ -4043,11 +4175,33 @@ function rangTeken(level, maat = 34) {
 }
 
 let klassementRijen = [];
+/// Waarop het klassement gesorteerd staat. Elk onderdeel heeft zijn eigen
+/// lijst: wie het verst is in de arena's is iemand anders dan wie de meeste
+/// nummers uitspeelde.
+let lbSoort = 'xp';
+const LB_SOORTEN = ['xp', 'arena', 'klik', 'muziek', 'boss'];
+
+/// Het getal rechts in de rij hoort bij het gekozen onderdeel.
+function lbWaarde(r) {
+  if (lbSoort === 'arena') return { groot: r.arena || 1, klein: t('lb_eenheid_arena', r.arena || 1) };
+  if (lbSoort === 'klik') return { groot: getal(r.klik || 0), klein: t('klik_kop') };
+  if (lbSoort === 'muziek') return { groot: r.liedjes || 0, klein: t('mz_liedjes') };
+  if (lbSoort === 'boss') return { groot: getal(r.schade || 0), klein: t('mode_boss') };
+  return { groot: levelVanXp(r.xp), klein: t('stat_level') };
+}
 
 async function toonKlassement() {
   $('klassement').classList.add('aan');
   $('klassementKop').textContent = t('leaderboard').toUpperCase();
   $('lbDicht').textContent = t('close');
+  $('lbSoorten').innerHTML = '';
+  LB_SOORTEN.forEach(srt => {
+    const knop = document.createElement('button');
+    knop.className = 'lbSoort' + (srt === lbSoort ? ' aan' : '');
+    knop.textContent = t('lb_soort_' + srt);
+    knop.onclick = e => { e.stopPropagation(); lbSoort = srt; toonKlassement(); };
+    $('lbSoorten').appendChild(knop);
+  });
   $('lbLijst').innerHTML = `<div class="lbMelding">${t('lb_loading')}</div>`;
 
   try {
@@ -4055,7 +4209,7 @@ async function toonKlassement() {
       method: 'POST',
       headers: { apikey: SB_KEY, 'Content-Type': 'application/json',
                  ...(sessie?.access_token ? { Authorization: 'Bearer ' + sessie.access_token } : {}) },
-      body: JSON.stringify({ limiet: 50, sport: SPORT }),
+      body: JSON.stringify({ limiet: 50, sport: SPORT, soort: lbSoort }),
     });
     if (!a.ok) throw new Error(a.status);
     klassementRijen = await a.json();
@@ -4083,9 +4237,10 @@ function tekenKlassement() {
       avatar(r.foto, level, 34, r.icoon) +
       `<span class="lbNaam"><span${hx ? ` style="color:${hx}"` : ''}>${ontsmet(r.naam)}</span>` +
       `${jij ? ` <small>${t('lb_you')}</small>` : ''}` +
-      `<small>${ttl ? ontsmet(ttl) + ' · ' : ''}${t('rank_' + rangVanLevel(level))}</small></span>` +
+      `<small>${ttl ? ontsmet(ttl) + ' · ' : ''}${ontsmet(lbWaarde(r).klein)}</small></span>` +
       `<span class="lbNiveau">${rangTeken(level, 22)}` +
-      `<span class="lbLevel" style="color:${RANG_ICONEN.colors[rangVanLevel(level) - 1]}">${level}</span></span>`;
+      `<span class="lbLevel" style="color:${RANG_ICONEN.colors[rangVanLevel(level) - 1]}">` +
+      `${lbWaarde(r).groot}</span></span>`;
     knop.onclick = e => {
       e.stopPropagation();
       // Je eigen rij brengt je naar je naam, zodat je hem daar kunt wijzigen.
@@ -5120,6 +5275,293 @@ document.querySelectorAll('.klikTab').forEach(tab => {
     tekenKlikLijst(true);
   });
 });
+
+/* ---------------------------------------------------------------
+   Op de maat: push-ups op het ritme.
+
+   Een ring krimpt naar een doelring toe; op het moment dat hij er precies
+   overheen valt hoor je een tik en moet je omlaag zijn. Hoe dichter bij die
+   tik, hoe beter het telt. Vijf nummers die steeds sneller gaan; haal je
+   zeventig procent, dan staat het nummer op je naam.
+
+   Het tempo is met opzet laag voor muziek maar hoog voor push-ups: twintig
+   tot zesendertig herhalingen per minuut is precies een stevig tempo.
+---------------------------------------------------------------- */
+const LIEDJES = [
+  { id: 1, tempo: 20, reps: 18 },
+  { id: 2, tempo: 24, reps: 20 },
+  { id: 3, tempo: 28, reps: 22 },
+  { id: 4, tempo: 32, reps: 24 },
+  { id: 5, tempo: 36, reps: 26 },
+];
+const MZ_HALEN = 70;   // procent op de maat dat een nummer uitspeelt
+
+let mzLied = null, mzFase = 'uit', mzTik = 0, mzTellerLus = null;
+let mzGedaan = 0, mzPunten = 0, mzRaak = 0, mzVolgende = 0;
+
+function muziekStaat() {
+  if (!P.muziek || typeof P.muziek !== 'object') P.muziek = { liedjes: 0, beste: {} };
+  P.muziek.beste = P.muziek.beste || {};
+  return P.muziek;
+}
+
+function toonMuziek() {
+  $('modes').classList.remove('aan');
+  $('menu').classList.add('uit');
+  $('stage').classList.add('uit');
+  $('mzKies').classList.add('aan');
+  startCameraIndienNodig();
+  tekenMuziekKeuze();
+}
+
+function tekenMuziekKeuze() {
+  const mz = muziekStaat();
+  $('mzKiesKop').textContent = t('mode_muziek').toUpperCase();
+  $('mzKiesUitleg').textContent = t('mz_uitleg');
+  $('mzLijst').innerHTML = '';
+  LIEDJES.forEach(lied => {
+    const beste = mz.beste[lied.id] || 0;
+    const knop = document.createElement('button');
+    knop.className = 'mzRij';
+    knop.innerHTML = `<span style="flex:1;min-width:0"><b>${ontsmet(t('mz_lied' + lied.id))}</b>` +
+      `<small>${ontsmet(t('mz_tempo', lied.tempo, lied.reps))}</small></span>` +
+      `<span class="mzBest">${beste ? ontsmet(t('mz_beste', beste)) : ontsmet(t('mz_nooit'))}</span>`;
+    knop.onclick = e => { e.stopPropagation(); startLied(lied); };
+    $('mzLijst').appendChild(knop);
+  });
+}
+
+function startLied(lied) {
+  mzLied = lied;
+  mzGedaan = 0; mzPunten = 0; mzRaak = 0;
+  $('mzKies').classList.remove('aan');
+  $('mz').classList.add('aan');
+  $('mzBalkVak').appendChild($('nosebar'));
+  camBalkBijwerken();
+  $('mzNaam').textContent = t('mz_lied' + lied.id);
+  $('mzStop').textContent = t('duel_to_menu');
+  $('mzTeller').textContent = t('mz_klaarmaken');
+  $('mzScore').textContent = '';
+  $('mzVul').style.width = '0%';
+  mzFase = 'aftellen';
+  setTimeout(() => {
+    if (mzFase !== 'aftellen') return;
+    mzFase = 'bezig';
+    mzVolgende = Date.now() + 60000 / lied.tempo;
+    mzTik = 0;
+    clearInterval(mzTellerLus);
+    mzTellerLus = setInterval(mzLoop, 40);
+  }, 2000);
+}
+
+/// De ring krimpt naar de tik toe; op de tik zelf klinkt er een klopje.
+function mzLoop() {
+  if (mzFase !== 'bezig' || !mzLied) return;
+  const stap = 60000 / mzLied.tempo;
+  const over = mzVolgende - Date.now();
+  if (over <= 0) {
+    mzVolgende += stap;
+    mzTik++;
+    toon(660, 0.05, 'square', 0.4);
+    // Een tik zonder herhaling telt als gemist.
+    if (mzTik > mzGedaan + 1) { mzGedaan++; mzOordeel('mz_mis', '#f2263a'); mzBijwerken(); }
+    if (mzGedaan >= mzLied.reps) { eindeLied(); return; }
+  }
+  const deel = Math.max(0, Math.min(1, over / stap));
+  $('mzRing').style.transform = `scale(${1 + deel * 1.1})`;
+  $('mzTeller').textContent = Math.max(0, mzLied.reps - mzGedaan);
+}
+
+function mzOordeel(sleutel, kleur) {
+  const el = $('mzOordeel');
+  el.textContent = t(sleutel);
+  el.style.color = kleur;
+  el.style.opacity = 1;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.opacity = 0; }, 400);
+}
+
+function mzBijwerken() {
+  $('mzVul').style.width = Math.min(100, mzGedaan / mzLied.reps * 100) + '%';
+  const pct = mzGedaan ? Math.round(mzRaak / mzGedaan * 100) : 0;
+  $('mzScore').textContent = t('mz_uit_score', pct);
+}
+
+/// Eén herhaling tijdens een nummer: hoe dicht zat je bij de tik?
+function muziekRep() {
+  if (mzFase !== 'bezig' || !mzLied) return;
+  const stap = 60000 / mzLied.tempo;
+  const afstand = Math.abs(mzVolgende - Date.now());
+  const scheef = Math.min(afstand, stap - afstand);
+  mzGedaan++;
+  P.totalReps++;
+  if (scheef < stap * 0.12) { mzRaak++; mzPunten += 3; mzOordeel('mz_perfect', '#4ade80'); toon(920, 0.1, 'triangle', 0.9); }
+  else if (scheef < stap * 0.28) { mzRaak++; mzPunten += 2; mzOordeel('mz_goed', '#ffc740'); }
+  else { mzOordeel('mz_mis', '#f2263a'); }
+  animateNose();
+  klikRepBonus();
+  mzBijwerken();
+  if (mzGedaan >= mzLied.reps) eindeLied();
+}
+
+function eindeLied() {
+  clearInterval(mzTellerLus); mzTellerLus = null;
+  mzFase = 'klaar';
+  const pct = mzGedaan ? Math.round(mzRaak / mzGedaan * 100) : 0;
+  const gehaald = pct >= MZ_HALEN;
+  const mz = muziekStaat();
+  const eerder = mz.beste[mzLied.id] || 0;
+  if (pct > eerder) mz.beste[mzLied.id] = pct;
+  mz.liedjes = LIEDJES.filter(l => (mz.beste[l.id] || 0) >= MZ_HALEN).length;
+
+  const xp = Math.round((30 + mzLied.id * 25) * (gehaald ? 1 : 0.3) * xpMaal());
+  P.totalXP += xp;
+  bpNakijken();
+  if (gehaald) tikStreak();
+  klikVerdien(mzPunten * 8);
+  save();
+
+  $('mzUitKop').textContent = gehaald ? t('mz_gehaald') : t('mz_uit_titel');
+  $('mzUitKop').style.color = gehaald ? '#4ade80' : '#ffc740';
+  $('mzUitScore').textContent = t('mz_uit_score', pct) + (gehaald ? '' : ' · ' + t('mz_nietgehaald'));
+  $('mzUitLoon').textContent = t('duel_reward', xp);
+  $('mzNogmaals').textContent = t('duel_again');
+  $('mzNaarMenu').textContent = t('duel_to_menu');
+  $('mzUit').classList.add('aan');
+  (gehaald ? geluidWin : geluidVerlies)();
+}
+
+function verlaatMuziek() {
+  clearInterval(mzTellerLus); mzTellerLus = null;
+  mzFase = 'uit'; mzLied = null;
+  $('mzUit').classList.remove('aan');
+  $('mz').classList.remove('aan');
+  $('mzKies').classList.remove('aan');
+  $('stage').querySelector('.middle').appendChild($('nosebar'));
+  camBalkBijwerken();
+  toonMenu();
+}
+
+$('modeMuziek').addEventListener('click', e => { e.stopPropagation(); toonMuziek(); });
+$('mzKiesDicht').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
+$('mzStop').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
+$('mzNaarMenu').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
+$('mzNogmaals').addEventListener('click', e => {
+  e.stopPropagation();
+  $('mzUit').classList.remove('aan');
+  $('mz').classList.remove('aan');
+  $('mzKies').classList.add('aan');
+  tekenMuziekKeuze();
+});
+
+/* ---------------------------------------------------------------
+   De wereldboss: één monster per oefening waar iedereen tegelijk op slaat.
+
+   Zijn kracht staat niet vast maar wordt op de server afgeleid van wie er
+   meedoet: aantal actieve spelers × hun gemiddelde dagproductie × vijf dagen.
+   Drie spelers die ongeveer honderd per dag doen krijgen dus een boss van
+   rond de 1500. Elke klap die je uitdeelt levert jou XP en push-ups op, dus
+   je beloning is precies je aandeel in de schade.
+---------------------------------------------------------------- */
+let wbNu = null, wbLus = null, wbTeSturen = 0, wbBezig = false;
+const WB_XP_PER = 2, WB_PUNT_PER = 3;
+
+function toonBoss() {
+  $('modes').classList.remove('aan');
+  $('menu').classList.add('uit');
+  $('stage').classList.add('uit');
+  $('wb').classList.add('aan');
+  $('wbKop').textContent = t('wb_titel').toUpperCase();
+  $('wbAccountTekst').textContent = t('wb_account');
+  $('wbNaarAccount').textContent = t('ol_open_account');
+  $('wbUitleg').textContent = t('wb_uitleg');
+  $('wbDicht').title = t('close');
+  const aan = ingelogd();
+  $('wbGeenAccount').style.display = aan ? 'none' : 'block';
+  $('wbVak').style.display = aan ? 'flex' : 'none';
+  if (!aan) return;
+  $('wbBalkVak').appendChild($('nosebar'));
+  camBalkBijwerken();
+  startCameraIndienNodig();
+  wbHaal();
+  clearInterval(wbLus);
+  wbLus = setInterval(wbTikken, 2500);
+}
+
+function verlaatBoss() {
+  clearInterval(wbLus); wbLus = null;
+  wbVersturen(true);
+  $('wb').classList.remove('aan');
+  $('stage').querySelector('.middle').appendChild($('nosebar'));
+  camBalkBijwerken();
+  toonMenu();
+}
+
+async function wbHaal() {
+  try {
+    const a = await sbVraag('/rest/v1/rpc/boss_nu', {
+      method: 'POST', body: JSON.stringify({ p_sport: SPORT }) });
+    if (!a.ok) throw new Error(a.status);
+    wbNu = await a.json();
+    tekenBoss();
+  } catch (e) { melding(t('wb_offline'), 3000); }
+}
+
+function tekenBoss() {
+  if (!wbNu) return;
+  const arena = arenaAt(Math.min(21, 1 + (wbNu.id % 21)));
+  $('wbSvg').innerHTML = monsterPaden(arena, rgbCss(arena.rgb));
+  $('wbVul').style.width = Math.max(0, wbNu.hp / wbNu.hp_max * 100) + '%';
+  $('wbHp').textContent = t('wb_hp', getal(wbNu.hp), getal(wbNu.hp_max));
+  $('wbMee').textContent = t('wb_vechters', wbNu.vechters, getal(wbNu.samen));
+  $('wbJij').textContent = t('wb_jij', getal(wbNu.jij));
+}
+
+/// Eén herhaling = één klap. We sturen ze gebundeld op, anders zou elke
+/// push-up een eigen verzoek zijn.
+function bossRep() {
+  if (!wbNu || !ingelogd()) return;
+  P.totalReps++;
+  wbTeSturen++;
+  wbNu.hp = Math.max(0, wbNu.hp - 1);
+  wbNu.jij++; wbNu.samen++;
+  P.bossSchade = (P.bossSchade || 0) + 1;
+  P.totalXP += WB_XP_PER * xpMaal();
+  klikVerdien(WB_PUNT_PER);
+  bpNakijken();
+  animateNose();
+  tekenBoss();
+  save();
+}
+
+function wbTikken() { wbVersturen(false); }
+
+async function wbVersturen(sluiten) {
+  if (wbBezig || !wbNu || !ingelogd()) return;
+  if (!wbTeSturen) { if (!sluiten) wbHaal(); return; }
+  const klap = wbTeSturen;
+  wbTeSturen = 0;
+  wbBezig = true;
+  try {
+    const a = await sbVraag('/rest/v1/rpc/boss_sla', {
+      method: 'POST', body: JSON.stringify({ p_id: wbNu.id, p_schade: klap }) });
+    if (a.ok) {
+      const was = wbNu.klaar;
+      wbNu = await a.json();
+      tekenBoss();
+      if (wbNu.klaar && !was) {
+        melding(t('wb_dood'), 5000);
+        geluidWin();
+        setTimeout(() => { wbHaal(); melding(t('wb_nieuw'), 4000); }, 2500);
+      }
+    } else { wbTeSturen += klap; }
+  } catch (e) { wbTeSturen += klap; }
+  wbBezig = false;
+}
+
+$('modeBoss').addEventListener('click', e => { e.stopPropagation(); toonBoss(); });
+$('wbDicht').addEventListener('click', e => { e.stopPropagation(); verlaatBoss(); });
+$('wbNaarAccount').addEventListener('click', e => { e.stopPropagation(); toonAccount(); });
 
 // Helemaal onderaan starten, zodat alle variabelen hierboven al bestaan.
 bouwTaalRij();

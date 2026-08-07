@@ -409,6 +409,25 @@ MODE_ICONEN: dict[str, str] = {
         + poly([(62, 88), (62, 66), (69, 52), (89, 52), (96, 66), (96, 88)])
         + poly([(58, 10), (43, 52), (51, 52), (44, 92), (61, 46), (52, 46)])
     ),
+    # Wereldboss: een grote kop met een wereldbol erachter.
+    "boss": (
+        circle(50, 50, 44)
+        + circle(50, 50, 35, hole=True)
+        + bar(6, 50, 94, 50, 5)
+        + poly([(28, 30), (72, 30), (78, 62), (50, 84), (22, 62)])
+        + poly([(32, 40), (46, 46), (32, 52)], hole=True)
+        + poly([(68, 40), (54, 46), (68, 52)], hole=True)
+        + poly([(38, 60), (62, 60), (58, 70), (42, 70)], hole=True)
+    ),
+    # Op de maat: een noot met een golf ernaast.
+    "muziek": (
+        ellipse(30, 74, 18, 14)
+        + bar(46, 74, 46, 14, 8)
+        + poly([(44, 8), (86, 18), (86, 34), (44, 24)])
+        + bar(70, 46, 70, 62, 5)
+        + bar(80, 38, 80, 70, 5)
+        + bar(90, 50, 90, 58, 5)
+    ),
     # De clicker: een grote knop met een aanwijzer erop.
     "klik": (
         circle(44, 50, 36)

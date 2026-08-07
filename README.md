@@ -157,7 +157,9 @@ Twee dingen die pas later kunnen gebeuren blijven kleine kaartjes onderin, omdat
 
 ## Klassement
 
-De beker rechtsboven opent het klassement: iedereen met een account, hoogste level bovenaan. Elke speler krijgt het rangteken dat bij zijn level hoort, van een simpel streepje bij Rekruut tot een gevleugelde ster bij Onsterfelijke. Je eigen rij is goudomrand.
+Bovenin staan vijf knoppen, want elk onderdeel heeft zijn eigen lijst: **XP** (je level), **Arena** (wie het verst is), **Clicker** (wie de meeste push-ups verzameld heeft), **Maat** (wie de meeste nummers uitspeelde) en **Boss** (wie de meeste schade deed). Alles per oefening, dus je squatlijst staat los van je push-uplijst.
+
+De beker in het burgermenu opent het klassement: iedereen met een account, hoogste level bovenaan. Elke speler krijgt het rangteken dat bij zijn level hoort, van een simpel streepje bij Rekruut tot een gevleugelde ster bij Onsterfelijke. Je eigen rij is goudomrand.
 
 Tik op iemand en je ziet zijn cijfers: push-ups, kills, uitgespeelde arena's, gewonnen duels, streak en XP.
 
@@ -270,6 +272,20 @@ Woede is dus geen tikwedstrijd meer maar een oefening: één minuut, alles telt 
 **Terwijl je weg bent** tellen je helpers door, op halve kracht en tot maximaal twaalf uur.
 
 Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wordt er alleen lokaal bewaard; de server krijgt je stand als je iets koopt of het scherm verlaat. Wordt de balans omgegooid, dan gaat `KLIK_VERSIE` omhoog en begint de clicker opnieuw — je vertelt dat één keer met een melding.
+
+## Op de maat
+
+Een ring krimpt naar een doelring toe; op het moment dat hij er precies overheen valt hoor je een tik en moet je omlaag zijn. Hoe dichter bij die tik, hoe beter het telt: *Precies* binnen twaalf procent van de maat, *Goed* binnen achtentwintig, daarbuiten *Mis*. Sla je een tik helemaal over, dan telt dat ook als mis.
+
+Er zijn vijf nummers die steeds sneller gaan, van twintig tot zesendertig herhalingen per minuut. Dat is met opzet traag voor muziek en stevig voor push-ups. Haal je zeventig procent op de maat, dan staat het nummer op je naam; je beste percentage per nummer blijft staan.
+
+## De wereldboss
+
+Eén monster per oefening waar iedereen tegelijk op slaat. Je ziet de balk zakken door andermans herhalingen, hoeveel vechters er meedoen en hoeveel schade jij zelf hebt gedaan.
+
+**Zijn kracht wordt niet met de hand ingesteld.** De server rekent hem uit: *aantal actieve spelers × hun gemiddelde dagproductie × vijf dagen*, waarbij de dagproductie geschat wordt op een tiende van wat iemand in totaal heeft gedaan. Drie spelers die ongeveer honderd per dag doen krijgen dus een boss van rond de 1500. Hoe meer mensen meedoen, hoe groter hij wordt.
+
+Elke klap levert je twee XP en drie push-ups op, dus je beloning is precies je aandeel in de schade. Gaat hij neer, dan staat er meteen een nieuwe — groter, want er is inmiddels meer volk. Je klappen worden gebundeld verstuurd, zodat er niet voor elke herhaling een verzoek de deur uit gaat.
 
 ## Het seizoenspad
 

@@ -469,6 +469,45 @@ enum Tk: String {
     case bp_loon_boost
     case bp_uitleg
     case bp_slot
+    case mode_muziek
+    case mode_muziek_sub
+    case mz_kies
+    case mz_tempo
+    case mz_beste
+    case mz_nooit
+    case mz_start
+    case mz_klaarmaken
+    case mz_perfect
+    case mz_goed
+    case mz_mis
+    case mz_uit_titel
+    case mz_uit_score
+    case mz_gehaald
+    case mz_nietgehaald
+    case mz_uitleg
+    case mz_liedjes
+    case mz_lied1
+    case mz_lied2
+    case mz_lied3
+    case mz_lied4
+    case mz_lied5
+    case mode_boss
+    case mode_boss_sub
+    case wb_titel
+    case wb_hp
+    case wb_vechters
+    case wb_jij
+    case wb_account
+    case wb_dood
+    case wb_nieuw
+    case wb_uitleg
+    case wb_offline
+    case lb_soort_xp
+    case lb_soort_arena
+    case lb_soort_klik
+    case lb_soort_muziek
+    case lb_soort_boss
+    case lb_eenheid_arena
 }
 
 enum Strings {
@@ -918,6 +957,45 @@ enum Strings {
         "bp_loon_boost": ["{0}", "{0}", "{0}"],
         "bp_uitleg": ["Elke tweeduizend XP is een trede. Je krijgt de beloning vanzelf, en het pad hoort bij deze oefening.", "Every two thousand XP is a tier. You get the reward automatically, and the pass belongs to this exercise.", "Chaque deux mille XP est un palier. La récompense arrive toute seule, et la passe appartient à cet exercice."],
         "bp_slot": ["Nog niet", "Not yet", "Pas encore"],
+        "mode_muziek": ["Op de maat", "On the Beat", "En Rythme"],
+        "mode_muziek_sub": ["Push-ups op het ritme, hoe strakker hoe meer", "Push-ups on the beat, the tighter the better", "Des pompes en rythme, plus c'est précis mieux c'est"],
+        "mz_kies": ["Kies een nummer", "Pick a track", "Choisis un morceau"],
+        "mz_tempo": ["{0} per minuut · {1} herhalingen", "{0} per minute · {1} reps", "{0} par minute · {1} répétitions"],
+        "mz_beste": ["Beste: {0}%", "Best: {0}%", "Record : {0} %"],
+        "mz_nooit": ["nog niet gespeeld", "not played yet", "jamais joué"],
+        "mz_start": ["BEGINNEN", "START", "COMMENCER"],
+        "mz_klaarmaken": ["Klaar…", "Ready…", "Prêt…"],
+        "mz_perfect": ["Precies!", "Perfect!", "Parfait !"],
+        "mz_goed": ["Goed", "Good", "Bien"],
+        "mz_mis": ["Mis", "Miss", "Raté"],
+        "mz_uit_titel": ["Nummer uit", "Track finished", "Morceau terminé"],
+        "mz_uit_score": ["{0}% op de maat", "{0}% on the beat", "{0} % en rythme"],
+        "mz_gehaald": ["Gehaald!", "Cleared!", "Réussi !"],
+        "mz_nietgehaald": ["Net niet. Zeventig procent is genoeg.", "Just short. Seventy percent is enough.", "Presque. Soixante-dix pour cent suffisent."],
+        "mz_uitleg": ["De ring krimpt op de maat. Kom omlaag als hij het kleinst is.", "The ring shrinks to the beat. Go down when it is smallest.", "L'anneau se resserre au rythme. Descends quand il est au plus petit."],
+        "mz_liedjes": ["nummers uit", "tracks cleared", "morceaux réussis"],
+        "mz_lied1": ["Warmlopen", "Warm-up", "Échauffement"],
+        "mz_lied2": ["Vaste Tred", "Steady", "Cadence"],
+        "mz_lied3": ["Opjagen", "Pushing", "Accélération"],
+        "mz_lied4": ["Hard Tegen Hard", "Hard Line", "Coup pour Coup"],
+        "mz_lied5": ["Buiten Adem", "Breathless", "À Bout de Souffle"],
+        "mode_boss": ["Wereldboss", "World Boss", "Boss Mondial"],
+        "mode_boss_sub": ["Iedereen slaat op hetzelfde monster", "Everyone hits the same monster", "Tout le monde frappe le même monstre"],
+        "wb_titel": ["Wereldboss", "World Boss", "Boss Mondial"],
+        "wb_hp": ["{0} van {1}", "{0} of {1}", "{0} sur {1}"],
+        "wb_vechters": ["{0} vechters · samen {1} schade", "{0} fighters · {1} damage together", "{0} combattants · {1} dégâts au total"],
+        "wb_jij": ["Jouw schade: {0}", "Your damage: {0}", "Tes dégâts : {0}"],
+        "wb_account": ["De wereldboss doe je samen, dus je hebt er een account voor nodig.", "The world boss is a joint effort, so you need an account.", "Le boss mondial se joue ensemble : il te faut un compte."],
+        "wb_dood": ["Neer! Iedereen die meesloeg krijgt zijn deel.", "Down! Everyone who joined in gets their share.", "À terre ! Tous ceux qui ont frappé reçoivent leur part."],
+        "wb_nieuw": ["Er staat een nieuwe. Hij is groter dan de vorige.", "A new one is up. Bigger than the last.", "Un nouveau est là. Plus gros que le précédent."],
+        "wb_uitleg": ["Zijn kracht hangt af van hoeveel spelers er zijn en hoeveel die doen. Elke klap levert je XP en push-ups op.", "Its strength depends on how many players there are and how much they do. Every hit earns you XP and push-ups.", "Sa force dépend du nombre de joueurs et de ce qu'ils font. Chaque coup te rapporte de l'XP et des pompes."],
+        "wb_offline": ["Geen verbinding met de wereldboss.", "No connection to the world boss.", "Pas de connexion au boss mondial."],
+        "lb_soort_xp": ["XP", "XP", "XP"],
+        "lb_soort_arena": ["Arena", "Arena", "Arène"],
+        "lb_soort_klik": ["Clicker", "Clicker", "Clicker"],
+        "lb_soort_muziek": ["Maat", "Beat", "Rythme"],
+        "lb_soort_boss": ["Boss", "Boss", "Boss"],
+        "lb_eenheid_arena": ["arena {0}", "arena {0}", "arène {0}"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
