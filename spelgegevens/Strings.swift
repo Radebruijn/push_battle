@@ -571,6 +571,16 @@ enum Tk: String {
     case mz_nog_een_keer
     case mz_andere
     case duel_terug_duel
+    case blok_knop
+    case blok_weg
+    case blok_klaar
+    case blok_op
+    case blok_fout
+    case acc_weg_knop
+    case acc_weg_zeker
+    case acc_weg_uitleg
+    case acc_weg_klaar
+    case acc_weg_fout
 }
 
 enum Strings {
@@ -1122,6 +1132,16 @@ enum Strings {
         "mz_nog_een_keer": ["Nog een keer", "One more time", "Encore une fois"],
         "mz_andere": ["Andere nummers", "Other tracks", "Autres morceaux"],
         "duel_terug_duel": ["Terug naar de duels", "Back to the duels", "Retour aux duels"],
+        "blok_knop": ["Speler blokkeren", "Block player", "Bloquer le joueur"],
+        "blok_weg": ["Blokkade opheffen", "Unblock", "Débloquer"],
+        "blok_klaar": ["Geblokkeerd. Je ziet deze speler niet meer.", "Blocked. You will not see this player again.", "Bloqué. Tu ne verras plus ce joueur."],
+        "blok_op": ["Blokkade opgeheven.", "Unblocked.", "Blocage levé."],
+        "blok_fout": ["Blokkeren lukte niet.", "Blocking did not work.", "Le blocage a échoué."],
+        "acc_weg_knop": ["Account verwijderen", "Delete account", "Supprimer le compte"],
+        "acc_weg_zeker": ["Zeker weten? Alles is dan weg", "Are you sure? Everything will be gone", "Sûr ? Tout sera perdu"],
+        "acc_weg_uitleg": ["Je account, je naam, je foto en je voortgang op de server worden verwijderd. Dit kan niet ongedaan gemaakt worden.", "Your account, name, photo and progress on the server are deleted. This cannot be undone.", "Ton compte, ton nom, ta photo et ta progression sur le serveur sont supprimés. C’est définitif."],
+        "acc_weg_klaar": ["Je account is verwijderd.", "Your account has been deleted.", "Ton compte a été supprimé."],
+        "acc_weg_fout": ["Verwijderen lukte niet. Probeer het opnieuw.", "Deleting did not work. Please try again.", "La suppression a échoué. Réessaie."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

@@ -724,6 +724,13 @@
                 border: 1px solid rgba(255,255,255,.14); background: rgba(18,18,22,.92);
                 color: rgba(255,255,255,.8); font-size: 19px; line-height: 1; }
   .sluitKruis:active { background: rgba(255,255,255,.14); }
+  /* Je account wissen staat helemaal onderaan, ver van alles vandaan, en
+     vraagt om een tweede tik. */
+  .accWegVak { text-align: center; padding: 4px 0 30px; }
+  .accWeg { color: rgba(242,38,58,.8) !important; }
+  .accWeg.zeker { color: #f2263a !important; font-weight: 900; }
+  .accWegUit { font-size: 11px; color: rgba(255,255,255,.35); line-height: 1.5;
+               max-width: 22rem; margin: 8px auto 0; }
   .uitlogVak { display: flex; justify-content: center; margin-top: 54px; padding: 26px 0 12px;
                border-top: 1px solid rgba(255,255,255,.08); }
   .uitlogKnop { padding: 11px 28px; border-radius: 99px; cursor: pointer; font: inherit;
@@ -1128,6 +1135,7 @@
     <div class="spelerRang" id="spelerRang"></div>
     <div class="accCijfers" id="spelerCijfers"></div>
     <button class="tekstKnop" id="spelerMeld"></button>
+    <button class="tekstKnop" id="spelerBlok"></button>
   </div>
 </div>
 
@@ -1311,6 +1319,10 @@
   </div>
   <div class="uitlogVak" id="uitlogVak">
     <button class="uitlogKnop" id="accUitloggen"></button>
+  </div>
+  <div class="accWegVak" id="accWegVak">
+    <button class="tekstKnop accWeg" id="accWeg"></button>
+    <div class="accWegUit" id="accWegUit"></div>
   </div>
 </div>
 
@@ -1573,6 +1585,12 @@ window.addEventListener('error', ev => {
 });
 </script>
 <script>
+/* In de app die in de App Store staat blijft het online zoeken naar muziek
+   achterwege. De fragmenten van dertig seconden zijn er om een nummer te laten
+   horen vóór je het koopt, niet om op te trainen, en dat wil je niet in een app
+   hebben die je bij Apple zelf inlevert. Je eigen bestanden toevoegen kan daar
+   gewoon; op de website blijft alles zoals het was. */
+const APP_BOUW = __APPBOUW__;
 const ARENAS = __ARENAS__;
 const TEKSTEN = __TEKSTEN__;
 const MODE_ICONEN = __MODEICONEN__;
@@ -3537,7 +3555,7 @@ function toonAccount() {
   renderAccount();
 }
 
-let uitlogTimer = null;
+let uitlogTimer = null, wegTimer = null;
 
 /// Welke oefening je op het accountscherm bekijkt. Dat hoeft niet de wereld
 /// te zijn waarin je speelt: je kunt gewoon even bij je squats kijken.
@@ -3598,6 +3616,11 @@ function renderAccount() {
   $('accUitloggen').classList.remove('zeker');
   clearTimeout(uitlogTimer);
   $('accUitloggen').textContent = t('sign_out');
+  $('accWegVak').style.display = ingelogd() ? 'block' : 'none';
+  $('accWeg').classList.remove('zeker');
+  clearTimeout(wegTimer);
+  $('accWeg').textContent = t('acc_weg_knop');
+  $('accWegUit').textContent = t('acc_weg_uitleg');
   $('accDicht').title = t('close');
 }
 
@@ -3606,6 +3629,38 @@ function accMelding(tekst, fout = false) {
   $('accMelding').style.color = fout ? '#f2263a' : '#ffc740';
 }
 
+/// Je account wissen. Eén tik zet de knop op scherp, de tweede doet het echt —
+/// net als bij uitloggen, want dit kun je niet terugdraaien. De server gooit
+/// je voortgang, je meldingen en je account zelf weg; wat op dit toestel staat
+/// blijft, zodat je gewoon verder kunt spelen zonder account.
+async function accountWeg() {
+  const knop = $('accWeg');
+  if (!knop.classList.contains('zeker')) {
+    knop.classList.add('zeker');
+    knop.textContent = t('acc_weg_zeker');
+    clearTimeout(wegTimer);
+    wegTimer = setTimeout(() => {
+      knop.classList.remove('zeker');
+      knop.textContent = t('acc_weg_knop');
+    }, 5000);
+    return;
+  }
+  clearTimeout(wegTimer);
+  bezig(t('acc_weg_knop'));
+  try {
+    const a = await sbVraag('/rest/v1/rpc/verwijder_mijn_account', { method: 'POST', body: '{}' });
+    if (!a.ok) throw new Error(a.status);
+    klaar();
+    logUit();
+    $('account').classList.remove('aan');
+    melding(t('acc_weg_klaar'), 5000);
+  } catch (e) {
+    klaar();
+    accMelding(t('acc_weg_fout'), true);
+  }
+}
+
+$('accWeg').addEventListener('click', e => { e.stopPropagation(); accountWeg(); });
 $('accountKnop').addEventListener('click', e => { e.stopPropagation(); toonAccount(); });
 $('questKnop').addEventListener('click', e => {
   e.stopPropagation(); $('quests').classList.add('aan'); renderQuests();
@@ -4545,6 +4600,7 @@ function lbWaarde(r) {
 
 async function toonKlassement() {
   $('klassement').classList.add('aan');
+  haalBlokkades();
   $('klassementKop').textContent = t('leaderboard').toUpperCase();
   $('lbDicht').title = t('close');
   $('lbSoorten').innerHTML = '';
@@ -4637,10 +4693,45 @@ async function meldSpeler() {
 
 $('spelerMeld').addEventListener('click', e => { e.stopPropagation(); meldSpeler(); });
 
+/// Blokkeren: daarna verdwijnt deze speler uit jouw klassement. Apple vraagt
+/// hierom zodra spelers elkaars naam en foto kunnen zien, en het is sowieso
+/// het minste dat je iemand kunt bieden die last heeft van een ander.
+let geblokkeerd = [];
+
+async function haalBlokkades() {
+  if (!ingelogd()) { geblokkeerd = []; return; }
+  try {
+    const a = await sbVraag('/rest/v1/rpc/mijn_blokkades', { method: 'POST', body: '{}' });
+    geblokkeerd = a.ok ? (await a.json()).map(r => (typeof r === 'string' ? r : r.doel)) : [];
+  } catch (e) { geblokkeerd = []; }
+}
+
+async function blokkeerSpeler() {
+  if (!spelerNu || !ingelogd()) { melding(t('meld_account'), 3500); return; }
+  const aan = !geblokkeerd.includes(spelerNu.speler);
+  try {
+    const a = await sbVraag('/rest/v1/rpc/blokkeer', {
+      method: 'POST',
+      body: JSON.stringify({ p_doel: spelerNu.speler, p_aan: aan }),
+    });
+    if (!a.ok) throw new Error(a.status);
+    if (aan) geblokkeerd.push(spelerNu.speler);
+    else geblokkeerd = geblokkeerd.filter(x => x !== spelerNu.speler);
+    melding(t(aan ? 'blok_klaar' : 'blok_op'), 3500);
+    $('speler').classList.remove('aan');
+    toonKlassement();
+  } catch (e) { melding(t('blok_fout'), 3000); }
+}
+
+$('spelerBlok').addEventListener('click', e => { e.stopPropagation(); blokkeerSpeler(); });
+
 function toonSpeler(r) {
   spelerNu = r;
+  const eigen = !ingelogd() || r.speler === sessie?.id;
   $('spelerMeld').textContent = t('meld_knop');
-  $('spelerMeld').style.display = ingelogd() && r.speler !== sessie?.id ? 'block' : 'none';
+  $('spelerMeld').style.display = eigen ? 'none' : 'block';
+  $('spelerBlok').textContent = t(geblokkeerd.includes(r.speler) ? 'blok_weg' : 'blok_knop');
+  $('spelerBlok').style.display = eigen ? 'none' : 'block';
   const level = levelVanXp(r.xp), n = rangVanLevel(level);
   const hx = kleurHex(r.kleur), ttl = titelNaam(r.titel);
   $('speler').classList.add('aan');
@@ -6169,7 +6260,7 @@ function tekenMuziekKeuze() {
   });
 
   // Voorstellen die je nog niet hebt staan: één tik en ze staan erbij.
-  const tips = MZ_TIPS.filter(tip =>
+  const tips = APP_BOUW ? [] : MZ_TIPS.filter(tip =>
     !eigenNummers.some(n => n.naam.toLowerCase().includes(tip.titel.toLowerCase())));
   if (tips.length) {
     kop(t('mz_kop_tips'));
@@ -6214,12 +6305,14 @@ function tekenMuziekKeuze() {
   erbij.onclick = e => { e.stopPropagation(); $('mzBestand').click(); };
   $('mzLijst').appendChild(erbij);
 
+  if (!APP_BOUW) {
   const online = document.createElement('button');
   online.className = 'mzRij mzErbij';
   online.innerHTML = `<span class="mzPlus">♪</span><span style="flex:1;min-width:0">` +
     `<b>${ontsmet(t('mz_online'))}</b><small>${ontsmet(t('mz_online_uit'))}</small></span>`;
   online.onclick = e => { e.stopPropagation(); mzZoekOpen(); };
   $('mzLijst').appendChild(online);
+  }
 
   const uitleg = document.createElement('div');
   uitleg.className = 'mzEigenUit';
@@ -6495,6 +6588,7 @@ $('mzZoekVeld').addEventListener('keydown', e => {
 // Vanuit Spotify of Apple Music naar deze app gedeeld (Android, geïnstalleerde
 // app): de link komt als zoekparameter binnen en opent meteen de muziekzoeker.
 (() => {
+  if (APP_BOUW) return;
   const deel = new URLSearchParams(location.search);
   const tekst = ['koppeling', 'tekst', 'titel'].map(k => deel.get(k) || '').join(' ').trim();
   if (!/https?:\/\//.test(tekst)) return;

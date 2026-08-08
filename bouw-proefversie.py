@@ -181,6 +181,11 @@ def main() -> None:
     pagina = pagina.replace("__RANGICONEN__",
                             json.dumps(lees_rang_icons(), ensure_ascii=False))
 
+    if pagina.count("__APPBOUW__") != 1:
+        raise SystemExit("Sjabloon moet precies één __APPBOUW__ bevatten")
+    app_pagina = pagina.replace("__APPBOUW__", "true")
+    pagina = pagina.replace("__APPBOUW__", "false")
+
     if any(p in pagina for p in ("__ARENAS__", "__TEKSTEN__", "__MODEICONEN__",
                                  "__ICOON180__", "__RANGICONEN__", "__ARENAART__",
                                  "__AANTAL_ARENAS__", "{AANTAL_ARENAS}")):
@@ -210,12 +215,20 @@ def main() -> None:
         (basis / "speel").mkdir(exist_ok=True)
         (basis / "speel" / "index.html").write_text(pagina)
 
-    # De iOS-app levert precies dezelfde pagina mee, zodat hij zonder
-    # internet opent. Zo blijft de app vanzelf gelijk aan de website.
+    # De iOS-app levert dezelfde pagina mee, zodat hij zonder internet opent.
+    # Eén verschil: daar zit het online zoeken naar muziek niet in.
+    app_kop, _, app_romp = app_pagina.partition("<!--KOP-EINDE-->")
+    app_document = (
+        "<!doctype html>\n<html lang=\"nl\">\n<head>\n"
+        + app_kop.strip()
+        + "\n</head>\n<body>\n"
+        + app_romp.strip()
+        + "\n</body>\n</html>\n"
+    )
     app_web = HIER / "Orbslayer" / "web"
     if app_web.parent.exists():
         app_web.mkdir(exist_ok=True)
-        (app_web / "index.html").write_text(pagina)
+        (app_web / "index.html").write_text(app_document)
         for naam in ("manifest.json", "icon-180.png", "icon-192.png", "icon-512.png"):
             bron = HIER / "website" / naam
             if bron.exists():

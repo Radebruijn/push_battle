@@ -60,7 +60,7 @@ WERELDBOSS
 Eén monster waar iedereen tegelijk op slaat. Zijn kracht hangt af van hoeveel spelers er meedoen, en je beloning is je aandeel in de schade.
 
 OP DE MAAT
-Push-ups op het ritme van een nummer. Kies er een van het spel of zet er een van jezelf bij; het spel zoekt het tempo erbij, of je tikt de maat zelf mee.
+Push-ups op het ritme van een nummer. Kies er een van het spel of zet er een van je eigen muziek bij; het spel zoekt het tempo erbij, of je tikt de maat zelf mee.
 
 CLICKER EN SEIZOENSPAD
 Je push-ups tellen door terwijl je weg bent, en elke arena geeft kleine beloningen die je zelf ophaalt.
@@ -75,7 +75,14 @@ pushup,push-up,fitness,workout,training,kracht,thuis,spel,game,reps,teller,camer
 
 **Categorie:** Gezondheid en fitness (tweede: Spellen)
 
-**Leeftijdsclassificatie:** 4+ — geen geweld dat Apple als zodanig telt (getekende monsters, geen bloed), geen aankopen.
+**Leeftijdsclassificatie:** in de vragenlijst van Apple moet je bij *door gebruikers gemaakte inhoud* eerlijk **ja** antwoorden: spelers zien elkaars naam en foto in het klassement. Daar hangt Apple meestal 12+ aan. De rest is 4+: getekende monsters, geen bloed, geen aankopen.
+
+## Wat Apple eist bij accounts en bij inhoud van gebruikers
+
+Dit zit er nu in, want zonder deze twee volgt een afwijzing:
+
+- **Account verwijderen in de app** (richtlijn 5.1.1(v)). Onderaan het accountscherm, ver van uitloggen vandaan, met een tweede tik ter bevestiging. De server wist je account, je voortgang, je foto, je meldingen, je blokkades en je duels; daarna staat er niets meer van je op de server. Wat op je eigen toestel staat blijft, zodat je zonder account verder kunt spelen.
+- **Blokkeren, melden en filteren** (richtlijn 1.2). Spelers zien elkaars naam en foto, dus er is een filter op namen en foto's, een meldknop, en je kunt iemand blokkeren — daarna verdwijnt die speler uit jouw klassement. Zet in App Store Connect ook een werkende **support-URL** neer; dat is het vierde dat Apple bij inhoud van gebruikers vraagt.
 
 ## Privacyvragen van Apple
 
@@ -99,6 +106,12 @@ Vul dit in bij *App Review Information → Notes*:
 >
 > Het spel draait binnen de app zelf en werkt zonder internet. Het lokale servertje op 127.0.0.1 dient alleen om de meegeleverde bestanden aan de ingebouwde weergave te geven; er gaat geen verkeer naar buiten. Online spelen, het klassement en de wereldboss gebruiken wel internet.
 
+## Muziek: wat er niet in de app zit
+
+Op de website kun je in *Op de maat* een nummer opzoeken en het officiële fragment van dertig seconden ophalen. **In de app zit dat er bewust niet in.** Die fragmenten zijn er om een nummer te laten horen vóór je het koopt, niet om op te trainen, en bewaard op je toestel als trainingsmuziek is dat een rechtenkwestie die je niet wilt hebben in een app die je bij Apple inlevert.
+
+In de app blijft *Nummer van je toestel*: je eigen muziekbestanden, met dezelfde tempozoeker en dezelfde tikknop. Het bouwscript maakt daarom twee versies van dezelfde pagina, via de schakelaar `APP_BOUW` — website met, app zonder.
+
 ## Het risico dat je moet kennen
 
 Apple weegt bij richtlijn **4.2 (Minimum Functionality)** of een app meer is dan een website in een jasje. Dat er een webweergave in zit is niet verboden — het gaat erom wat de app doet. In ons voordeel: het spel zit ín de app en werkt zonder internet, de camera is een echte iOS-functie met eigen toestemmingsvraag, er is haptische terugkoppeling bij elke herhaling, en het is een compleet spel met zeven modi.
@@ -110,7 +123,8 @@ Wordt hij toch afgewezen op 4.2, dan staat de reden in App Store Connect en zijn
 1. **Xcode installeren** uit de Mac App Store. Op deze Mac staan nu alleen de command line tools, dus er kan hier nog niets gebouwd worden. Gratis, ongeveer tien gigabyte.
 2. **Team instellen.** Open `Orbslayer.xcodeproj`, ga naar *Signing & Capabilities* en kies je Apple Developer-team. De rest van de instellingen staat al goed.
 3. **Uitproberen.** Zeg het zodra Xcode er is: dan draai ik de app in de simulator, kijk of alles werkt en los op wat er misgaat. De Swift-bestanden zijn nog niet één keer gecompileerd, dus reken op wat kleine correcties.
-4. **Screenshots maken.** Apple wil er minstens drie van een 6,7-inch iPhone. Die maak ik in de simulator zodra hij draait.
-5. **Inzenden.** In Xcode: *Product → Archive*, dan *Distribute App*. Daarna in App Store Connect de teksten hierboven invullen en op *Submit for Review* drukken.
+4. **Support-URL invullen** in App Store Connect. Een pagina of e-mailadres waar iemand je kan bereiken; Apple eist dat bij apps waarin spelers elkaar zien.
+5. **Screenshots maken.** Apple wil er minstens drie van een 6,7-inch iPhone. Die maak ik in de simulator zodra hij draait.
+6. **Inzenden.** In Xcode: *Product → Archive*, dan *Distribute App*. Daarna in App Store Connect de teksten hierboven invullen en op *Submit for Review* drukken.
 
 De beoordeling duurt meestal één tot drie dagen.

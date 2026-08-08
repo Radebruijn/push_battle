@@ -147,6 +147,8 @@ Wie het toch voor elkaar krijgt langs de browser te komen, wint er niets mee: he
 
 De regel staat er ook bij als je een foto kiest: geen naaktbeelden of aanstootgevende foto's.
 
+**Blokkeren en je account wissen.** Tik in het klassement op een speler en je kunt hem melden of **blokkeren**; geblokkeerde spelers verdwijnen uit jouw klassement (de server filtert ze eruit, niet de pagina). Onderaan het accountscherm staat **Account verwijderen**, ver van uitloggen vandaan en met een tweede tik ter bevestiging: dat wist je account, je voortgang, je foto, je meldingen, je blokkades en je duels van de server. Wat op je eigen toestel staat blijft, zodat je zonder account verder kunt spelen. Allebei zijn ze een harde eis van Apple — 5.1.1(v) voor het wissen, 1.2 voor het blokkeren — en allebei horen ze er sowieso te zijn.
+
 ## De rondleiding
 
 Open je het spel voor het eerst zonder account, dan begint een rondleiding van zes schermen die het hele scherm vult. Zolang die loopt kun je niets anders doen: alleen **Overslaan** rechtsboven en de knop onderaan reageren. De zes schermen leggen uit wat het spel is, hoe je je telefoon neerzet, hoe er geteld wordt, waarom kalibreren nodig is, welke spelmodi er zijn en wat een account oplevert. Elk scherm heeft een eigen tekening.
