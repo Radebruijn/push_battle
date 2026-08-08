@@ -2377,14 +2377,14 @@
       "À terre ! Tous ceux qui ont frappé reçoivent leur part."
     ],
     "wb_nieuw": [
-      "Er staat een nieuwe. Hij is groter dan de vorige.",
-      "A new one is up. Bigger than the last.",
-      "Un nouveau est là. Plus gros que le précédent."
+      "Er staat alweer een nieuwe klaar.",
+      "Another one is already waiting.",
+      "Un autre attend déjà."
     ],
     "wb_uitleg": [
-      "Zijn kracht hangt af van hoeveel spelers er zijn en hoeveel die doen. Elke klap levert je XP en push-ups op.",
-      "Its strength depends on how many players there are and how much they do. Every hit earns you XP and push-ups.",
-      "Sa force dépend du nombre de joueurs et de ce qu'ils font. Chaque coup te rapporte de l'XP et des pompes."
+      "Zijn kracht hangt af van hoeveel spelers er zijn: rond de twintig tot zestig per persoon, nooit meer dan zeshonderd. Elke klap levert je XP en push-ups op.",
+      "His strength depends on how many players there are: about twenty to sixty each, never more than six hundred. Every hit earns you XP and push-ups.",
+      "Sa force dépend du nombre de joueurs : environ vingt à soixante par personne, jamais plus de six cents. Chaque coup te rapporte de l’XP et des pompes."
     ],
     "wb_offline": [
       "Geen verbinding met de wereldboss.",

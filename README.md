@@ -326,7 +326,9 @@ De maat blijft aan de muziek vastzitten: elke tik wordt opnieuw uit de audioklok
 
 Eén monster per oefening waar iedereen tegelijk op slaat. Je ziet de balk zakken door andermans herhalingen, hoeveel vechters er meedoen en hoeveel schade jij zelf hebt gedaan.
 
-**Zijn kracht wordt niet met de hand ingesteld.** De server rekent hem uit: *aantal actieve spelers × hun gemiddelde dagproductie × vijf dagen*, waarbij de dagproductie geschat wordt op een tiende van wat iemand in totaal heeft gedaan. Drie spelers die ongeveer honderd per dag doen krijgen dus een boss van rond de 1500. Hoe meer mensen meedoen, hoe groter hij wordt.
+**Zijn kracht wordt niet met de hand ingesteld.** De server rekent hem uit uit het aantal spelers dat de laatste twee weken actief was en hoeveel die doen: per speler tussen de twintig en zestig herhalingen, samen nooit meer dan zeshonderd en nooit minder dan veertig. Zeven actieve spelers geven zo een boss van 140. Hij is dus met opzet klein — een avondje samen, geen weekproject — en door dat dak blijft ook de tiende boss te doen, hoe hoog ieders totaal intussen ook is geworden.
+
+Dat was eerst anders: *spelers × dagproductie × vijf dagen*, zonder dak. Dat gaf 1307 HP bij zeven spelers en werd elke ronde zwaarder, en dan gaat niemand meer op zo'n boss slaan.
 
 Elke klap levert je twee XP en drie push-ups op, dus je beloning is precies je aandeel in de schade. Gaat hij neer, dan staat er meteen een nieuwe — groter, want er is inmiddels meer volk. Je klappen worden gebundeld verstuurd, zodat er niet voor elke herhaling een verzoek de deur uit gaat.
 
