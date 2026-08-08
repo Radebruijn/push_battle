@@ -2407,6 +2407,14 @@ function toon(hz, duur = 0.12, golf = 'triangle', luid = 1, wacht = 0) {
   bron.stop(t0 + duur + 0.03);
 }
 
+/// In de iOS-app mag de telefoon meetrillen. Op het web bestaat die brug niet
+/// en valt dit stil terug op de trilfunctie van de browser, als die er is.
+const TELEFOON = window.webkit?.messageHandlers?.telefoon || null;
+function tril(wat) {
+  if (TELEFOON) { TELEFOON.postMessage(wat); return; }
+  if (navigator.vibrate) navigator.vibrate(wat === 'kill' ? 45 : 12);
+}
+
 /// De ladder waarlangs de push-uptoon omhoog kruipt zolang je doorgaat.
 const TOONLADDER = [294, 330, 370, 392, 440, 494, 554, 587, 659, 740];
 function geluidPush() {
@@ -2414,9 +2422,13 @@ function geluidPush() {
   toonTrap = (nu - laatsteToon <= COMBO_WINDOW) ? Math.min(toonTrap + 1, TOONLADDER.length - 1) : 0;
   laatsteToon = nu;
   toon(TOONLADDER[toonTrap], 0.13, 'triangle', 1);
+  tril('rep');
 }
 const geluidTik = () => toon(760, 0.045, 'square', 0.3);
-const geluidKill = () => [523, 659, 784].forEach((hz, i) => toon(hz, 0.15, 'triangle', 0.85, i * 0.06));
+const geluidKill = () => {
+  [523, 659, 784].forEach((hz, i) => toon(hz, 0.15, 'triangle', 0.85, i * 0.06));
+  tril('kill');
+};
 const geluidWin = () => [523, 659, 784, 1047].forEach((hz, i) => toon(hz, 0.22, 'triangle', 1, i * 0.08));
 const geluidVerlies = () => [330, 262, 196].forEach((hz, i) => toon(hz, 0.28, 'sawtooth', 0.5, i * 0.1));
 const geluidLevel = () => [659, 784, 988, 1319].forEach((hz, i) => toon(hz, 0.26, 'sine', 1, i * 0.07));

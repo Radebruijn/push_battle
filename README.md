@@ -400,9 +400,13 @@ Twee dingen die jij nog kunt doen zodra de site een vast adres heeft: meld hem a
 
 ## Naar de App Store
 
-`APPSTORE.md` bevat alles wat Apple bij de inzending vraagt: de naam, ondertitel, beschrijving, trefwoorden, categorie, leeftijdsclassificatie en de antwoorden op de privacyvragen. Het app-icoon staat klaar en `privacy.html` is de privacypagina die Apple als werkende link eist.
+De app is het spel zelf, niet een snelkoppeling. De gebouwde pagina reist mee in `Orbslayer/web/` en wordt van binnenuit geserveerd, dus de app opent zonder internet en kan precies wat de website kan.
 
-Wat er nog nodig is en niet vanaf hier kan: Xcode installeren, lid worden van het Apple Developer Program (99 euro per jaar) en screenshots maken. De volledige stappen staan in `APPSTORE.md`.
+Om die pagina heen zit een dunne native laag: `PushBattleApp.swift` zet de audiosessie op *playback* (anders zwijgt alles als het schuifje van je iPhone op stil staat), `SpelScherm.swift` regelt volledig scherm, de cameratoestemming en een trilling bij elke getelde push-up, en `LokaleServer.swift` serveert de meegeleverde bestanden op `http://127.0.0.1`.
+
+Dat servertje is geen omweg maar noodzaak: `getUserMedia` werkt alleen in een veilige context — `file://` is dat niet, `127.0.0.1` wel — en op `file://` weigert WebKit localStorage en IndexedDB, waar alle voortgang in staat. Het bouwscript kopieert de pagina automatisch mee, dus de app blijft vanzelf gelijk aan de site.
+
+De oude, met de hand nagebouwde SwiftUI-versie van arena en duel staat in `oud-swift-spel/` en doet niet meer mee; de gegenereerde gegevensbestanden staan in `spelgegevens/`. Alles wat Apple bij de inzending vraagt staat in `APPSTORE.md`.
 
 ## Het logo
 

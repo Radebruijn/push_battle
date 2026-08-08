@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genereert Orbslayer/Strings.swift uit taal.json.
+"""Genereert spelgegevens/Strings.swift uit taal.json.
 
 De browserversie leest dezelfde taal.json via bouw-proefversie.py, zodat de app
 en de proefversie nooit uit elkaar lopen.
@@ -16,7 +16,7 @@ TALEN = ["nl", "en", "fr"]
 
 
 def aantal_arenas() -> int:
-    bron = (HIER / "Orbslayer" / "Arena.swift").read_text()
+    bron = (HIER / "spelgegevens" / "Arena.swift").read_text()
     blok = bron.split("static let all: [Arena] = [", 1)[1].split("\n    ]", 1)[0]
     aantal = blok.count("Arena(")
     if aantal == 0:
@@ -103,7 +103,7 @@ def main() -> None:
         "",
     ]
 
-    uit = HIER / "Orbslayer" / "Strings.swift"
+    uit = HIER / "spelgegevens" / "Strings.swift"
     uit.write_text("\n".join(regels))
     print(f"Strings.swift geschreven — {len(sleutels)} teksten × {len(TALEN)} talen")
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tekent de vijand-iconen en schrijft ze als SVG-pad in Orbslayer/Arena.swift.
+"""Tekent de vijand-iconen en schrijft ze als SVG-pad in spelgegevens/Arena.swift.
 
 Elk icoon is één pad in een vierkant van 100x100 (y loopt naar beneden).
 Vulregel is nonzero: subpaden met de klok mee vullen, tegen de klok in maken
@@ -833,7 +833,7 @@ def schrijf_arena_art() -> None:
         stuk = ";".join(f"{d}|{rol}" for d, rol in lagen)
         regels.append(f'        "{ras}": "{stuk}",')
     regels += ["    ]", "}", ""]
-    (HIER / "Orbslayer" / "ArenaArt.swift").write_text("\n".join(regels))
+    (HIER / "spelgegevens" / "ArenaArt.swift").write_text("\n".join(regels))
 
 
 def schrijf_mode_icons() -> None:
@@ -847,7 +847,7 @@ def schrijf_mode_icons() -> None:
         regels.append(f'    static let {naam} = "{d}"')
     regels.append(f'    static let plank = "{PLANK_ICOON}"')
     regels += ["}", ""]
-    (HIER / "Orbslayer" / "ModeIcons.swift").write_text("\n".join(regels))
+    (HIER / "spelgegevens" / "ModeIcons.swift").write_text("\n".join(regels))
 
 # Rangtekens: van een simpel streepje tot iets dat je verdiend moet hebben.
 # Ze horen bij de acht rangen uit taal.json (rank_1 tot en met rank_8).
@@ -908,11 +908,11 @@ def schrijf_rang_icons() -> None:
     for k in RANG_KLEUREN:
         regels.append(f'        "{k}",')
     regels += ["    ]", "}", ""]
-    (HIER / "Orbslayer" / "RankIcons.swift").write_text("\n".join(regels))
+    (HIER / "spelgegevens" / "RankIcons.swift").write_text("\n".join(regels))
 
 
 def patch_arena_swift() -> int:
-    pad = HIER / "Orbslayer" / "Arena.swift"
+    pad = HIER / "spelgegevens" / "Arena.swift"
     bron = pad.read_text()
     aantal = 0
     for race, d in ICONEN.items():

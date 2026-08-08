@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bouwt proefversie.html: leest de arena's uit Orbslayer/Arena.swift en vult ze in het sjabloon.
+"""Bouwt proefversie.html: leest de arena's uit spelgegevens/Arena.swift en vult ze in het sjabloon.
 
 Zo blijven de browserversie en de iOS-app dezelfde arena's, namen en kleuren gebruiken.
 Gebruik:  python3 bouw-proefversie.py [pad/naar/sjabloon.tpl]
@@ -28,7 +28,7 @@ PATROON = re.compile(
 
 
 def lees_arenas() -> list[dict]:
-    bron = (HIER / "Orbslayer" / "Arena.swift").read_text()
+    bron = (HIER / "spelgegevens" / "Arena.swift").read_text()
     blok = bron.split("static let all: [Arena] = [", 1)[1].split("\n    ]", 1)[0]
     arenas = [
         {
@@ -48,7 +48,7 @@ def lees_arenas() -> list[dict]:
 
 
 def lees_rang_icons() -> dict[str, list[str]]:
-    bron = (HIER / "Orbslayer" / "RankIcons.swift").read_text()
+    bron = (HIER / "spelgegevens" / "RankIcons.swift").read_text()
     blokken = bron.split("static let")
     paden = re.findall(r'"([^"]+)"', blokken[1])
     kleuren = re.findall(r'"(#[0-9a-fA-F]{6})"', blokken[2])
@@ -57,7 +57,7 @@ def lees_rang_icons() -> dict[str, list[str]]:
 
 def lees_arena_art() -> dict[str, list[list[str]]]:
     """Leest de tekeningen in lagen uit ArenaArt.swift: ras -> [[pad, rol], ...]."""
-    bron = (HIER / "Orbslayer" / "ArenaArt.swift")
+    bron = (HIER / "spelgegevens" / "ArenaArt.swift")
     if not bron.exists():
         return {}
     uit: dict[str, list[list[str]]] = {}
@@ -67,7 +67,7 @@ def lees_arena_art() -> dict[str, list[list[str]]]:
 
 
 def lees_mode_icons() -> dict[str, str]:
-    bron = (HIER / "Orbslayer" / "ModeIcons.swift").read_text()
+    bron = (HIER / "spelgegevens" / "ModeIcons.swift").read_text()
     return dict(re.findall(r'static let (\w+) = "([^"]+)"', bron))
 
 
@@ -210,6 +210,17 @@ def main() -> None:
         (basis / "speel").mkdir(exist_ok=True)
         (basis / "speel" / "index.html").write_text(pagina)
 
+    # De iOS-app levert precies dezelfde pagina mee, zodat hij zonder
+    # internet opent. Zo blijft de app vanzelf gelijk aan de website.
+    app_web = HIER / "Orbslayer" / "web"
+    if app_web.parent.exists():
+        app_web.mkdir(exist_ok=True)
+        (app_web / "index.html").write_text(pagina)
+        for naam in ("manifest.json", "icon-180.png", "icon-192.png", "icon-512.png"):
+            bron = HIER / "website" / naam
+            if bron.exists():
+                (app_web / naam).write_bytes(bron.read_bytes())
+
     promo = bouw_promo(arenas, woorden, icoon_data, icons)
     (HIER / "index.html").write_text(promo)
     (HIER / "website" / "index.html").write_text(promo)
@@ -223,7 +234,7 @@ def main() -> None:
     privacy = HIER / "privacy.html"
     if privacy.exists():
         (HIER / "website" / "privacy.html").write_text(privacy.read_text())
-    print(f"{UIT.name} + speel/index.html + promopagina gebouwd — "
+    print(f"{UIT.name} + speel/index.html + app + promopagina gebouwd — "
           f"{len(arenas)} arena's, {len(pagina)} tekens")
 
 
