@@ -287,6 +287,8 @@ Alles staat in je profiel en gaat dus met je account mee. Tijdens het spelen wor
 
 Een ring krimpt naar een doelring toe; op het moment dat hij er precies overheen valt hoor je een tik en moet je omlaag zijn. Hoe dichter bij die tik, hoe beter het telt: *Precies* binnen twaalf procent van de maat, *Goed* binnen achtentwintig, daarbuiten *Mis*. Sla je een tik helemaal over, dan telt dat ook als mis.
 
+Klaar met een nummer, dan blijf je in de muziekmodus staan. Het uitslagscherm geeft je **Nog een keer** (hetzelfde nummer opnieuw) en **Andere nummers** (terug naar de lijst); naar het hoofdmenu ga je alleen als je daar zelf om vraagt. Stop je halverwege, dan kom je ook in de lijst terecht en niet in het menu. Dat is overal zo: na een duel sta je weer bij de duels, na een online duel weer in de lobby.
+
 Er zijn vijf nummers die steeds sneller gaan, van twintig tot zesendertig herhalingen per minuut. Dat is met opzet traag voor muziek en stevig voor push-ups. Haal je zeventig procent op de maat, dan staat het nummer op je naam; je beste percentage per nummer blijft staan.
 
 **Er speelt echte muziek onder.** Elk nummer heeft een eigen wijs: een basloop, een melodie van vier maten en een klapje op de tussenmaat, allemaal opgebouwd in de browser — er staat geen enkel geluidsbestand in het spel. Eén herhaling is één maat, en die maat valt uiteen in acht stapjes, dus op zesendertig maten per minuut hoor je gewoon een nummer op tempo. De maat wordt telkens een hele maat vooruit ingepland, zodat een haperend beeldje het ritme niet scheeftrekt. De menumuziek zwijgt zolang je speelt.
@@ -326,7 +328,7 @@ De maat blijft aan de muziek vastzitten: elke tik wordt opnieuw uit de audioklok
 
 Eén monster per oefening waar iedereen tegelijk op slaat. Je ziet de balk zakken door andermans herhalingen, hoeveel vechters er meedoen en hoeveel schade jij zelf hebt gedaan.
 
-**Zijn kracht wordt niet met de hand ingesteld.** De server rekent hem uit uit het aantal spelers dat de laatste twee weken actief was en hoeveel die doen: per speler tussen de twintig en zestig herhalingen, samen nooit meer dan zeshonderd en nooit minder dan veertig. Zeven actieve spelers geven zo een boss van 140. Hij is dus met opzet klein — een avondje samen, geen weekproject — en door dat dak blijft ook de tiende boss te doen, hoe hoog ieders totaal intussen ook is geworden.
+**Zijn kracht wordt niet met de hand ingesteld.** De server rekent hem uit uit het aantal spelers dat de laatste twee weken actief was en hoeveel die doen: per speler tussen de 85 en 150 herhalingen, samen nooit meer dan negenhonderd en nooit minder dan honderdtwintig. Zeven actieve spelers geven zo een boss van 595 — een avond samen, en door dat dak blijft ook de tiende boss te doen, hoe hoog ieders totaal intussen ook is geworden.
 
 Dat was eerst anders: *spelers × dagproductie × vijf dagen*, zonder dak. Dat gaf 1307 HP bij zeven spelers en werd elke ronde zwaarder, en dan gaat niemand meer op zo'n boss slaan.
 

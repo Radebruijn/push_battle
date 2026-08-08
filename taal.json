@@ -2382,9 +2382,9 @@
       "Un autre attend déjà."
     ],
     "wb_uitleg": [
-      "Zijn kracht hangt af van hoeveel spelers er zijn: rond de twintig tot zestig per persoon, nooit meer dan zeshonderd. Elke klap levert je XP en push-ups op.",
-      "His strength depends on how many players there are: about twenty to sixty each, never more than six hundred. Every hit earns you XP and push-ups.",
-      "Sa force dépend du nombre de joueurs : environ vingt à soixante par personne, jamais plus de six cents. Chaque coup te rapporte de l’XP et des pompes."
+      "Zijn kracht hangt af van hoeveel spelers er zijn: ongeveer honderd per persoon, nooit meer dan negenhonderd. Elke klap levert je XP en push-ups op.",
+      "His strength depends on how many players there are: about a hundred each, never more than nine hundred. Every hit earns you XP and push-ups.",
+      "Sa force dépend du nombre de joueurs : environ cent par personne, jamais plus de neuf cents. Chaque coup te rapporte de l’XP et des pompes."
     ],
     "wb_offline": [
       "Geen verbinding met de wereldboss.",
@@ -2720,6 +2720,21 @@
       "Hoor je niets op een iPhone? Zet het schuifje aan de zijkant om, zodat de bel aanstaat.",
       "Hear nothing on an iPhone? Flip the switch on the side so the ringer is on.",
       "Rien sur un iPhone ? Bascule le bouton sur le côté pour activer la sonnerie."
+    ],
+    "mz_nog_een_keer": [
+      "Nog een keer",
+      "One more time",
+      "Encore une fois"
+    ],
+    "mz_andere": [
+      "Andere nummers",
+      "Other tracks",
+      "Autres morceaux"
+    ],
+    "duel_terug_duel": [
+      "Terug naar de duels",
+      "Back to the duels",
+      "Retour aux duels"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

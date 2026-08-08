@@ -1233,6 +1233,7 @@
     <div class="score" id="mzUitScore"></div>
     <div class="beloning" id="mzUitLoon"></div>
     <button class="grotKnop" id="mzNogmaals" style="margin-top:26px"></button>
+    <button class="tekstKnop" id="mzAndere"></button>
     <button class="tekstKnop" id="mzNaarMenu"></button>
   </div>
 </div>
@@ -3235,6 +3236,8 @@ function eindigDuel() {
   $('duelUitBeloning').textContent = gewonnen ? t('duel_reward', xp) : t('duel_consolation', xp);
   $('duelNogmaals').textContent = t('duel_again');
   $('duelNaarMenu').textContent = t('duel_to_menu');
+  // Na een duel sta je vanzelf weer bij de duels: de grote knop brengt je
+  // terug naar het instelscherm van deze modus, niet naar het hoofdmenu.
   $('duelUit').classList.add('aan');
   if (navigator.vibrate) navigator.vibrate(gewonnen ? [30, 60, 30] : 20);
 }
@@ -6334,7 +6337,7 @@ async function startLied(lied) {
   $('mzBalkVak').appendChild($('nosebar'));
   camBalkBijwerken();
   $('mzNaam').textContent = lied.eigen ? lied.naam : t('mz_lied' + lied.id);
-  $('mzStop').textContent = t('duel_to_menu');
+  $('mzStop').textContent = t('mz_andere');
   $('mzTeller').textContent = t('mz_klaarmaken');
   $('mzScore').textContent = '';
   $('mzVul').style.width = '0%';
@@ -6447,7 +6450,8 @@ function eindeLied() {
   $('mzUitKop').style.color = gehaald ? '#4ade80' : '#ffc740';
   $('mzUitScore').textContent = t('mz_uit_score', pct) + (gehaald ? '' : ' · ' + t('mz_nietgehaald'));
   $('mzUitLoon').textContent = t('duel_reward', xp);
-  $('mzNogmaals').textContent = t('duel_again');
+  $('mzNogmaals').textContent = t('mz_nog_een_keer');
+  $('mzAndere').textContent = t('mz_andere');
   $('mzNaarMenu').textContent = t('duel_to_menu');
   $('mzUit').classList.add('aan');
   (gehaald ? geluidWin : geluidVerlies)();
@@ -6500,14 +6504,30 @@ $('mzBestand').addEventListener('change', e => {
   eigenToevoegen(e.target.files && e.target.files[0]);
   e.target.value = '';
 });
-$('mzStop').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
+/// Klaar met een nummer? Dan blijf je in de muziekmodus staan: nog een keer
+/// hetzelfde, of terug naar de lijst. Naar het menu ga je alleen als je daar
+/// zelf om vraagt.
+function mzNaarLijst() {
+  clearInterval(mzTellerLus); mzTellerLus = null;
+  mzStil();
+  mzFase = 'uit';
+  muziekBij();
+  $('mzUit').classList.remove('aan');
+  $('mz').classList.remove('aan');
+  $('stage').querySelector('.middle').appendChild($('nosebar'));
+  camBalkBijwerken();
+  $('mzKies').classList.add('aan');
+  tekenMuziekKeuze();
+}
+
+$('mzStop').addEventListener('click', e => { e.stopPropagation(); mzNaarLijst(); });
+$('mzAndere').addEventListener('click', e => { e.stopPropagation(); mzNaarLijst(); });
 $('mzNaarMenu').addEventListener('click', e => { e.stopPropagation(); verlaatMuziek(); });
 $('mzNogmaals').addEventListener('click', e => {
   e.stopPropagation();
+  const zelfde = mzLied;
   $('mzUit').classList.remove('aan');
-  $('mz').classList.remove('aan');
-  $('mzKies').classList.add('aan');
-  tekenMuziekKeuze();
+  if (zelfde) startLied(zelfde); else mzNaarLijst();
 });
 
 /* ---------------------------------------------------------------

@@ -568,6 +568,9 @@ enum Tk: String {
     case mz_tempo_nu
     case geluid_test
     case geluid_stil
+    case mz_nog_een_keer
+    case mz_andere
+    case duel_terug_duel
 }
 
 enum Strings {
@@ -1048,7 +1051,7 @@ enum Strings {
         "wb_account": ["De wereldboss doe je samen, dus je hebt er een account voor nodig.", "The world boss is a joint effort, so you need an account.", "Le boss mondial se joue ensemble : il te faut un compte."],
         "wb_dood": ["Neer! Iedereen die meesloeg krijgt zijn deel.", "Down! Everyone who joined in gets their share.", "À terre ! Tous ceux qui ont frappé reçoivent leur part."],
         "wb_nieuw": ["Er staat alweer een nieuwe klaar.", "Another one is already waiting.", "Un autre attend déjà."],
-        "wb_uitleg": ["Zijn kracht hangt af van hoeveel spelers er zijn: rond de twintig tot zestig per persoon, nooit meer dan zeshonderd. Elke klap levert je XP en push-ups op.", "His strength depends on how many players there are: about twenty to sixty each, never more than six hundred. Every hit earns you XP and push-ups.", "Sa force dépend du nombre de joueurs : environ vingt à soixante par personne, jamais plus de six cents. Chaque coup te rapporte de l’XP et des pompes."],
+        "wb_uitleg": ["Zijn kracht hangt af van hoeveel spelers er zijn: ongeveer honderd per persoon, nooit meer dan negenhonderd. Elke klap levert je XP en push-ups op.", "His strength depends on how many players there are: about a hundred each, never more than nine hundred. Every hit earns you XP and push-ups.", "Sa force dépend du nombre de joueurs : environ cent par personne, jamais plus de neuf cents. Chaque coup te rapporte de l’XP et des pompes."],
         "wb_offline": ["Geen verbinding met de wereldboss.", "No connection to the world boss.", "Pas de connexion au boss mondial."],
         "lb_soort_xp": ["XP", "XP", "XP"],
         "lb_soort_arena": ["Arena", "Arena", "Arène"],
@@ -1116,6 +1119,9 @@ enum Strings {
         "mz_tempo_nu": ["Nu: {0} BPM · {1} push-ups per minuut", "Now: {0} BPM · {1} push-ups per minute", "Actuel : {0} BPM · {1} pompes par minute"],
         "geluid_test": ["Geluid testen", "Test the sound", "Tester le son"],
         "geluid_stil": ["Hoor je niets op een iPhone? Zet het schuifje aan de zijkant om, zodat de bel aanstaat.", "Hear nothing on an iPhone? Flip the switch on the side so the ringer is on.", "Rien sur un iPhone ? Bascule le bouton sur le côté pour activer la sonnerie."],
+        "mz_nog_een_keer": ["Nog een keer", "One more time", "Encore une fois"],
+        "mz_andere": ["Andere nummers", "Other tracks", "Autres morceaux"],
+        "duel_terug_duel": ["Terug naar de duels", "Back to the duels", "Retour aux duels"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
