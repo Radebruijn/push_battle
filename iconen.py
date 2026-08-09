@@ -54,26 +54,80 @@ def _oppervlak(pts: list[tuple[float, float]]) -> float:
     )
 
 
-def poly(points: list[tuple[float, float]], hole: bool = False) -> str:
+# Hoe rond alles staat. Nul geeft de oude, hoekige vormen terug; hoger maakt
+# de figuren zachter. Zes is uitgeprobeerd tegen vier en acht: bij vier zie je
+# de hoeken nog, bij acht verliezen de mantel van de vampier en de armen van de
+# golem hun vorm. Zes rondt alles af en houdt elk silhouet herkenbaar.
+ROND = 6.0
+
+
+def poly(points: list[tuple[float, float]], hole: bool = False,
+         rond: float | None = None) -> str:
+    """Veelhoek met afgeronde hoeken. Elke hoek wordt een stukje ingekort en
+    met een boogje overbrugd, zodat de monsters uit ronde vormen bestaan in
+    plaats van uit scherpe punten. De inkorting is nooit meer dan de helft van
+    de kortste zijde eromheen, anders zou een smalle vorm dichtklappen."""
     # De richting waarin de punten toevallig staan mag niet uitmaken: we draaien
     # ze zo nodig om, zodat 'hole' altijd echt een gat oplevert.
     opp = _oppervlak(points)
     pts = list(reversed(points)) if (opp > 0) == hole else list(points)
-    d = f"M{_f(pts[0][0])} {_f(pts[0][1])}"
-    for x, y in pts[1:]:
-        d += f"L{_f(x)} {_f(y)}"
+    straal = ROND if rond is None else rond
+    if straal <= 0 or len(pts) < 3:
+        d = f"M{_f(pts[0][0])} {_f(pts[0][1])}"
+        for x, y in pts[1:]:
+            d += f"L{_f(x)} {_f(y)}"
+        return d + "Z"
+
+    n = len(pts)
+    stukken = []
+    for i in range(n):
+        vx, vy = pts[i - 1]
+        x, y = pts[i]
+        nx, ny = pts[(i + 1) % n]
+        d1 = math.hypot(vx - x, vy - y) or 1
+        d2 = math.hypot(nx - x, ny - y) or 1
+        k = min(straal, d1 / 2, d2 / 2)
+        binnen = (x + (vx - x) / d1 * k, y + (vy - y) / d1 * k)
+        buiten = (x + (nx - x) / d2 * k, y + (ny - y) / d2 * k)
+        stukken.append((binnen, (x, y), buiten))
+
+    d = f"M{_f(stukken[0][0][0])} {_f(stukken[0][0][1])}"
+    for i, (binnen, hoek, buiten) in enumerate(stukken):
+        if i:
+            d += f"L{_f(binnen[0])} {_f(binnen[1])}"
+        d += f"Q{_f(hoek[0])} {_f(hoek[1])} {_f(buiten[0])} {_f(buiten[1])}"
     return d + "Z"
 
 
-def bar(x1: float, y1: float, x2: float, y2: float, w: float, hole: bool = False) -> str:
-    """Balk tussen twee punten, bruikbaar voor poten en ledematen."""
+def bar(x1: float, y1: float, x2: float, y2: float, w: float,
+        hole: bool = False) -> str:
+    """Ledemaat tussen twee punten: een balk met ronde koppen, zoals een arm of
+    een poot ook eindigt. De koppen zijn kwartcirkels benaderd met een boogje;
+    dat scheelt gedoe met draairichtingen en ziet er op dit formaat hetzelfde
+    uit als een echte halve cirkel."""
     dx, dy = x2 - x1, y2 - y1
     ln = math.hypot(dx, dy) or 1
-    nx, ny = -dy / ln * w / 2, dx / ln * w / 2
-    return poly(
-        [(x1 + nx, y1 + ny), (x2 + nx, y2 + ny), (x2 - nx, y2 - ny), (x1 - nx, y1 - ny)],
-        hole,
-    )
+    ux, uy = dx / ln, dy / ln
+    r = w / 2
+    nx, ny = -uy * r, ux * r
+    hoeken = [(x1 + nx, y1 + ny), (x2 + nx, y2 + ny),
+              (x2 - nx, y2 - ny), (x1 - nx, y1 - ny)]
+    # Dezelfde draairichting-correctie als bij poly, zodat 'hole' klopt. Welke
+    # kant we ook op lopen, we komen eerst langs het uiteinde bij punt twee en
+    # daarna langs dat bij punt één.
+    if (_oppervlak(hoeken) > 0) == hole:
+        hoeken = list(reversed(hoeken))
+    koppen = [(x2, y2, ux, uy), (x1, y1, -ux, -uy)]
+
+    # Het stuurpunt ligt twee stralen voorbij het midden; dan raakt het midden
+    # van de kromme precies de cirkel en is de kop netjes rond.
+    d = f"M{_f(hoeken[0][0])} {_f(hoeken[0][1])}"
+    for i, (kx, ky, rx, ry) in enumerate(koppen):
+        stuur = (kx + rx * r * 2, ky + ry * r * 2)
+        eind = hoeken[(i * 2 + 2) % 4]
+        d += (f"L{_f(hoeken[i * 2 + 1][0])} {_f(hoeken[i * 2 + 1][1])}"
+              f"Q{_f(stuur[0])} {_f(stuur[1])} {_f(eind[0])} {_f(eind[1])}")
+    return d + "Z"
 
 
 def raw(d: str) -> str:
@@ -950,12 +1004,47 @@ def preview() -> Path:
     )
     uit = HIER / "overzicht-iconen.html"
     uit.write_text(html)
+    poppetjes()
+    return uit
+
+
+# Grof dezelfde kleuren als in het spel, zodat het overzicht laat zien wat je
+# straks ook echt ziet.
+PREVIEW_KLEUR = {"lijf": "#6db354", "diep": "#41702f", "licht": "#9ad47f",
+                 "kleding": "#8a8577", "broek": "#4a4f5c",
+                 "wit": "#f4f1e8", "zwart": "#191a1f"}
+
+
+def poppetjes() -> Path:
+    """Alle vijanden in lagen naast elkaar. Handig om te zien of ze nog
+    familie van elkaar zijn nadat je aan de vormen hebt gezeten."""
+    vakjes = ""
+    for ras, lagen in ART.items():
+        stukken = "".join(
+            f'<path d="{d}" fill="{PREVIEW_KLEUR.get(rol, "#888")}" stroke="#191a1f" '
+            f'stroke-width="{1.6 if rol in ("wit", "zwart") else 2.8}" '
+            f'stroke-linejoin="round"/>'
+            for d, rol in lagen
+        )
+        vakjes += (f'<figure><svg viewBox="-4 -4 108 108">{stukken}</svg>'
+                   f"<figcaption>{ras}</figcaption></figure>")
+    html = (
+        '<meta charset="utf-8"><title>Poppetjes</title>'
+        "<style>body{background:#0b0b0d;color:#eee;font-family:system-ui;margin:0;padding:20px}"
+        "main{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}"
+        "figure{margin:0;text-align:center}"
+        "svg{width:100%;background:#15181a;border-radius:12px}"
+        "figcaption{font-size:11px;color:#999;margin-top:4px}</style>"
+        f"<main>{vakjes}</main>"
+    )
+    uit = HIER / "overzicht-poppetjes.html"
+    uit.write_text(html)
     return uit
 
 
 if __name__ == "__main__":
     if "--preview" in sys.argv:
-        print("overzicht geschreven:", preview().name)
+        print("overzicht geschreven:", preview().name, "+ overzicht-poppetjes.html")
     else:
         aantal = patch_arena_swift()
         schrijf_mode_icons()

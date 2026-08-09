@@ -386,13 +386,15 @@ Wat je draagt is te zien in het klassement en op je spelerskaart: de kop vervang
 
 Vijanden heten naar wat ze zijn: in Orkenrijk vecht je tegen een Ork, in Spinnenkuil tegen een Spin, en de boss van een arena is de Grote variant daarvan. Elk soort heeft een eigen silhouet: een ork met slagtanden, een schedel, een spin, een vleermuis, een bliksemschicht in een ring, een oog in de leegte. Dat icoon is de vijand die je slaat — hij ademt, krimpt bij elke klap en verkleurt van de arenakleur naar bloedrood naarmate hij doodgaat. In het menu zie je dezelfde iconen klein terug op de kaartjes van komende arena's.
 
-De iconen worden getekend door `iconen.py` en als SVG-pad in `Orbslayer/Arena.swift` gezet. Wil je er een aanpassen, bewerk dan de vorm in `iconen.py` en draai:
+**Alles is rond.** De tekeningen worden opgebouwd uit twee bouwstenen: `bar()` voor een ledemaat en `poly()` voor een vlak. Die waren hoekig — rechthoekige armen met vierkante uiteinden, veelhoeken met scherpe punten — en dat maakte de figuren blokkerig. Nu eindigt elke arm en elk been in een ronde kop, en wordt elke hoek van een vlak met een boogje afgesneden. Hoeveel staat in één getal, `ROND`, bovenaan `iconen.py`. Zes is uitgeprobeerd tegen vier en acht: bij vier zie je de hoeken nog, bij acht verliezen de mantel van de vampier en de armen van de golem hun vorm. De inkorting is nooit meer dan de helft van de kortste zijde eromheen, zodat kleine dingen — tanden, klauwen, de zigzag onder een geest — scherp blijven. Eén getal veranderen doet dus alle eenentwintig vijanden, alle modus-iconen en alle rangtekens tegelijk, en juist daardoor blijven ze familie van elkaar.
+
+De iconen worden getekend door `iconen.py` en als SVG-pad in `spelgegevens/Arena.swift` gezet. Wil je er een aanpassen, bewerk dan de vorm in `iconen.py` en draai:
 
 ```bash
 python3 iconen.py && python3 bouw-proefversie.py
 ```
 
-Met `python3 iconen.py --preview` krijg je `overzicht-iconen.html`, waarin je alle eenentwintig naast elkaar ziet.
+Met `python3 iconen.py --preview` krijg je twee overzichten: `overzicht-iconen.html` met alle silhouetten, modus-iconen en rangtekens, en `overzicht-poppetjes.html` met de vijanden in lagen en kleur — zoals je ze in het menu ziet. Dat tweede is het overzicht om naar te kijken als je aan de vormen zit.
 
 ## Gevonden worden
 
