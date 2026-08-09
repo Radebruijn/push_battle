@@ -308,11 +308,13 @@ Daaronder staat **Zoek een nummer online**: typ een naam of plak een link, en je
 | **YouTube** (`youtube.com`, `youtu.be`, Shorts, YouTube Music) | de titel komt via hun oEmbed binnen, wordt schoongeveegd — *(Official Video)*, *[4K]*, alles achter een streepje — en daarmee wordt gezocht |
 | **Apple Music** | het nummernummer staat in de link; één opzoeking is genoeg |
 | **SoundCloud** | net als YouTube: titel via oEmbed, dan zoeken |
-| **Spotify** | Spotify weigert elk verzoek van een andere site, dus uit de kale link valt niets te halen. Staat de titel naast de link — zoals bij delen vanuit de app — dan wordt daarop gezocht; staat hij er niet, dan vraagt het spel gewoon om de naam |
+| **Spotify** | de pagina mag Spotify niets vragen (geen CORS-kop), dus dit loopt via onze eigen serverfunctie `nummer`: die haalt de titel op uit hun oEmbed of anders uit de `og:`-gegevens van de pagina, en zoekt daarmee verder |
 | **een directe link naar een mp3 of m4a** | het bestand wordt meteen opgehaald en toegevoegd |
 | **iets anders** | de links worden eruit geknipt en er wordt gezocht op de woorden die overblijven |
 
-Vindt hij niets, dan probeert hij het nog een keer met alleen de eerste zes woorden. Lukt het dan nog niet, dan staat er waaróm — niet een lege lijst.
+Alles gaat eerst langs de serverfunctie, want een server kent de grenzen niet die een browser wel heeft. Ligt die er even uit, dan probeert de pagina het alsnog zelf voor YouTube, SoundCloud en Apple Music. Vindt hij niets, dan probeert hij het nog een keer met alleen de eerste zes woorden, en lukt het dan nog niet dan staat er waaróm — geen lege lijst.
+
+**Je ziet jezelf terwijl je pusht.** Het voorbeeldvenster met de stip op je hoofd hangt boven de spelmodi in plaats van erachter, dus ook in Op de maat, bij de wereldboss en in de clicker zie je linksboven of de camera je nog volgt.
 
 Het spel zoekt het tempo er zelf bij. Het maakt van de eerste minuut een luidheidscurve, houdt alleen over wat harder wordt (dat zijn de klappen) en zoekt met een autocorrelatie welke afstand het vaakst terugkomt. Daarna bepaalt het ook nog de fase — waar de eerste tel valt — zodat de ring precies op de beat inklapt. Op een testnummer van 140 BPM komt hij op 140,6 uit, met de tel elf milliseconden na het begin.
 

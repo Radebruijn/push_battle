@@ -942,7 +942,9 @@
   #calBtn { display: none; margin: 10px 0 0 8px; background: none; border: 0; color: rgba(255,255,255,.5);
             font: inherit; font-size: 13px; cursor: pointer; }
   #calBtn.on { display: inline-block; }
-  #cam { position: fixed; left: 10px; top: 84px; width: 120px; z-index: 12; display: none; }
+  /* Het voorbeeldvenster hangt boven de spelmodi (die zitten op 12), anders
+     zie je jezelf niet in Op de maat, bij de wereldboss of in de clicker. */
+  #cam { position: fixed; left: 10px; top: 84px; width: 120px; z-index: 13; display: none; }
   #cam.on { display: block; }
   #video { width: 120px; border-radius: 10px; transform: scaleX(-1); display: block;
            border: 1px solid rgba(255,255,255,.2); background: #111; }
@@ -6077,9 +6079,35 @@ function zoekFout(sleutel) {
   return f;
 }
 
+/// Eerst langs onze eigen server. Die mag wél bij Spotify langs — een browser
+/// mag dat niet, want Spotify stuurt geen CORS-kop mee. De server haalt de
+/// titel op, veegt hem schoon en zoekt het fragment erbij.
+async function zoekViaServer(vraag) {
+  const a = await fetch(SB_URL + '/functions/v1/nummer', {
+    method: 'POST',
+    headers: { apikey: SB_ANON, Authorization: 'Bearer ' + SB_ANON,
+               'Content-Type': 'application/json' },
+    body: JSON.stringify({ vraag }),
+  });
+  if (!a.ok) throw new Error('server ' + a.status);
+  const d = await a.json();
+  if (d.treffers && d.treffers.length) return d.treffers;
+  if (d.fout === 'link') throw zoekFout('mz_zoek_link_niet');
+  return [];
+}
+
 async function mzZoekOnline(vraag) {
   vraag = vraag.trim();
   if (!vraag) return [];
+
+  try {
+    const raak = await zoekViaServer(vraag);
+    if (raak.length) return raak;
+  } catch (e) {
+    // Een nette uitleg gaat door naar het scherm; is de server onbereikbaar,
+    // dan proberen we het hieronder alsnog vanuit de browser zelf.
+    if (e.uitleg) throw e;
+  }
 
   // Apple Music: het nummernummer staat gewoon in de link.
   const apple = vraag.match(/music\.apple\.com\/[^?\s]+\?(?:[^#\s]*&)?i=(\d+)/) ||

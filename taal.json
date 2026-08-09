@@ -2587,9 +2587,9 @@
       "Cherche un titre en ligne"
     ],
     "mz_online_uit": [
-      "Plak een link uit YouTube, Apple Music of SoundCloud, of typ gewoon de naam.",
-      "Paste a link from YouTube, Apple Music or SoundCloud, or just type the name.",
-      "Colle un lien de YouTube, Apple Music ou SoundCloud, ou tape simplement le nom."
+      "Plak een link uit Spotify, YouTube of Apple Music, of typ gewoon de naam.",
+      "Paste a link from Spotify, YouTube or Apple Music, or just type the name.",
+      "Colle un lien de Spotify, YouTube ou Apple Music, ou tape simplement le nom."
     ],
     "mz_zoek_info": [
       "Je krijgt het officiële fragment van 30 seconden; de beat wordt er vanzelf onder gelegd.",
@@ -2597,9 +2597,9 @@
       "Tu reçois l'extrait officiel de 30 secondes ; le rythme se cale automatiquement."
     ],
     "mz_zoek_hint": [
-      "Naam of link…",
-      "Name or link…",
-      "Nom ou lien…"
+      "Naam of link plakken…",
+      "Paste a name or link…",
+      "Colle un nom ou un lien…"
     ],
     "mz_zoek_ga": [
       "Zoeken",
@@ -2617,9 +2617,9 @@
       "Spotify ne donne pas le titre aux autres sites. Tape le nom du morceau et je le trouverai."
     ],
     "mz_zoek_link_niet": [
-      "Deze link kan ik niet lezen. Typ de naam van het nummer.",
-      "I cannot read this link. Type the name of the track instead.",
-      "Je n’arrive pas à lire ce lien. Tape plutôt le nom du morceau."
+      "Deze link kon ik niet openen. Typ anders de naam van het nummer.",
+      "I could not open this link. Try typing the name of the track instead.",
+      "Je n’ai pas pu ouvrir ce lien. Essaie plutôt de taper le nom du morceau."
     ],
     "mz_zoek_gevonden": [
       "Gevonden: {0}",
