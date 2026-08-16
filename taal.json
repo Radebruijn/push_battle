@@ -2810,6 +2810,181 @@
       "{0} push-ups",
       "{0} push-ups",
       "{0} pompes"
+    ],
+    "mode_stad": [
+      "Stad",
+      "City",
+      "Cité"
+    ],
+    "mode_stad_sub": [
+      "Bouw je vesting en beroof andere spelers.",
+      "Build your fortress and raid other players.",
+      "Bâtis ta forteresse et pille les autres joueurs."
+    ],
+    "stad_goud": [
+      "goud",
+      "gold",
+      "or"
+    ],
+    "stad_uitleg": [
+      "Elke push-up hier is een goudstuk. Bouw je verdediging op, en ga op rooftocht bij de rest.",
+      "Every push-up here is a gold coin. Build your defenses, then go raiding.",
+      "Chaque pompe ici est une pièce d'or. Renforce ta défense, puis pars en razzia."
+    ],
+    "stad_schild": [
+      "🛡️ schild nog {0}",
+      "🛡️ shield for {0}",
+      "🛡️ bouclier encore {0}"
+    ],
+    "stad_account": [
+      "Voor de stad heb je een account nodig.",
+      "You need an account for the city.",
+      "Il te faut un compte pour la cité."
+    ],
+    "stad_stil": [
+      "De stad is nog niet opengesteld. Probeer het straks nog eens.",
+      "The city hasn't opened yet. Try again soon.",
+      "La cité n'est pas encore ouverte. Réessaie bientôt."
+    ],
+    "stad_overval_knop": [
+      "Overvallen",
+      "Raid",
+      "Piller"
+    ],
+    "stad_geen_doel": [
+      "Iedereen heeft een schild of de steden zijn nog leeg. Probeer het later.",
+      "Everyone has a shield or the cities are still empty. Try later.",
+      "Tout le monde a un bouclier ou les cités sont vides. Réessaie plus tard."
+    ],
+    "stad_niveau": [
+      "niveau {0}",
+      "level {0}",
+      "niveau {0}"
+    ],
+    "stad_vol": [
+      "vol",
+      "max",
+      "max"
+    ],
+    "stad_gebouwd": [
+      "{0} is een niveau gestegen!",
+      "{0} went up a level!",
+      "{0} a gagné un niveau !"
+    ],
+    "stad_log_kop": [
+      "Logboek",
+      "Log",
+      "Journal"
+    ],
+    "stad_log_leeg": [
+      "Nog niemand heeft je stad aangevallen.",
+      "No one has attacked your city yet.",
+      "Personne n'a encore attaqué ta cité."
+    ],
+    "stad_log_verloren": [
+      "{0} brak door je muren en nam {1} goud mee",
+      "{0} broke through your walls and took {1} gold",
+      "{0} a percé tes murs et pris {1} or"
+    ],
+    "stad_log_gehouden": [
+      "{0} beet zich stuk op je muren",
+      "{0} broke against your walls",
+      "{0} s'est brisé sur tes murs"
+    ],
+    "gebouw_stadhuis": [
+      "Stadhuis",
+      "Town hall",
+      "Hôtel de ville"
+    ],
+    "gebouw_stadhuis_uit": [
+      "Laat de andere gebouwen tot niveau {0} bouwen.",
+      "Lets your other buildings reach level {0}.",
+      "Permet aux autres bâtiments d'atteindre le niveau {0}."
+    ],
+    "gebouw_muur": [
+      "Muur",
+      "Wall",
+      "Muraille"
+    ],
+    "gebouw_muur_uit": [
+      "Geeft nu {0} verdediging (+10 per niveau).",
+      "Gives {0} defense now (+10 per level).",
+      "Donne {0} défense (+10 par niveau)."
+    ],
+    "gebouw_toren": [
+      "Wachttoren",
+      "Watchtower",
+      "Tour de guet"
+    ],
+    "gebouw_toren_uit": [
+      "Geeft nu {0} verdediging (+15 per niveau).",
+      "Gives {0} defense now (+15 per level).",
+      "Donne {0} défense (+15 par niveau)."
+    ],
+    "gebouw_schatkamer": [
+      "Schatkamer",
+      "Treasury",
+      "Trésorerie"
+    ],
+    "gebouw_schatkamer_uit": [
+      "Beschermt {0}% van je goud bij een overval.",
+      "Protects {0}% of your gold in a raid.",
+      "Protège {0}% de ton or lors d'un pillage."
+    ],
+    "gebouw_smederij": [
+      "Smederij",
+      "Forge",
+      "Forge"
+    ],
+    "gebouw_smederij_uit": [
+      "Je overvallen slaan {0}% harder.",
+      "Your raids hit {0}% harder.",
+      "Tes pillages frappent {0}% plus fort."
+    ],
+    "ov_kop": [
+      "Overval",
+      "Raid",
+      "Pillage"
+    ],
+    "ov_tegen": [
+      "Je staat voor de poort van {0}.",
+      "You stand at the gate of {0}.",
+      "Tu es devant la porte de {0}."
+    ],
+    "ov_verdediging": [
+      "Verdediging: {0}",
+      "Defense: {0}",
+      "Défense : {0}"
+    ],
+    "ov_buit": [
+      "Buit tot {0} goud",
+      "Loot up to {0} gold",
+      "Butin jusqu'à {0} or"
+    ],
+    "ov_start": [
+      "Begin de overval — 60 seconden",
+      "Start the raid — 60 seconds",
+      "Lance le pillage — 60 secondes"
+    ],
+    "ov_opgeven": [
+      "Bestorm nu",
+      "Storm now",
+      "Donne l'assaut"
+    ],
+    "ov_kracht": [
+      "Kracht {0} van de {1} — pushen!",
+      "Strength {0} of {1} — push!",
+      "Force {0} sur {1} — pousse !"
+    ],
+    "ov_gewonnen": [
+      "Doorbraak! Je neemt {0} goud mee naar huis.",
+      "Breakthrough! You take {0} gold home.",
+      "Percée ! Tu ramènes {0} or."
+    ],
+    "ov_verloren": [
+      "De muren hielden stand: kracht {0} van de {1} nodig.",
+      "The walls held: strength {0} of the {1} needed.",
+      "Les murs ont tenu : force {0} sur les {1} requis."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",
