@@ -4146,6 +4146,7 @@ const LES_STAPPEN = [
   { doel: 'modeDuel',   tekst: 'les6', knop: true, dood: true },
   { doel: 'modeOnline', tekst: 'les7', knop: true, dood: true },
   { doel: 'modeKlik',   tekst: 'les8', knop: true, dood: true },
+  { doel: 'modeStad',   tekst: 'les_stad', knop: true, dood: true },
   { doel: 'questKnop',  tekst: 'les9', knop: true, dood: true,
     bij: () => $('modes').classList.remove('aan') },
   { doel: 'sportKiezer', tekst: 'les10', knop: true, dood: true },
@@ -6022,6 +6023,8 @@ function toonStad() {
   if (!ingelogd()) { melding(t('stad_account'), 4000); toonAccount(); return; }
   $('modes').classList.remove('aan');
   $('stad').classList.add('aan');
+  // Elk bezoek begint netjes bij het dorp, hoe ver je vorige keer ook zwierf.
+  kaartX = 20; kaartY = 0; kaartZoom = 1;
   $('stadKop').textContent = t('mode_stad').toUpperCase();
   $('stadBouwKnop').textContent = t('stad_bouw_knop');
   $('stadOvervalKnop').textContent = t('stad_overval_knop');
@@ -6142,12 +6145,26 @@ function tekenKaart() {
              ` fill="#dfe8ff" opacity="0.${4 + (i % 5)}"/>`;
   }
   const heuvels =
-    `<ellipse cx="${breed * 0.2}" cy="${grond + 46}" rx="${breed * 0.55}" ry="76" fill="#1c2a42"/>` +
-    `<ellipse cx="${breed * 0.75}" cy="${grond + 58}" rx="${breed * 0.6}" ry="92" fill="#152136"/>`;
+    `<ellipse cx="${breed * 0.2}" cy="${grond + 46}" rx="${breed * 0.55}" ry="76" fill="#243755"/>` +
+    `<ellipse cx="${breed * 0.75}" cy="${grond + 58}" rx="${breed * 0.6}" ry="92" fill="#1a2a44"/>`;
+  // Wolken: drie zachte proppen van lichte bollen, laag boven de heuvels.
+  const wolk = (wx, wy, m) =>
+    `<g transform="translate(${wx},${wy}) scale(${m})" fill="#c7d3e8" opacity=".45">` +
+    `<ellipse cx="0" cy="0" rx="26" ry="10"/><ellipse cx="-16" cy="4" rx="16" ry="8"/>` +
+    `<ellipse cx="17" cy="4" rx="18" ry="8"/><ellipse cx="4" cy="-7" rx="14" ry="8"/></g>`;
+  const wolken = wolk(breed * 0.22, 62, 1) + wolk(breed * 0.55, 96, 0.8) +
+                 wolk(breed * 0.9, 48, 1.2);
   const pad =
     `<path d="M-2000,${grond + 30} Q${breed / 2},${grond + 18} ${breed + 2000},${grond + 26}"` +
     ` stroke="#6d5334" stroke-width="15" fill="none" opacity=".9"/>`;
+  // Lichtere grasvlakken, zodat het veld geen egaal groen vlak is.
   let veld = '';
+  for (let i = 0; i < 12; i++) {
+    const px = ((i * 389 + 90) % (breed + 900)) - 450;
+    const py = grond + 34 + (i * 53) % 52;
+    veld += `<ellipse cx="${px}" cy="${py}" rx="${52 + (i * 31) % 60}" ry="${10 + (i * 13) % 10}"` +
+            ` fill="${i % 2 ? '#2b4227' : '#31492a'}"/>`;
+  }
   const bloemKleuren = ['#e6b0d8', '#ffd166', '#ff8f6b'];
   for (let i = 0; i < 46; i++) {
     const gx = ((i * 233 + 60) % (breed + 800)) - 400;
@@ -6168,13 +6185,17 @@ function tekenKaart() {
     `<circle cx="${breed - 70}" cy="44" r="18" fill="#f4edd7" opacity=".9"/>` +
     `<circle cx="${breed - 77}" cy="40" r="4" fill="#e3dbbf" opacity=".5"/>` +
     `<circle cx="${breed - 62}" cy="50" r="3" fill="#e3dbbf" opacity=".4"/>` +
-    heuvels +
-    `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="600" fill="#22331f"/>` +
-    `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="5" fill="#2e4429"/>` +
+    heuvels + wolken +
+    `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="600" fill="#26391f"/>` +
+    `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="5" fill="#33502c"/>` +
     pad + veld + stukken + `</g>`;
 }
 
 function kaartBij() {
+  // Je kunt nooit zó ver slepen dat het dorp uit beeld raakt.
+  const breed = +($('stadKaart').getAttribute('viewBox') || '0 0 560 280').split(' ')[2];
+  kaartX = Math.min(260, Math.max(-(breed * kaartZoom - 200), kaartX));
+  kaartY = Math.min(170, Math.max(-170 * kaartZoom, kaartY));
   const scene = document.getElementById('stadScene');
   if (scene) scene.setAttribute('transform',
     `translate(${kaartX},${kaartY}) scale(${kaartZoom})`);
@@ -6387,12 +6408,18 @@ $('stadDicht').addEventListener('click', e => {
   toonMenu();
 });
 $('stadBouwKnop').addEventListener('click', e => {
-  e.stopPropagation(); $('stadWinkel').classList.add('aan'); tekenWinkel();
+  e.stopPropagation();
+  if (!stadNu) { melding(t('stad_stil'), 5000); stadHaal(); return; }
+  $('stadWinkel').classList.add('aan'); tekenWinkel();
 });
 $('stadWinkelDicht').addEventListener('click', e => {
   e.stopPropagation(); $('stadWinkel').classList.remove('aan');
 });
-$('stadOvervalKnop').addEventListener('click', e => { e.stopPropagation(); ovZoek(); });
+$('stadOvervalKnop').addEventListener('click', e => {
+  e.stopPropagation();
+  if (!stadNu) { melding(t('stad_stil'), 5000); stadHaal(); return; }
+  ovZoek();
+});
 $('ovStart').addEventListener('click', e => { e.stopPropagation(); ovBegin(); });
 $('ovWeg').addEventListener('click', e => {
   e.stopPropagation();

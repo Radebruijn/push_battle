@@ -3065,6 +3065,11 @@
       "Je {0} soldaten vechten mee: +{1} kracht.",
       "Your {0} soldiers join in: +{1} strength.",
       "Tes {0} soldats participent : +{1} force."
+    ],
+    "les_stad": [
+      "De stad: elke push-up, waar je ook traint, is een goudstuk. Bouw een dorp met een mijn, huizen en soldaten — en beroof andere spelers.",
+      "The city: every push-up, wherever you train, is a gold coin. Build a village with a mine, houses and soldiers — and raid other players.",
+      "La cité : chaque pompe, où que tu t'entraînes, est une pièce d'or. Bâtis un village avec une mine, des maisons et des soldats — et pille les autres joueurs."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

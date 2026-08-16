@@ -637,6 +637,7 @@ enum Tk: String {
     case w_verdediging
     case w_verdediging_uit
     case ov_soldaten
+    case les_stad
 }
 
 enum Strings {
@@ -1254,6 +1255,7 @@ enum Strings {
         "w_verdediging": ["Verdediger", "Defender", "Défenseur"],
         "w_verdediging_uit": ["Bewaakt je dorp: +8 verdediging per stuk. Je hebt er {0}.", "Guards your village: +8 defense each. You have {0}.", "Garde ton village : +8 défense chacun. Tu en as {0}."],
         "ov_soldaten": ["Je {0} soldaten vechten mee: +{1} kracht.", "Your {0} soldiers join in: +{1} strength.", "Tes {0} soldats participent : +{1} force."],
+        "les_stad": ["De stad: elke push-up, waar je ook traint, is een goudstuk. Bouw een dorp met een mijn, huizen en soldaten — en beroof andere spelers.", "The city: every push-up, wherever you train, is a gold coin. Build a village with a mine, houses and soldiers — and raid other players.", "La cité : chaque pompe, où que tu t'entraînes, est une pièce d'or. Bâtis un village avec une mine, des maisons et des soldats — et pille les autres joueurs."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
