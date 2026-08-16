@@ -2842,9 +2842,9 @@
       "Il te faut un compte pour la cité."
     ],
     "stad_stil": [
-      "De stad is nog niet opengesteld. Probeer het straks nog eens.",
-      "The city hasn't opened yet. Try again soon.",
-      "La cité n'est pas encore ouverte. Réessaie bientôt."
+      "De stad is nog niet opengesteld: de server draait de stadsregels nog niet (stad.sql).",
+      "The city hasn't opened yet: the server isn't running the city rules yet (stad.sql).",
+      "La cité n'est pas encore ouverte : le serveur n'a pas encore les règles de la cité (stad.sql)."
     ],
     "stad_overval_knop": [
       "Overvallen",

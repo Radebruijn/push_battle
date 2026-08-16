@@ -6032,10 +6032,16 @@ function toonStad() {
 
 async function stadHaal() {
   try {
-    stadNu = await stadVraag('stad_mijn', { p_sport: SPORT });
+    const antwoord = await stadVraag('stad_mijn', { p_sport: SPORT });
+    // Een server die nog de oude stad draait geeft een andere vorm terug;
+    // dat behandelen we hetzelfde als een stad die er nog niet is.
+    if (!antwoord || typeof antwoord !== 'object' || !('pushups' in antwoord)) {
+      throw new Error('stil');
+    }
+    stadNu = antwoord;
     tekenStad();
   } catch (e) {
-    melding(t(e.message === 'stil' ? 'stad_stil' : 'lb_failed'), 4000);
+    melding(t(e.message === 'stil' ? 'stad_stil' : 'lb_failed'), 5000);
   }
 }
 
@@ -6102,6 +6108,17 @@ function kSoldaat(x, y, soort) {
     `<circle cx="0" cy="-19" r="6" fill="#e8b98a"/>` + ding + `</g>`;
 }
 
+/// Klein groen: graspolletjes en bloemen die het veld vullen.
+function kGras(x, y) {
+  return `<g transform="translate(${x},${y})" stroke="#3f6b3a" stroke-width="2" fill="none">` +
+    `<path d="M0,0 Q-3,-7 -5,-10"/><path d="M0,0 Q0,-9 0,-12"/><path d="M0,0 Q3,-7 6,-9"/></g>`;
+}
+function kBloem(x, y, kleur) {
+  return `<g transform="translate(${x},${y})">` +
+    `<line x1="0" y1="0" x2="0" y2="-9" stroke="#3f6b3a" stroke-width="2"/>` +
+    `<circle cx="0" cy="-11" r="3.5" fill="${kleur}"/></g>`;
+}
+
 function tekenKaart() {
   const grond = 210;
   let stukken = '', x = 40;
@@ -6114,13 +6131,47 @@ function tekenKaart() {
   x += 40;
   stukken += kBoom(x, grond, 0.8);
   const breed = Math.max(560, x + 60);
+
+  // Het decor. Alles staat op vaste plekken (rekensommen op het volgnummer,
+  // geen toeval), zodat het dorp er elke keer precies hetzelfde bijligt.
+  let lucht = '';
+  for (let i = 0; i < 26; i++) {
+    const sx = ((i * 197 + 40) % (breed + 600)) - 300;
+    const sy = 14 + (i * 83) % 130;
+    lucht += `<circle cx="${sx}" cy="${sy}" r="${1 + (i % 3 === 0 ? 1 : 0)}"` +
+             ` fill="#dfe8ff" opacity="0.${4 + (i % 5)}"/>`;
+  }
+  const heuvels =
+    `<ellipse cx="${breed * 0.2}" cy="${grond + 46}" rx="${breed * 0.55}" ry="76" fill="#1c2a42"/>` +
+    `<ellipse cx="${breed * 0.75}" cy="${grond + 58}" rx="${breed * 0.6}" ry="92" fill="#152136"/>`;
+  const pad =
+    `<path d="M-2000,${grond + 30} Q${breed / 2},${grond + 18} ${breed + 2000},${grond + 26}"` +
+    ` stroke="#6d5334" stroke-width="15" fill="none" opacity=".9"/>`;
+  let veld = '';
+  const bloemKleuren = ['#e6b0d8', '#ffd166', '#ff8f6b'];
+  for (let i = 0; i < 46; i++) {
+    const gx = ((i * 233 + 60) % (breed + 800)) - 400;
+    const gy = grond + 46 + (i * 61) % 48;
+    const soort = i % 6;
+    if (soort < 2) veld += kGras(gx, gy);
+    else if (soort === 2) veld += kBloem(gx, gy, bloemKleuren[i % 3]);
+    else if (soort === 3) veld += `<ellipse cx="${gx}" cy="${gy}" rx="8" ry="4" fill="#2b4127"/>`;
+    else if (soort === 4) veld += `<ellipse cx="${gx}" cy="${gy}" rx="6" ry="3.5" fill="#5d6468"/>` +
+      `<ellipse cx="${gx - 2}" cy="${gy - 1.5}" rx="3" ry="2" fill="#767e83"/>`;
+    else veld += kGras(gx, gy - 2);
+  }
+
   $('stadKaart').setAttribute('viewBox', `0 0 ${breed} 280`);
   $('stadKaart').innerHTML =
     `<g id="stadScene" transform="translate(${kaartX},${kaartY}) scale(${kaartZoom})">` +
+    lucht +
+    `<circle cx="${breed - 70}" cy="44" r="18" fill="#f4edd7" opacity=".9"/>` +
+    `<circle cx="${breed - 77}" cy="40" r="4" fill="#e3dbbf" opacity=".5"/>` +
+    `<circle cx="${breed - 62}" cy="50" r="3" fill="#e3dbbf" opacity=".4"/>` +
+    heuvels +
     `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="600" fill="#22331f"/>` +
     `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="5" fill="#2e4429"/>` +
-    `<circle cx="${breed - 70}" cy="44" r="18" fill="#f4edd7" opacity=".9"/>` +
-    stukken + `</g>`;
+    pad + veld + stukken + `</g>`;
 }
 
 function kaartBij() {

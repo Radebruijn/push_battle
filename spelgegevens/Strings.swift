@@ -1209,7 +1209,7 @@ enum Strings {
         "stad_uitleg": ["Elke push-up hier is een goudstuk. Bouw je verdediging op, en ga op rooftocht bij de rest.", "Every push-up here is a gold coin. Build your defenses, then go raiding.", "Chaque pompe ici est une pièce d'or. Renforce ta défense, puis pars en razzia."],
         "stad_schild": ["🛡️ schild nog {0}", "🛡️ shield for {0}", "🛡️ bouclier encore {0}"],
         "stad_account": ["Voor de stad heb je een account nodig.", "You need an account for the city.", "Il te faut un compte pour la cité."],
-        "stad_stil": ["De stad is nog niet opengesteld. Probeer het straks nog eens.", "The city hasn't opened yet. Try again soon.", "La cité n'est pas encore ouverte. Réessaie bientôt."],
+        "stad_stil": ["De stad is nog niet opengesteld: de server draait de stadsregels nog niet (stad.sql).", "The city hasn't opened yet: the server isn't running the city rules yet (stad.sql).", "La cité n'est pas encore ouverte : le serveur n'a pas encore les règles de la cité (stad.sql)."],
         "stad_overval_knop": ["Overvallen", "Raid", "Piller"],
         "stad_geen_doel": ["Iedereen heeft een schild of de steden zijn nog leeg. Probeer het later.", "Everyone has a shield or the cities are still empty. Try later.", "Tout le monde a un bouclier ou les cités sont vides. Réessaie plus tard."],
         "stad_niveau": ["niveau {0}", "level {0}", "niveau {0}"],
