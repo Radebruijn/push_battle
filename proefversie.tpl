@@ -447,6 +447,7 @@
      hangt je eigen hoofd voor de uitleg. */
   body.lesAan #cam { z-index: 9; }
   body.lesAan #modes { z-index: 9; }
+  body.lesAan #stad, body.lesAan #stadWinkel, body.lesAan #ovKies { z-index: 9; }
   #les { position: fixed; inset: 0; z-index: 10; display: none; pointer-events: none; }
   #les.aan { display: block; }
   .lesBlok { position: fixed; background: rgba(0,0,0,.78); pointer-events: auto; }
@@ -683,6 +684,27 @@
                   margin-top: 16px; flex: none; }
   .dagenVandaag { text-align: center; font-size: 13px; color: rgba(255,255,255,.55);
                   margin-top: 6px; flex: none; }
+  #vlieg { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96);
+           display: none; padding: 28px 16px 18px; flex-direction: column; }
+  #vlieg.aan { display: flex; }
+  #vlieg h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+              color: rgba(255,255,255,.5); margin: 0 0 8px; padding: 8px 46px 0; flex: none; }
+  .vliegBalk { display: flex; justify-content: center; align-items: baseline; gap: 14px;
+               flex: none; margin-bottom: 8px; }
+  #vliegScore { font-size: 34px; font-weight: 900; color: #ffc740;
+                font-variant-numeric: tabular-nums; }
+  #vliegBeste { font-size: 12px; color: rgba(255,255,255,.5); }
+  .vliegVak { position: relative; flex: 1; min-height: 240px; border-radius: 18px;
+              overflow: hidden; background: #101725; }
+  #vliegDoek { width: 100%; height: 100%; display: block; }
+  .vliegOver { position: absolute; inset: 0; display: grid; place-items: center;
+               text-align: center; padding: 20px; background: rgba(0,0,0,.72); }
+  .vliegOver.weg { display: none; }
+  #vliegOverTekst { font-size: 15px; line-height: 1.5; margin-bottom: 14px;
+                    color: rgba(255,255,255,.85); }
+  .vliegUit { text-align: center; font-size: 11px; color: rgba(255,255,255,.45);
+              margin-top: 8px; flex: none; }
+
   /* De stad: tellers bovenaan, daaronder de dorpskaart waar je doorheen
      sleept en zoomt, en onderin de twee grote knoppen. */
   #stad { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96);
@@ -726,7 +748,14 @@
   .stadLogRij { font-size: 12px; color: rgba(255,255,255,.65); padding: 7px 2px;
                 border-bottom: 1px solid rgba(255,255,255,.07); }
   /* De overval: één kaart midden in beeld, van voorstel tot uitslag. */
-  #ov { position: fixed; inset: 0; z-index: 15; background: rgba(0,0,0,.88);
+  #ovKies { position: fixed; inset: 0; z-index: 15; background: rgba(0,0,0,.96);
+            display: none; padding: 30px 18px; overflow-y: auto; }
+  #ovKies.aan { display: block; }
+  #ovKies h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+               color: rgba(255,255,255,.5); margin: 0 0 8px; padding: 8px 46px 0; }
+  .ovKiesUit { font-size: 12px; color: rgba(255,255,255,.55); text-align: center;
+               margin-bottom: 14px; line-height: 1.5; }
+  #ov { position: fixed; inset: 0; z-index: 16; background: rgba(0,0,0,.88);
         display: none; place-items: center; padding: 24px; }
   #ov.aan { display: grid; }
   .ovKaart { width: 100%; max-width: 22rem; text-align: center; background: #15161a;
@@ -1207,6 +1236,10 @@
     <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
     <div class="modeTekst"><b></b><span></span></div>
   </button>
+  <button class="modeKaart" id="modeVlieg">
+    <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
+    <div class="modeTekst"><b></b><span></span></div>
+  </button>
   <button class="modeKaart" id="modeStad">
     <svg class="modeIcoon" viewBox="0 0 100 100"><path/></svg>
     <div class="modeTekst"><b></b><span></span></div>
@@ -1235,14 +1268,41 @@
     <button class="grotKnop" id="stadBouwKnop"></button>
     <button class="grotKnop" id="stadOvervalKnop"></button>
   </div>
+  <button class="tekstKnop" id="stadRangKnop"></button>
+</div>
+
+<div id="vlieg">
+  <button class="sluitKruis" id="vliegDicht" aria-label="sluiten">✕</button>
+  <h2 id="vliegKop"></h2>
+  <div class="vliegBalk">
+    <span id="vliegScore">0</span>
+    <span id="vliegBeste"></span>
+  </div>
+  <div class="vliegVak" id="vliegVak">
+    <canvas id="vliegDoek"></canvas>
+    <div class="vliegOver" id="vliegOver">
+      <div id="vliegOverTekst"></div>
+      <button class="grotKnop" id="vliegStart"></button>
+    </div>
+  </div>
+  <div class="vliegUit" id="vliegUit"></div>
 </div>
 
 <div id="stadWinkel">
   <button class="sluitKruis" id="stadWinkelDicht" aria-label="sluiten">✕</button>
   <h2 id="stadWinkelKop"></h2>
   <div id="stadGebouwen"></div>
+  <div class="qKop" id="stadKazerneKop"></div>
+  <div id="stadKazerne"></div>
   <div class="qKop" id="stadLogKop"></div>
   <div id="stadLog"></div>
+</div>
+
+<div id="ovKies">
+  <button class="sluitKruis" id="ovKiesDicht" aria-label="sluiten">✕</button>
+  <h2 id="ovKiesKop"></h2>
+  <div class="ovKiesUit" id="ovKiesUitleg"></div>
+  <div class="lbLijst" id="ovKiesLijst"></div>
 </div>
 
 <div id="ov">
@@ -2307,6 +2367,9 @@ let DIEPTE = parseFloat(localStorage.getItem('orbslayer.diepte'));
 if (!(DIEPTE >= 0.3 && DIEPTE <= 0.85)) DIEPTE = 0.6;
 
 let UP = 0.8, DOWN = 0.2;
+/// De laatst gemeten hoofdhoogte (0 = laag bij de grond, 1 = hoog). De
+/// vliegmodus leest hem elk beeldje om de vogel mee te sturen.
+let hoogteNu = 0.5;
 function updateMarks() {
   const range = CAL.top - CAL.bottom;
   const rand = (1 - DIEPTE) / 2;
@@ -3249,6 +3312,7 @@ function handleFace(height, punten, alles) {
   }
 
   setNose(value, value <= DOWN);
+  hoogteNu = value;   // de vliegmodus stuurt hier zijn vogel mee
   camState(houdingOk ? t('cam_height', Math.round(value * 100)) : t('houd_goed'));
   if (!houdingOk && houdingAan) {
     $('hint').textContent = t('houd_fout_' + SPORT);
@@ -3387,6 +3451,7 @@ function toonModi() {
   vul('modeBoss', MODE_ICONEN.boss, t('mode_boss'), t('mode_boss_sub'), false);
   vul('modeMuziek', MODE_ICONEN.muziek, t('mode_muziek'), t('mode_muziek_sub'), false);
   vul('modeKlik', MODE_ICONEN.klik, t('mode_klik'), t('mode_klik_sub'), false);
+  vul('modeVlieg', MODE_ICONEN.vlieg, t('mode_vlieg'), t('mode_vlieg_sub'), false);
   vul('modeStad', MODE_ICONEN.stad, t('mode_stad'), t('mode_stad_sub'), false);
   $('modesDicht').title = t('close');
 }
@@ -3745,9 +3810,25 @@ async function logIn(email, wachtwoord) {
                  email: d.user?.email ?? email, id: d.user?.id });
 }
 
+/// Uitloggen betekent ook echt weg zijn van dit apparaat. Vroeger bleef je
+/// voortgang, je naam en je foto gewoon staan — dan zat je gevoelsmatig nog
+/// steeds in je account. Alles staat veilig op de server en komt terug zodra
+/// je weer inlogt, dus hier beginnen we schoon.
 function logUit() {
   bewaarSessie(null);
+  ALLES = { actief: SPORT, naam: '', werelden: {} };
+  SPORTEN.forEach(sp => { ALLES.werelden[sp] = {}; });
+  P = { ...DEFAULTS };
+  combo = 0; sessionReps = 0; bezoek = null; stadNu = null;
+  mijnFoto = '';
+  localStorage.removeItem('orbslayer.foto');
+  localStorage.removeItem('orbslayer.proto');
+  spawn();
+  tekenFoto();
+  render();
+  renderMenu();
   renderAccount();
+  melding(t('uitgelogd_schoon'), 5000);
 }
 
 /// Haalt de voortgang van de server en houdt de verste vooruitgang aan,
@@ -4146,9 +4227,29 @@ const LES_STAPPEN = [
   { doel: 'modeDuel',   tekst: 'les6', knop: true, dood: true },
   { doel: 'modeOnline', tekst: 'les7', knop: true, dood: true },
   { doel: 'modeKlik',   tekst: 'les8', knop: true, dood: true },
-  { doel: 'modeStad',   tekst: 'les_stad', knop: true, dood: true },
+  // De stad krijgt een eigen rondgang: van de tellers via de winkel en de
+  // kazerne naar de kaart en de rooftocht.
+  { doel: 'modeStad',     tekst: 'les_stad1' },
+  { doel: 'stadTellers',  tekst: 'les_stad2', knop: true, dood: true },
+  { doel: 'stadDag',      tekst: 'les_stad3', knop: true, dood: true },
+  { doel: 'stadBouwKnop', tekst: 'les_stad4' },
+  { doel: 'winkel-houtvester',  tekst: 'les_stad5', knop: true, dood: true },
+  { doel: 'winkel-mijn',        tekst: 'les_stad6', knop: true, dood: true },
+  { doel: 'winkel-huis',        tekst: 'les_stad7', knop: true, dood: true },
+  { doel: 'winkel-aanval',      tekst: 'les_stad8', knop: true, dood: true },
+  { doel: 'winkel-verdediging', tekst: 'les_stad9', knop: true, dood: true },
+  { doel: 'winkel-medicijn',    tekst: 'les_stad10', knop: true, dood: true },
+  { doel: 'stadKazerne',        tekst: 'les_stad11', knop: true, dood: true },
+  { doel: 'stadKaartVak',       tekst: 'les_stad12', knop: true, dood: true,
+    bij: () => $('stadWinkel').classList.remove('aan') },
+  { doel: 'stadOvervalKnop',    tekst: 'les_stad13', knop: true, dood: true },
   { doel: 'questKnop',  tekst: 'les9', knop: true, dood: true,
-    bij: () => $('modes').classList.remove('aan') },
+    bij: () => {
+      $('modes').classList.remove('aan');
+      $('stadWinkel').classList.remove('aan');
+      $('stad').classList.remove('aan');
+      toonMenu();
+    } },
   { doel: 'sportKiezer', tekst: 'les10', knop: true, dood: true },
   { doel: 'mIcoon',     tekst: 'les11', knop: true, dood: true },
 ];
@@ -4166,6 +4267,8 @@ function lesStart() {
 function tekenLes() {
   const stap = LES_STAPPEN[lesStap - 1];
   stap.bij?.();
+  // Staat het doel in een lijst die je moet scrollen, haal het dan in beeld.
+  $(stap.doel)?.scrollIntoView({ block: 'center' });
   $('lesTekst').textContent = t(stap.tekst);
   $('lesKnop').style.display = stap.knop ? 'block' : 'none';
   $('lesKnop').textContent = t('les_knop');
@@ -4851,8 +4954,8 @@ let klassementRijen = [];
 /// Waarop het klassement gesorteerd staat. Elk onderdeel heeft zijn eigen
 /// lijst: wie het verst is in de arena's is iemand anders dan wie de meeste
 /// nummers uitspeelde.
-let lbSoort = 'xp';
-const LB_SOORTEN = ['xp', 'arena', 'klik', 'muziek', 'boss'];
+let lbSoort = 'reps';   // push-ups staan vooraan en zijn ook de eerste weergave
+const LB_SOORTEN = ['reps', 'xp', 'duel', 'arena', 'klik', 'vlieg', 'muziek', 'boss'];
 
 /// Het getal rechts in de rij hoort bij het gekozen onderdeel.
 function lbWaarde(r) {
@@ -4860,6 +4963,9 @@ function lbWaarde(r) {
   if (lbSoort === 'klik') return { groot: getal(r.klik || 0), klein: t('klik_kop') };
   if (lbSoort === 'muziek') return { groot: r.liedjes || 0, klein: t('mz_liedjes') };
   if (lbSoort === 'boss') return { groot: getal(r.schade || 0), klein: t('mode_boss') };
+  if (lbSoort === 'duel') return { groot: r.duels || 0, klein: t('stat_duels') };
+  if (lbSoort === 'reps') return { groot: getal(r.reps || 0), klein: t('stat_pushups') };
+  if (lbSoort === 'vlieg') return { groot: r.vlieg || 0, klein: t('lb_eenheid_buizen') };
   return { groot: levelVanXp(r.xp), klein: t('stat_level') };
 }
 
@@ -4883,10 +4989,21 @@ async function toonKlassement() {
       method: 'POST',
       headers: { apikey: SB_KEY, 'Content-Type': 'application/json',
                  ...(sessie?.access_token ? { Authorization: 'Bearer ' + sessie.access_token } : {}) },
-      body: JSON.stringify({ limiet: 50, sport: SPORT, soort: lbSoort }),
+      body: JSON.stringify({ limiet: ['duel', 'reps', 'vlieg'].includes(lbSoort) ? 100 : 50, sport: SPORT, soort: lbSoort }),
     });
     if (!a.ok) throw new Error(a.status);
     klassementRijen = await a.json();
+    // De server sorteert op de onderdelen die hij kent. Gewonnen gevechten
+    // staan wel in het antwoord, dus die zetten we hier zelf op volgorde.
+    // De server sorteert alleen op de onderdelen die hij kent. Gewonnen
+    // gevechten en push-ups staan wel in het antwoord, dus die zetten we
+    // hier zelf op volgorde.
+    const zelf = { duel: r => r.duels || 0, reps: r => r.reps || 0, vlieg: r => r.vlieg || 0 };
+    if (zelf[lbSoort]) {
+      klassementRijen = klassementRijen
+        .filter(r => zelf[lbSoort](r) > 0)
+        .sort((a, b) => zelf[lbSoort](b) - zelf[lbSoort](a));
+    }
   } catch (e) {
     $('lbLijst').innerHTML = `<div class="lbMelding">${t('lb_failed')}</div>`;
     return;
@@ -4896,7 +5013,8 @@ async function toonKlassement() {
 
 function tekenKlassement() {
   if (!klassementRijen.length) {
-    $('lbLijst').innerHTML = `<div class="lbMelding">${t('lb_empty')}</div>`;
+    $('lbLijst').innerHTML =
+      `<div class="lbMelding">${ontsmet(t(lbSoort === 'vlieg' ? 'lb_vlieg_wacht' : 'lb_empty'))}</div>`;
     return;
   }
   $('lbLijst').innerHTML = '';
@@ -5978,6 +6096,221 @@ function goudenPak() {
 
 $('modeKlik').addEventListener('click', e => { e.stopPropagation(); toonKlik(); });
 $('modeStad').addEventListener('click', e => { e.stopPropagation(); toonStad(); });
+$('modeVlieg').addEventListener('click', e => { e.stopPropagation(); toonVlieg(); });
+
+/* ---------------- vliegen ----------------
+   Flappy Bird, maar dan met je hoofd. De camera weet al hoe hoog je hoofd is
+   — dat is precies wat de vogel nodig heeft. Ga je omhoog, dan stijgt hij;
+   zak je, dan duikt hij. Geen camera bij de hand? Dan stuur je hem met je
+   vinger, zodat je toch kunt spelen. */
+let vlFase = 'uit', vlLus = null, vlVogel = 0.5, vlSnelheid = 0, vlScore = 0;
+let vlBuizen = [], vlVorig = 0, vlAfstand = 0, vlVinger = null;
+
+function vliegStaat() {
+  if (!P.vlieg || typeof P.vlieg !== 'object') P.vlieg = { beste: 0 };
+  return P.vlieg;
+}
+
+function toonVlieg() {
+  $('modes').classList.remove('aan');
+  $('menu').classList.add('uit');
+  $('stage').classList.add('uit');
+  $('vlieg').classList.add('aan');
+  $('vliegKop').textContent = t('mode_vlieg').toUpperCase();
+  $('vliegDicht').title = t('close');
+  $('vliegUit').textContent = t('vlieg_uitleg');
+  vlFase = 'wacht';
+  vlScore = 0;
+  vliegTellers();
+  vliegOverlay(t('vlieg_klaar'), t('vlieg_start'));
+  startCameraIndienNodig();
+  vliegPas();
+}
+
+function vliegTellers() {
+  $('vliegScore').textContent = vlScore;
+  $('vliegBeste').textContent = t('vlieg_beste', vliegStaat().beste || 0);
+}
+
+function vliegOverlay(tekst, knop) {
+  $('vliegOverTekst').textContent = tekst;
+  $('vliegStart').textContent = knop;
+  $('vliegOver').classList.remove('weg');
+}
+
+/// Het doek even groot maken als het vak, ook op een scherm met dubbele pixels.
+function vliegPas() {
+  const doek = $('vliegDoek'), vak = $('vliegVak');
+  const d = Math.min(2, window.devicePixelRatio || 1);
+  doek.width = Math.max(200, vak.clientWidth) * d;
+  doek.height = Math.max(200, vak.clientHeight) * d;
+  doek.getContext('2d').setTransform(d, 0, 0, d, 0, 0);
+  if (vlFase !== 'bezig') vliegTeken();
+}
+
+function vliegBegin() {
+  vlFase = 'bezig';
+  vlScore = 0;
+  vlBuizen = [];
+  vlAfstand = 0;
+  vlVogel = 0.5;
+  vlSnelheid = 0;
+  vlVorig = performance.now();
+  $('vliegOver').classList.add('weg');
+  vliegTellers();
+  clearInterval(vlLus);
+  vlLus = requestAnimationFrame(vliegStap);
+}
+
+/// Waar de vogel heen wil: recht uit je hoofdhoogte, of uit je vinger als de
+/// camera uit staat. De ijking bepaalt wat 'helemaal boven' en 'onder' is.
+function vliegDoel() {
+  if (vlVinger !== null) return vlVinger;
+  const boven = Math.max(CAL.top, CAL.bottom + 0.05);
+  const onder = Math.min(CAL.bottom, boven - 0.05);
+  const deel = (hoogteNu - onder) / (boven - onder);
+  return Math.min(1, Math.max(0, 1 - deel));   // hoofd hoog = vogel hoog
+}
+
+function vliegStap(nu) {
+  if (vlFase !== 'bezig') return;
+  const dt = Math.min(0.05, (nu - vlVorig) / 1000);
+  vlVorig = nu;
+  const vak = $('vliegVak');
+  const B = vak.clientWidth, H = vak.clientHeight;
+
+  // De vogel volgt je hoofd, maar met een beetje traagheid zodat hij zweeft
+  // in plaats van springt.
+  const doel = vliegDoel();
+  vlVogel += (doel - vlVogel) * Math.min(1, dt * 9);
+  vlSnelheid = (doel - vlVogel);
+
+  const snel = 150 + Math.min(120, vlScore * 6);
+  vlAfstand += snel * dt;
+  vlBuizen.forEach(b => { b.x -= snel * dt; });
+  vlBuizen = vlBuizen.filter(b => b.x > -90);
+
+  const tussen = Math.max(190, 320 - vlScore * 4);
+  const laatste = vlBuizen[vlBuizen.length - 1];
+  if (!laatste || laatste.x < B - tussen) {
+    const gat = Math.max(0.2, 0.34 - vlScore * 0.004);
+    const midden = 0.2 + Math.random() * 0.6;
+    vlBuizen.push({ x: B + 40, midden, gat, geteld: false });
+  }
+
+  const vogelX = B * 0.28, straal = Math.max(10, Math.min(16, B * 0.035));
+  const vogelY = vlVogel * H;
+  for (const b of vlBuizen) {
+    if (!b.geteld && b.x + 30 < vogelX - straal) {
+      b.geteld = true;
+      vlScore++;
+      vliegTellers();
+      toon(760, 0.06, 'triangle', 0.5);
+    }
+    const raakX = vogelX + straal > b.x && vogelX - straal < b.x + 60;
+    const gatBoven = (b.midden - b.gat / 2) * H, gatOnder = (b.midden + b.gat / 2) * H;
+    if (raakX && (vogelY - straal < gatBoven || vogelY + straal > gatOnder)) return vliegAf();
+  }
+  if (vogelY + straal > H || vogelY - straal < 0) return vliegAf();
+
+  vliegTeken();
+  vlLus = requestAnimationFrame(vliegStap);
+}
+
+function vliegTeken() {
+  const doek = $('vliegDoek'), g = doek.getContext('2d');
+  const vak = $('vliegVak');
+  const B = vak.clientWidth, H = vak.clientHeight;
+  g.clearRect(0, 0, B, H);
+  // Lucht met een paar sterren en heuvels, in de stijl van het dorp.
+  const lucht = g.createLinearGradient(0, 0, 0, H);
+  lucht.addColorStop(0, '#101725'); lucht.addColorStop(1, '#1b2a3f');
+  g.fillStyle = lucht; g.fillRect(0, 0, B, H);
+  g.fillStyle = 'rgba(223,232,255,.45)';
+  for (let i = 0; i < 18; i++) {
+    g.beginPath();
+    g.arc((i * 137 + (B - vlAfstand * 0.15) % B + B) % B, 20 + (i * 71) % (H - 60), 1.4, 0, 7);
+    g.fill();
+  }
+  // De buizen: groene zuilen met een lichte rand.
+  vlBuizen.forEach(b => {
+    const gatBoven = (b.midden - b.gat / 2) * H, gatOnder = (b.midden + b.gat / 2) * H;
+    g.fillStyle = '#2f7d32';
+    g.fillRect(b.x, 0, 60, gatBoven);
+    g.fillRect(b.x, gatOnder, 60, H - gatOnder);
+    g.fillStyle = '#3a9440';
+    g.fillRect(b.x - 5, gatBoven - 16, 70, 16);
+    g.fillRect(b.x - 5, gatOnder, 70, 16);
+  });
+  // De vogel, met een snaveltje en een vleugel die met je snelheid meekantelt.
+  const vogelX = B * 0.28, straal = Math.max(10, Math.min(16, B * 0.035));
+  const vogelY = vlVogel * H;
+  g.save();
+  g.translate(vogelX, vogelY);
+  g.rotate(Math.max(-0.5, Math.min(0.5, -vlSnelheid * 6)));
+  g.fillStyle = '#ffc740';
+  g.beginPath(); g.arc(0, 0, straal, 0, 7); g.fill();
+  g.fillStyle = '#ff9d2e';
+  g.beginPath(); g.moveTo(straal - 2, -3); g.lineTo(straal + 9, 0);
+  g.lineTo(straal - 2, 3); g.closePath(); g.fill();
+  g.fillStyle = '#e08c1e';
+  g.beginPath(); g.ellipse(-3, 2, straal * 0.55, straal * 0.38, 0, 0, 7); g.fill();
+  g.fillStyle = '#15161a';
+  g.beginPath(); g.arc(straal * 0.35, -straal * 0.3, 2.2, 0, 7); g.fill();
+  g.restore();
+}
+
+function vliegAf() {
+  vlFase = 'klaar';
+  cancelAnimationFrame(vlLus);
+  const st = vliegStaat();
+  const record = vlScore > (st.beste || 0);
+  if (record) { st.beste = vlScore; save(); }
+  vliegTellers();
+  vliegOverlay(record ? t('vlieg_record', vlScore) : t('vlieg_af', vlScore), t('vlieg_opnieuw'));
+  toon(180, 0.3, 'sawtooth', 0.4);
+}
+
+function verlaatVlieg() {
+  vlFase = 'uit';
+  cancelAnimationFrame(vlLus);
+  if (cameraOn) stopCamera();
+  $('vlieg').classList.remove('aan');
+  toonMenu();
+}
+
+// Wegklikken tijdens het spelen zet het spel stil in plaats van je te laten
+// verongelukken; als je terugkomt pak je de draad weer op.
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && vlFase === 'bezig') {
+    vlFase = 'pauze';
+    cancelAnimationFrame(vlLus);
+    vliegOverlay(t('vlieg_pauze'), t('vlieg_verder'));
+  }
+});
+
+$('vliegStart').addEventListener('click', e => {
+  e.stopPropagation();
+  // Na een pauze gaat het spel verder waar het was; anders begint het opnieuw.
+  if (vlFase === 'pauze') {
+    vlFase = 'bezig';
+    vlVorig = performance.now();
+    $('vliegOver').classList.add('weg');
+    vlLus = requestAnimationFrame(vliegStap);
+    return;
+  }
+  vliegBegin();
+});
+$('vliegDicht').addEventListener('click', e => { e.stopPropagation(); verlaatVlieg(); });
+// Zonder camera stuur je hem met je vinger; met camera doet je hoofd het werk.
+['pointerdown', 'pointermove'].forEach(soort =>
+  $('vliegVak').addEventListener(soort, e => {
+    if (cameraOn || e.buttons === 0 && soort === 'pointermove') return;
+    const r = $('vliegVak').getBoundingClientRect();
+    vlVinger = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+  }));
+$('vliegVak').addEventListener('pointerup', () => { if (!cameraOn) vlVinger = null; });
+addEventListener('resize', () => { if ($('vlieg').classList.contains('aan')) vliegPas(); });
 
 /* ---------------- de stad ----------------
    Jouw dorp, per oefening, en het leeft op de server. Elke echte push-up —
@@ -5989,63 +6322,96 @@ $('modeStad').addEventListener('click', e => { e.stopPropagation(); toonStad(); 
    zoomt. Alle regels staan op de server (stad_*-functies); de browser
    loopt hooguit even optimistisch vooruit. */
 const STAD_WINKEL = [
-  { id: 'mijn',        emoji: '⛏️', max: 5 },
   { id: 'houtvester',  emoji: '🌲', max: 5 },
-  { id: 'huis',        emoji: '🏠', max: 6 },
+  { id: 'mijn',        emoji: '⛏️', max: 5 },
+  { id: 'huis',        emoji: '🏠', max: 12 },
   { id: 'aanval',      emoji: '⚔️' },
   { id: 'verdediging', emoji: '🛡️' },
+  { id: 'medicijn',    emoji: '💊' },
 ];
-let stadNu = null, stadPot = 0, stadStuurLus = null;
+/// De kazerne: soldaten van baan laten wisselen of met pensioen sturen.
+/// Kopen kost 30 goud, verkopen levert er 20 op, en omwisselen kost het
+/// verschil van 10 — zo is er nooit een truc om goud uit niets te maken.
+const STAD_KAZERNE = [
+  { id: 'naarVerdediger', emoji: '🔄', van: 'aanval', naar: 'verdediging', kost: 10 },
+  { id: 'naarSoldaat',    emoji: '🔄', van: 'verdediging', naar: 'aanval', kost: 10 },
+  { id: 'verkoopSoldaat', emoji: '💰', van: 'aanval', op: 20 },
+  { id: 'verkoopVerdediger', emoji: '💰', van: 'verdediging', op: 20 },
+];
+/// Elk huis biedt plek aan twee soldaten; twaalf huizen is dus een leger
+/// van vierentwintig. Uitbreiden wordt steeds duurder, dus groot worden
+/// kost tijd en push-ups.
+const PLEK_PER_HUIS = 2;
+let stadNu = null;
 let ovDoel = null, ovFase = 'uit', ovReps = 0, ovTot = 0, ovLus = null;
 let kaartX = 20, kaartY = 0, kaartZoom = 1;
 
-async function stadVraag(functie, lijf) {
-  const a = await sbVraag('/rest/v1/rpc/' + functie, {
-    method: 'POST', body: JSON.stringify(lijf),
-  });
-  if (a.status === 404) throw new Error('stil');
-  if (!a.ok) throw new Error((await a.json().catch(() => ({}))).message || a.status);
-  return a.json();
+/// Het dorp woont in je profiel, net als de clicker en je opdrachten. Dat
+/// profiel wordt al naar de server gestuurd, dus je dorp reist gewoon mee
+/// naar je andere apparaten — er is geen aparte stadsdatabase voor nodig.
+const STAD_DAGLIMIET = 300;
+/// Gaat omhoog als een dorp opnieuw moet beginnen. Staat er een ouder
+/// nummer in het profiel, dan wordt het dorp één keer leeggeruimd — zo
+/// verdwijnen ook restjes van vroeger, op welk apparaat ze ook staan.
+const STAD_VERSIE = 1;
+
+function stadStaat() {
+  if (!P.stad || typeof P.stad !== 'object' || (P.stad.versie || 0) < STAD_VERSIE) {
+    P.stad = { versie: STAD_VERSIE };
+  }
+  const s = P.stad;
+  s.pushups = s.pushups || 0;
+  s.hout = s.hout || 0;
+  s.goud = s.goud || 0;
+  s.spullen = (s.spullen && typeof s.spullen === 'object') ? s.spullen : {};
+  s.log = Array.isArray(s.log) ? s.log : [];
+  // Een nieuwe dag zet de teller van productieve herhalingen op nul.
+  const vandaag = dagSleutel();
+  if (s.dag !== vandaag) { s.dag = vandaag; s.dagReps = 0; }
+  s.dagReps = s.dagReps || 0;
+  return s;
 }
 
+const stadOver = () => Math.max(0, STAD_DAGLIMIET - stadStaat().dagReps);
 const stadTal = id => (stadNu && stadNu.spullen && +stadNu.spullen[id]) || 0;
 
 /// De prijzen spiegelen de server; alleen om ze te tonen en knoppen te kleuren.
 function stadPrijs(id) {
   const n = stadTal(id);
-  if (id === 'mijn') return { p: 20 * 3 ** n, h: 30 * n, g: 0 };
+  // De houtvester is het begin: die kost alleen push-ups. Daarna vraagt
+  // alles hout, dus je bos is de motor van je dorp.
   if (id === 'houtvester') return { p: 20 * 3 ** n, h: 0, g: 0 };
-  if (id === 'huis') return { p: 20, h: 40, g: 0 };
-  return { p: 0, h: 0, g: 30 };
+  if (id === 'mijn') return { p: 20 * 3 ** n, h: 30 + 40 * n, g: 0 };
+  if (id === 'huis') return { p: 20 + 10 * n, h: 40 + 20 * n, g: 0 };
+  if (id === 'medicijn') return { p: 0, h: 20, g: 40 };
+  return { p: 0, h: 0, g: 30 };   // soldaat of verdediger
 }
 
+/// Gewonde soldaten liggen in bed: ze verdedigen niet en gaan niet mee op
+/// rooftocht. Met een medicijn knapt er eentje weer op.
+const stadGewond = () => Math.min(stadTal('gewond'), stadTal('aanval') + stadTal('verdediging'));
+const gezondeAanval = () => Math.max(0, stadTal('aanval') - Math.min(stadTal('gewond'), stadTal('aanval')));
+const gezondeVerdediging = () =>
+  Math.max(0, stadTal('verdediging') - Math.max(0, stadGewond() - stadTal('aanval')));
+
 function toonStad() {
-  if (!ingelogd()) { melding(t('stad_account'), 4000); toonAccount(); return; }
   $('modes').classList.remove('aan');
+  if (LES_STAPPEN[lesStap - 1]?.tekst === 'les_stad1') lesVolgende();
   $('stad').classList.add('aan');
   // Elk bezoek begint netjes bij het dorp, hoe ver je vorige keer ook zwierf.
   kaartX = 20; kaartY = 0; kaartZoom = 1;
   $('stadKop').textContent = t('mode_stad').toUpperCase();
   $('stadBouwKnop').textContent = t('stad_bouw_knop');
   $('stadOvervalKnop').textContent = t('stad_overval_knop');
+  $('stadRangKnop').textContent = t('stad_rang_knop');
   $('stadDicht').title = t('close');
   startCameraIndienNodig();
   stadHaal();
 }
 
-async function stadHaal() {
-  try {
-    const antwoord = await stadVraag('stad_mijn', { p_sport: SPORT });
-    // Een server die nog de oude stad draait geeft een andere vorm terug;
-    // dat behandelen we hetzelfde als een stad die er nog niet is.
-    if (!antwoord || typeof antwoord !== 'object' || !('pushups' in antwoord)) {
-      throw new Error('stil');
-    }
-    stadNu = antwoord;
-    tekenStad();
-  } catch (e) {
-    melding(t(e.message === 'stil' ? 'stad_stil' : 'lb_failed'), 5000);
-  }
+function stadHaal() {
+  stadNu = stadStaat();
+  tekenStad();
 }
 
 function tekenStad() {
@@ -6053,11 +6419,9 @@ function tekenStad() {
   $('stadPush').textContent = getal(stadNu.pushups);
   $('stadHout').textContent = getal(stadNu.hout);
   $('stadGoud').textContent = getal(stadNu.goud);
-  const schild = stadNu.schild_tot && new Date(stadNu.schild_tot) > new Date();
-  $('stadSchild').textContent = schild
-    ? t('stad_schild', klokje((new Date(stadNu.schild_tot) - Date.now()) / 1000)) : '';
+  $('stadSchild').textContent = t('stad_verdediging_regel', stadVerdediging());
   $('stadDag').textContent = stadTal('mijn') + stadTal('houtvester') > 0
-    ? t('stad_dag', stadNu.dag_over ?? 300, stadTal('houtvester'), stadTal('mijn'))
+    ? t('stad_dag', stadOver(), stadTal('houtvester'), stadTal('mijn'))
     : t('stad_dag_leeg');
   tekenKaart();
   if ($('stadWinkel').classList.contains('aan')) tekenWinkel();
@@ -6067,40 +6431,114 @@ function tekenStad() {
 
 /// Kleine bouwstenen voor de tekening. Alles is bewust plat en simpel:
 /// rechthoeken, driehoeken en cirkels in vrolijke kleuren op de donkere nacht.
-function kVlag(n) {
-  return n > 1 ? `<line x1="0" y1="0" x2="0" y2="-26" stroke="#caa" stroke-width="2"/>` +
-    `<polygon points="0,-26 24,-20 0,-14" fill="#ffc740"/>` +
-    `<text x="9" y="-17.5" text-anchor="middle" font-size="9" font-weight="900" fill="#000">${n}</text>` : '';
-}
 function kBoom(x, y, m = 1) {
   return `<g transform="translate(${x},${y}) scale(${m})">` +
     `<rect x="-3" y="-8" width="6" height="12" fill="#6b4423"/>` +
     `<polygon points="-14,-6 14,-6 0,-34" fill="#2f7d32"/>` +
     `<polygon points="-11,-18 11,-18 0,-42" fill="#3a9440"/></g>`;
 }
-function kHuis(x, y) {
+
+/// Een huis groeit met je dorp mee: een hutje wordt een huis met schoorsteen
+/// en uiteindelijk een villa met twee verdiepingen en een balkon.
+function kHuis(x, y, trap) {
+  if (trap >= 3) {
+    return `<g transform="translate(${x},${y})">` +
+      `<rect x="0" y="-64" width="74" height="64" fill="#d9a05f"/>` +
+      `<rect x="0" y="-34" width="74" height="4" fill="#b8823f"/>` +
+      `<polygon points="-9,-64 37,-92 83,-64" fill="#8f2f2f"/>` +
+      `<rect x="52" y="-104" width="12" height="16" fill="#7a6a5a"/>` +
+      `<rect x="26" y="-24" width="18" height="24" fill="#5a3413"/>` +
+      `<circle cx="40" cy="-12" r="1.8" fill="#ffc740"/>` +
+      `<rect x="8" y="-58" width="13" height="13" fill="#ffe9a8"/>` +
+      `<rect x="53" y="-58" width="13" height="13" fill="#ffe9a8"/>` +
+      `<rect x="8" y="-26" width="12" height="12" fill="#ffe9a8"/>` +
+      `<rect x="24" y="-40" width="26" height="4" fill="#a8763a"/>` +
+      `<rect x="24" y="-40" width="3" height="10" fill="#a8763a"/>` +
+      `<rect x="47" y="-40" width="3" height="10" fill="#a8763a"/></g>`;
+  }
+  if (trap === 2) {
+    return `<g transform="translate(${x},${y})">` +
+      `<rect x="0" y="-44" width="60" height="44" fill="#cf9450"/>` +
+      `<polygon points="-7,-44 30,-70 67,-44" fill="#a33636"/>` +
+      `<rect x="42" y="-82" width="10" height="14" fill="#7a6a5a"/>` +
+      `<rect x="22" y="-22" width="15" height="22" fill="#5a3413"/>` +
+      `<rect x="7" y="-38" width="12" height="12" fill="#ffe9a8"/>` +
+      `<rect x="42" y="-38" width="12" height="12" fill="#ffe9a8"/></g>`;
+  }
   return `<g transform="translate(${x},${y})">` +
     `<rect x="0" y="-34" width="52" height="34" fill="#c88a4d"/>` +
     `<polygon points="-6,-34 26,-58 58,-34" fill="#b03a3a"/>` +
     `<rect x="20" y="-18" width="13" height="18" fill="#5a3413"/>` +
     `<rect x="7" y="-28" width="10" height="9" fill="#ffe9a8"/></g>`;
 }
+
+/// De mijn groeit van een heuveltje met een gat naar een echte berg met
+/// stutten, rails en een karretje. Het niveau zie je dus aan zijn formaat.
 function kMijn(x, y, n) {
-  return `<g transform="translate(${x},${y})">` +
-    `<path d="M-40,0 Q0,-64 40,0 Z" fill="#5c6470"/>` +
-    `<path d="M-16,0 v-14 a16,16 0 0 1 32,0 v14 z" fill="#15161a"/>` +
-    `<rect x="-24" y="-2" width="48" height="4" fill="#3a3f47"/>` +
-    `<circle cx="26" cy="-38" r="4" fill="#ffc740"/>` +
-    `<g transform="translate(-30,-46)">${kVlag(n)}</g></g>`;
+  const m = 1 + (n - 1) * 0.22;
+  let uit = `<g transform="translate(${x},${y}) scale(${m})">` +
+    `<path d="M-46,0 Q-20,-44 0,-70 Q20,-44 46,0 Z" fill="#5c6470"/>` +
+    `<path d="M-14,-52 Q0,-70 14,-52 Q0,-58 -14,-52 Z" fill="#79818d"/>` +
+    `<path d="M-18,0 v-16 a18,18 0 0 1 36,0 v16 z" fill="#15161a"/>` +
+    `<rect x="-22" y="-20" width="5" height="20" fill="#6b4423"/>` +
+    `<rect x="17" y="-20" width="5" height="20" fill="#6b4423"/>` +
+    `<rect x="-24" y="-24" width="48" height="5" fill="#6b4423"/>`;
+  if (n >= 2) {
+    // Rails met een karretje dat het erts naar buiten rijdt.
+    uit += `<rect x="-44" y="-3" width="80" height="3" fill="#3a3f47"/>` +
+      `<rect x="24" y="-13" width="18" height="11" fill="#7a5a34"/>` +
+      `<circle cx="28" cy="-1" r="3" fill="#2b2f36"/><circle cx="38" cy="-1" r="3" fill="#2b2f36"/>` +
+      `<circle cx="31" cy="-15" r="3" fill="#ffc740"/><circle cx="38" cy="-16" r="2.4" fill="#ffd873"/>`;
+  }
+  if (n >= 3) {
+    // Een tweede ingang en een hijsmast op de top.
+    uit += `<path d="M-42,0 v-11 a11,11 0 0 1 22,0 v11 z" fill="#15161a"/>` +
+      `<line x1="0" y1="-70" x2="0" y2="-88" stroke="#6b4423" stroke-width="4"/>` +
+      `<line x1="-9" y1="-84" x2="9" y2="-84" stroke="#6b4423" stroke-width="3"/>`;
+  }
+  if (n >= 4) uit += `<circle cx="-26" cy="-32" r="4" fill="#ffc740"/>` +
+                     `<circle cx="22" cy="-40" r="3.4" fill="#ffd873"/>`;
+  if (n >= 5) uit += `<circle cx="6" cy="-30" r="4.6" fill="#8be9fd"/>` +
+                     `<circle cx="-10" cy="-46" r="3" fill="#8be9fd"/>`;
+  return uit + `</g>`;
 }
+
+/// Het houthakkersplekje groeit van een hutje met een stronk naar een
+/// echte houtzagerij met stapels boomstammen en een zaagbok.
 function kHut(x, y, n) {
-  return `<g transform="translate(${x},${y})">` +
-    kBoom(-34, -2, 0.9) + kBoom(52, -4, 1.1) +
-    `<rect x="-14" y="-26" width="34" height="26" fill="#8a6034"/>` +
-    `<polygon points="-20,-26 3,-44 26,-26" fill="#4c7a3d"/>` +
-    `<rect x="-4" y="-13" width="10" height="13" fill="#43290e"/>` +
-    `<g transform="translate(14,-50)">${kVlag(n)}</g></g>`;
+  const m = 1 + (n - 1) * 0.16;
+  let uit = `<g transform="translate(${x},${y}) scale(${m})">` +
+    `<rect x="-16" y="-30" width="40" height="30" fill="#8a6034"/>` +
+    `<rect x="-16" y="-30" width="40" height="4" fill="#6f4c28"/>` +
+    `<polygon points="-24,-30 4,-52 32,-30" fill="#4c7a3d"/>` +
+    `<polygon points="-24,-30 4,-52 32,-30" fill="none" stroke="#3d6431" stroke-width="2"/>` +
+    `<rect x="-4" y="-15" width="12" height="15" fill="#43290e"/>` +
+    `<rect x="12" y="-24" width="9" height="9" fill="#ffe9a8"/>` +
+    // De boomstronk met de bijl erin hoort er altijd bij.
+    `<ellipse cx="-30" cy="-2" rx="9" ry="4" fill="#7a5836"/>` +
+    `<rect x="-38" y="-9" width="16" height="8" fill="#8f6a41"/>` +
+    `<line x1="-30" y1="-9" x2="-24" y2="-22" stroke="#5a3413" stroke-width="3"/>` +
+    `<polygon points="-25,-22 -18,-26 -22,-16" fill="#c8ced6"/>`;
+  if (n >= 2) {
+    // Een stapel boomstammen naast de hut.
+    uit += `<g transform="translate(34,-2)">` +
+      [[0, 0], [13, 0], [6.5, -10]].map(([sx, sy]) =>
+        `<ellipse cx="${sx}" cy="${sy}" rx="6.5" ry="5" fill="#8f6a41"/>` +
+        `<ellipse cx="${sx}" cy="${sy}" rx="3" ry="2.4" fill="#c49a68"/>`).join('') +
+      `</g>`;
+  }
+  if (n >= 3) {
+    // Een zaagbok met een balk erop.
+    uit += `<g transform="translate(-52,0)" stroke="#6b4423" stroke-width="3" fill="none">` +
+      `<path d="M0,0 L6,-14 M12,0 L6,-14 M2,0 L8,-14 M14,0 L8,-14"/></g>` +
+      `<rect x="-58" y="-19" width="30" height="6" fill="#8f6a41"/>`;
+  }
+  if (n >= 4) uit += `<rect x="24" y="-40" width="4" height="16" fill="#6b4423"/>` +
+                     `<rect x="18" y="-46" width="16" height="7" fill="#c9a227"/>`;
+  if (n >= 5) uit += `<ellipse cx="-44" cy="-26" rx="12" ry="8" fill="#4c7a3d" opacity=".8"/>`;
+  return uit + `</g>`;
 }
+
 function kSoldaat(x, y, soort) {
   const kleur = soort === 'aanval' ? '#d9534f' : '#4f86d9';
   const ding = soort === 'aanval'
@@ -6124,15 +6562,44 @@ function kBloem(x, y, kleur) {
 
 function tekenKaart() {
   const grond = 210;
-  let stukken = '', x = 40;
-  stukken += kMijn(x + 40, grond, stadTal('mijn')); x += 140;
-  stukken += kHut(x + 20, grond, stadTal('houtvester')); x += 130;
-  for (let i = 0; i < stadTal('huis'); i++) { stukken += kHuis(x, grond); x += 86; }
-  if (!stadTal('huis')) { stukken += kBoom(x + 10, grond); x += 60; }
+  // Je begint met een leeg veld: er staat pas iets als je het gebouwd hebt.
+  let stukken = '', x = 60;
+  if (stadTal('mijn')) {
+    stukken += kMijn(x + 50, grond, stadTal('mijn'));
+    x += 130 + stadTal('mijn') * 22;
+  }
+  if (stadTal('houtvester')) {
+    // Het houthakkersplekje: een klein oud hutje met een boomstronk en een
+    // bosje eromheen dat meegroeit met het niveau.
+    stukken += kHut(x + 60, grond, stadTal('houtvester'));
+    for (let i = 0; i < stadTal('houtvester') + 1; i++) {
+      stukken += kBoom(x + 118 + i * 32, grond, 0.85 + (i % 2) * 0.3);
+    }
+    x += 150 + stadTal('houtvester') * 34;
+  }
+  // Eén huis, dat met elk niveau groeit: van hutje naar huis naar villa.
+  if (stadTal('huis')) {
+    const nivo = stadTal('huis');
+    const trap = nivo >= 8 ? 3 : nivo >= 4 ? 2 : 1;
+    // Binnen elke trap groeit hij nog een beetje door, zodat elk niveau telt.
+    const groei = 1 + ((nivo - 1) % 4) * 0.09;
+    stukken += `<g transform="translate(${x},${grond}) scale(${groei})">` +
+               kHuis(0, 0, trap) + `</g>`;
+    x += [0, 70, 82, 100][trap] * groei;
+  }
   for (let i = 0; i < stadTal('verdediging'); i++) { stukken += kSoldaat(x + 8, grond, 'verdediging'); x += 30; }
   for (let i = 0; i < stadTal('aanval'); i++) { stukken += kSoldaat(x + 8, grond, 'aanval'); x += 30; }
-  x += 40;
-  stukken += kBoom(x, grond, 0.8);
+  if (!stukken) {
+    // Nog niets gebouwd: een bouwplek met wat piketpaaltjes.
+    stukken = `<g transform="translate(150,${grond})">` +
+      `<ellipse cx="0" cy="0" rx="86" ry="13" fill="#3b3524"/>` +
+      [-64, -20, 24, 66].map(px =>
+        `<line x1="${px}" y1="0" x2="${px}" y2="-16" stroke="#8a7346" stroke-width="3"/>` +
+        `<circle cx="${px}" cy="-18" r="2.5" fill="#c9a227"/>`).join('') +
+      `</g>`;
+    x = 300;
+  }
+  x += 60;
   const breed = Math.max(560, x + 60);
 
   // Het decor. Alles staat op vaste plekken (rekensommen op het volgnummer,
@@ -6253,9 +6720,10 @@ function winkelUitleg(id) {
   if (id === 'mijn') return t('w_mijn_uit', stadTal('mijn'));
   if (id === 'houtvester') return t('w_houtvester_uit', stadTal('houtvester'));
   if (id === 'huis') return t('w_huis_uit',
-    stadTal('aanval') + stadTal('verdediging'), stadTal('huis') * 2);
-  if (id === 'aanval') return t('w_aanval_uit', stadTal('aanval'));
-  return t('w_verdediging_uit', stadTal('verdediging'));
+    stadTal('aanval') + stadTal('verdediging'), stadTal('huis') * PLEK_PER_HUIS);
+  if (id === 'medicijn') return t('w_medicijn_uit', stadGewond());
+  if (id === 'aanval') return t('w_aanval_uit', gezondeAanval());
+  return t('w_verdediging_uit', gezondeVerdediging());
 }
 
 function tekenWinkel() {
@@ -6265,10 +6733,11 @@ function tekenWinkel() {
   $('stadGebouwen').innerHTML = '';
   STAD_WINKEL.forEach(g => {
     const n = stadTal(g.id);
-    const vol = g.max && n >= g.max;
+    const medicijn = g.id === 'medicijn';
+    const vol = (g.max && n >= g.max) || (medicijn && !stadGewond());
     const soldaat = g.id === 'aanval' || g.id === 'verdediging';
     const plekVol = soldaat &&
-      stadTal('aanval') + stadTal('verdediging') >= stadTal('huis') * 2;
+      stadTal('aanval') + stadTal('verdediging') >= stadTal('huis') * PLEK_PER_HUIS;
     const prijs = stadPrijs(g.id);
     const kan = !vol && !plekVol && stadNu.pushups >= prijs.p &&
                 stadNu.hout >= prijs.h && stadNu.goud >= prijs.g;
@@ -6277,27 +6746,61 @@ function tekenWinkel() {
          prijs.g && getal(prijs.g) + ' 🪙'].filter(Boolean).join(' · ');
     const rij = document.createElement('div');
     rij.className = 'stadKaartRij';
+    rij.id = 'winkel-' + g.id;
     rij.innerHTML =
       `<span class="sEmoji">${g.emoji}</span>` +
       `<span class="sTekst"><b>${ontsmet(t('w_' + g.id))}` +
       `${g.max ? ' · ' + ontsmet(t('stad_niveau', n)) : n ? ' · ' + n : ''}</b>` +
       `<small>${ontsmet(winkelUitleg(g.id))}</small></span>` +
       `<button class="stadKoop${kan ? ' kan' : ''}">${ontsmet(prijsTekst)}</button>`;
-    rij.querySelector('.stadKoop').onclick = async e => {
+    rij.querySelector('.stadKoop').onclick = e => {
       e.stopPropagation();
       if (vol || plekVol) { if (plekVol) melding(t('stad_geen_plek'), 4000); return; }
       if (!kan) { melding(t('klik_te_duur')); return; }
-      try {
-        stadNu = await stadVraag('stad_koop', { p_sport: SPORT, p_wat: g.id });
-        tekenStad();
-        melding(t('stad_gebouwd', t('w_' + g.id)), 3000);
-      } catch (fout) { melding(t('lb_failed'), 3000); }
+      const s = stadStaat();
+      s.pushups -= prijs.p; s.hout -= prijs.h; s.goud -= prijs.g;
+      if (medicijn) s.spullen.gewond = Math.max(0, stadGewond() - 1);
+      else s.spullen[g.id] = n + 1;
+      save();
+      stadHaal();
+      melding(t('stad_gebouwd', t('w_' + g.id)), 3000);
     };
     $('stadGebouwen').appendChild(rij);
   });
+  // De kazerne: van baan wisselen of afscheid nemen.
+  $('stadKazerneKop').textContent = t('kazerne_kop');
+  $('stadKazerne').innerHTML = '';
+  STAD_KAZERNE.forEach(k => {
+    const heeft = stadTal(k.van);
+    const gezond = k.van === 'aanval' ? gezondeAanval() : gezondeVerdediging();
+    const kan = gezond > 0 && (!k.kost || stadNu.goud >= k.kost);
+    const rij = document.createElement('div');
+    rij.className = 'stadKaartRij';
+    rij.id = 'kaz-' + k.id;
+    rij.innerHTML =
+      `<span class="sEmoji">${k.emoji}</span>` +
+      `<span class="sTekst"><b>${ontsmet(t('kaz_' + k.id))}</b>` +
+      `<small>${ontsmet(t('kaz_' + k.id + '_uit', heeft))}</small></span>` +
+      `<button class="stadKoop${kan ? ' kan' : ''}">` +
+      `${k.kost ? getal(k.kost) + ' 🪙' : '+' + getal(k.op) + ' 🪙'}</button>`;
+    rij.querySelector('.stadKoop').onclick = e => {
+      e.stopPropagation();
+      if (!gezond) { melding(t('kaz_geen'), 3500); return; }
+      if (k.kost && stadNu.goud < k.kost) { melding(t('klik_te_duur')); return; }
+      const s2 = stadStaat();
+      s2.spullen[k.van] = heeft - 1;
+      if (k.naar) { s2.spullen[k.naar] = stadTal(k.naar) + 1; s2.goud -= k.kost; }
+      else s2.goud += k.op;
+      save();
+      stadHaal();
+      melding(t(k.naar ? 'kaz_gewisseld' : 'kaz_verkocht'), 3000);
+    };
+    $('stadKazerne').appendChild(rij);
+  });
+
   $('stadLog').innerHTML = (stadNu.log && stadNu.log.length)
     ? stadNu.log.map(r => `<div class="stadLogRij">${ontsmet(
-        t(r.gewonnen ? 'stad_log_verloren' : 'stad_log_gehouden', r.wie, getal(r.buit || 0)))}</div>`).join('')
+        t(r.gewonnen ? 'stad_log_gewonnen' : 'stad_log_mis', r.wie, getal(r.buit || 0)))}</div>`).join('')
     : `<div class="stadLogRij">${ontsmet(t('stad_log_leeg'))}</div>`;
 }
 
@@ -6306,30 +6809,25 @@ function tekenWinkel() {
 /// Aangeroepen vanuit telRep(): elke echte herhaling gaat in de pot, en de
 /// browser loopt alvast optimistisch vooruit als de stad in beeld is. De
 /// bundel gaat om de paar seconden naar de server, die de daglimiet bewaakt.
+/// Elke echte herhaling, waar in het spel ook gedaan, komt hier langs: hij
+/// gaat in je pot, en zolang je binnen de daglimiet zit leveren je mijn en
+/// je houtvester er goud en hout bij op.
 function stadOogst() {
-  if (!ingelogd()) return;
-  stadPot++;
-  if (stadNu && ovFase !== 'bezig') {
-    stadNu.pushups++;
-    if ((stadNu.dag_over ?? 0) > 0) {
-      stadNu.dag_over--;
-      stadNu.hout += stadTal('houtvester');
-      stadNu.goud += stadTal('mijn');
-    }
-    if ($('stad').classList.contains('aan')) tekenStad();
+  const s = stadStaat();
+  s.pushups++;
+  if (s.dagReps < STAD_DAGLIMIET) {
+    s.dagReps++;
+    s.hout += (+s.spullen.houtvester || 0);
+    s.goud += (+s.spullen.mijn || 0);
   }
-  clearTimeout(stadStuurLus);
-  stadStuurLus = setTimeout(stadStuur, 3000);
+  if ($('stad').classList.contains('aan') && ovFase !== 'bezig') {
+    stadNu = s;
+    tekenStad();
+  }
 }
 
-async function stadStuur() {
-  while (stadPot > 0) {
-    const stuur = Math.min(stadPot, 60);
-    stadPot -= stuur;
-    try { await stadVraag('stad_reps', { p_sport: SPORT, p_aantal: stuur }); }
-    catch (e) { return; }   // stil of offline: de pot blijft staan voor later
-  }
-}
+/// Het dorp reist mee in je profiel; opslaan is dus gewoon opslaan.
+function stadStuur() { save(); }
 
 /// In de stad zelf tellen herhalingen gewoon mee (via telRep → stadOogst);
 /// alleen tijdens een overval tellen ze als bestorming.
@@ -6339,11 +6837,61 @@ function stadRep() {
 }
 
 /* -- de overval -- */
-async function ovZoek() {
+/// Jouw eigen verdediging, voor op het scherm.
+function stadVerdediging() { return 10 + gezondeVerdediging() * 8; }
+
+/// Een doelwit zoeken. De namen en levels komen uit het echte klassement,
+/// dus je overvalt bestaande spelers; hun eigen goud raak je niet aan —
+/// daarvoor moeten de stadsregels op de server staan.
+/// Hoe sterk een andere speler staat. Zolang de stadsregels nog niet op de
+/// server draaien kunnen we zijn echte dorp niet inzien, dus leiden we het
+/// af van zijn level: hoe verder iemand is, hoe meer soldaten hij houdt.
+function vijandKracht(r) {
+  const niveau = levelVanXp(r.xp);
+  const soldaten = Math.max(1, Math.round(niveau / 2));
+  return { naam: r.naam, foto: r.foto, niveau, soldaten,
+           verdediging: 10 + soldaten * 8,
+           buit_tot: Math.round(20 + niveau * 7) };
+}
+
+/// De lijst met doelwitten: iedereen die het spel speelt, de sterkste
+/// bovenaan. Je kiest zelf wie je aanvalt.
+async function ovLijst() {
+  $('ovKies').classList.add('aan');
+  $('ovKiesKop').textContent = t('ov_kies_kop').toUpperCase();
+  $('ovKiesUitleg').textContent = t('ov_kies_uitleg', gezondeAanval(), gezondeAanval() * 5);
+  $('ovKiesDicht').title = t('close');
+  $('ovKiesLijst').innerHTML = `<div class="lbMelding">${ontsmet(t('lb_loading'))}</div>`;
+  let spelers = [];
   try {
-    ovDoel = await stadVraag('stad_doelwit', { p_sport: SPORT });
-  } catch (e) { melding(t('lb_failed'), 3000); return; }
-  if (!ovDoel) { melding(t('stad_geen_doel'), 4000); return; }
+    const a = await fetch(SB_URL + '/rest/v1/rpc/klassement', {
+      method: 'POST',
+      headers: { apikey: SB_KEY, 'Content-Type': 'application/json',
+                 ...(sessie?.access_token ? { Authorization: 'Bearer ' + sessie.access_token } : {}) },
+      body: JSON.stringify({ limiet: 50, sport: SPORT, soort: 'xp' }),
+    });
+    if (a.ok) spelers = (await a.json()).filter(r => !ingelogd() || r.speler !== sessie.id);
+  } catch (e) { /* offline */ }
+
+  const doelen = spelers.map(vijandKracht).sort((a, b) => b.soldaten - a.soldaten);
+  if (!doelen.length) doelen.push({ naam: t('ov_onbekend'), niveau: 1, soldaten: 2,
+                                    verdediging: 26, buit_tot: 40 });
+  $('ovKiesLijst').innerHTML = '';
+  doelen.forEach(d => {
+    const knop = document.createElement('button');
+    knop.className = 'lbRij';
+    knop.innerHTML =
+      avatar(d.foto, d.niveau, 34) +
+      `<span class="lbNaam">${ontsmet(d.naam)}` +
+      `<small>${ontsmet(t('ov_kies_regel', d.soldaten, d.verdediging, getal(d.buit_tot)))}</small></span>` +
+      `<span class="lbLevel">${d.verdediging}</span>`;
+    knop.onclick = e => { e.stopPropagation(); $('ovKies').classList.remove('aan'); ovZoek(d); };
+    $('ovKiesLijst').appendChild(knop);
+  });
+}
+
+function ovZoek(doel) {
+  ovDoel = doel;
   ovFase = 'voorstel';
   $('ov').classList.add('aan');
   $('ovKop').textContent = t('ov_kop').toUpperCase();
@@ -6351,7 +6899,7 @@ async function ovZoek() {
   $('ovCijfers').innerHTML =
     ontsmet(t('ov_verdediging', ovDoel.verdediging)) + '<br>' +
     ontsmet(t('ov_buit', getal(ovDoel.buit_tot))) +
-    (stadTal('aanval') ? '<br>' + ontsmet(t('ov_soldaten', stadTal('aanval'), stadTal('aanval') * 5)) : '');
+    (gezondeAanval() ? '<br>' + ontsmet(t('ov_soldaten', gezondeAanval(), gezondeAanval() * 5)) : '');
   $('ovTijd').textContent = '';
   $('ovStart').style.display = 'block';
   $('ovStart').textContent = t('ov_start');
@@ -6370,27 +6918,53 @@ function ovBegin() {
   ovTeken();
 }
 
-function ovKracht() { return ovReps + stadTal('aanval') * 5; }
+/// Elke push-up is één kracht, elke gezonde soldaat vijf. Vijfentwintig
+/// push-ups met drie soldaten is dus veertig kracht.
+function ovKracht() { return ovReps + gezondeAanval() * 5; }
+
+/// Boven de verdediging uit blijven pushen loont: elke kracht extra maakt
+/// de buit groter, tot het dubbele.
+function ovBuit() {
+  const extra = Math.max(0, ovKracht() - ovDoel.verdediging);
+  return Math.round(ovDoel.buit_tot * (1 + Math.min(1, extra / Math.max(1, ovDoel.verdediging))));
+}
 
 function ovTeken() {
   const over = Math.max(0, (ovTot - Date.now()) / 1000);
   $('ovTijd').textContent = klokje(over);
-  $('ovCijfers').innerHTML = ontsmet(t('ov_kracht', ovKracht(), ovDoel.verdediging));
-  if (over <= 0 || ovKracht() >= ovDoel.verdediging) ovKlaar();
+  const genoeg = ovKracht() >= ovDoel.verdediging;
+  // De volle minuut blijft staan: je vecht niet alleen om binnen te komen,
+  // maar ook om zoveel mogelijk mee te nemen.
+  $('ovCijfers').innerHTML = ontsmet(t('ov_kracht', ovKracht(), ovDoel.verdediging)) +
+    (genoeg ? '<br><b>' + ontsmet(t('ov_binnen', getal(ovBuit()))) + '</b>' : '');
+  if (over <= 0) ovKlaar();
 }
 
-async function ovKlaar() {
+function ovKlaar() {
   clearInterval(ovLus);
   ovFase = 'uitslag';
-  let uit = null;
-  try {
-    uit = await stadVraag('stad_overval',
-      { p_sport: SPORT, p_doel: ovDoel.doel, p_reps: ovReps });
-  } catch (e) { melding(t('lb_failed'), 3000); ovWeg(); return; }
-  $('ovTijd').textContent = uit.gewonnen ? '🏆' : '🛡️';
-  $('ovCijfers').innerHTML = ontsmet(uit.gewonnen
-    ? t('ov_gewonnen', getal(uit.buit))
-    : t('ov_verloren', uit.kracht, uit.verdediging));
+  const kracht = ovKracht();
+  const gewonnen = kracht >= ovDoel.verdediging;
+  const s = stadStaat();
+  const buit = gewonnen ? ovBuit() : 0;
+  let gewond = 0;
+  if (gewonnen) {
+    s.goud += buit;
+  } else if (gezondeAanval()) {
+    // Een mislukte bestorming kost je mannen: hoe verder je tekortkwam,
+    // hoe meer er gewond thuiskomen. Met een medicijn knappen ze weer op.
+    const tekort = ovDoel.verdediging - kracht;
+    gewond = Math.min(gezondeAanval(), 1 + Math.floor(tekort / 20));
+    s.spullen.gewond = stadGewond() + gewond;
+  }
+  s.log.unshift({ wanneer: Date.now(), wie: ovDoel.naam, gewonnen, buit, gewond });
+  s.log = s.log.slice(0, 10);
+  save();
+  $('ovTijd').textContent = gewonnen ? '🏆' : '🛡️';
+  $('ovCijfers').innerHTML = ontsmet(gewonnen
+    ? t('ov_gewonnen', getal(buit))
+    : t('ov_verloren', kracht, ovDoel.verdediging)) +
+    (gewond ? '<br>' + ontsmet(t('ov_gewond', gewond)) : '');
   $('ovWeg').textContent = t('close');
   stadHaal();
 }
@@ -6401,6 +6975,12 @@ function ovWeg() {
   $('ov').classList.remove('aan');
 }
 
+// De ranglijst van gewonnen gevechten, vanuit het dorp meteen bij de hand.
+$('stadRangKnop').addEventListener('click', e => {
+  e.stopPropagation();
+  lbSoort = 'duel';
+  toonKlassement();
+});
 $('stadDicht').addEventListener('click', e => {
   e.stopPropagation();
   stadStuur();
@@ -6409,16 +6989,20 @@ $('stadDicht').addEventListener('click', e => {
 });
 $('stadBouwKnop').addEventListener('click', e => {
   e.stopPropagation();
-  if (!stadNu) { melding(t('stad_stil'), 5000); stadHaal(); return; }
+  stadHaal();
   $('stadWinkel').classList.add('aan'); tekenWinkel();
+  if (LES_STAPPEN[lesStap - 1]?.tekst === 'les_stad4') lesVolgende();
 });
 $('stadWinkelDicht').addEventListener('click', e => {
   e.stopPropagation(); $('stadWinkel').classList.remove('aan');
 });
+$('ovKiesDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('ovKies').classList.remove('aan');
+});
 $('stadOvervalKnop').addEventListener('click', e => {
   e.stopPropagation();
-  if (!stadNu) { melding(t('stad_stil'), 5000); stadHaal(); return; }
-  ovZoek();
+  stadHaal();
+  ovLijst();
 });
 $('ovStart').addEventListener('click', e => { e.stopPropagation(); ovBegin(); });
 $('ovWeg').addEventListener('click', e => {
@@ -7336,6 +7920,21 @@ $('mzZoekVeld').addEventListener('keydown', e => {
   // De hele gedeelde tekst gaat mee: staat de titel naast de link, dan heeft
   // de zoeker daar meer aan dan aan de link alleen.
   mzZoekOpen(tekst);
+})();
+
+/* Een testdorp om mee te spelen: open de site met ?testdorp erachter en je
+   krijgt een volle voorraad. Het werkt bewust alléén als je uitgelogd bent,
+   zodat er nooit verzonnen bezit in een echt account terechtkomt. */
+(() => {
+  if (APP_BOUW) return;
+  if (!new URLSearchParams(location.search).has('testdorp')) return;
+  history.replaceState(null, '', location.pathname);
+  if (ingelogd()) { melding(t('testdorp_uitloggen'), 8000); return; }
+  const s = stadStaat();
+  s.pushups = 10000; s.hout = 10000; s.goud = 10000;
+  bewaarAlles();
+  melding(t('testdorp_klaar'), 6000);
+  toonStad();
 })();
 $('mzTikPad').addEventListener('pointerdown', e => { e.stopPropagation(); mzTikErbij(); });
 $('mzTikBewaar').addEventListener('click', e => { e.stopPropagation(); mzTempoBewaren(); });

@@ -2837,9 +2837,9 @@
       "🛡️ bouclier encore {0}"
     ],
     "stad_account": [
-      "Voor de stad heb je een account nodig.",
-      "You need an account for the city.",
-      "Il te faut un compte pour la cité."
+      "Zonder account blijft je dorp op dit apparaat staan.",
+      "Without an account your village stays on this device.",
+      "Sans compte, ton village reste sur cet appareil."
     ],
     "stad_stil": [
       "De stad is nog niet opengesteld: de server draait de stadsregels nog niet (stad.sql).",
@@ -2872,14 +2872,14 @@
       "{0} a gagné un niveau !"
     ],
     "stad_log_kop": [
-      "Logboek",
-      "Log",
-      "Journal"
+      "Je rooftochten",
+      "Your raids",
+      "Tes pillages"
     ],
     "stad_log_leeg": [
-      "Nog niemand heeft je stad aangevallen.",
-      "No one has attacked your city yet.",
-      "Personne n'a encore attaqué ta cité."
+      "Je bent nog nergens op rooftocht geweest.",
+      "You haven't raided anyone yet.",
+      "Tu n'as encore pillé personne."
     ],
     "stad_log_verloren": [
       "{0} brak door je muren en nam {1} goud mee",
@@ -2962,9 +2962,9 @@
       "Butin jusqu'à {0} or"
     ],
     "ov_start": [
-      "Begin de overval — 60 seconden",
-      "Start the raid — 60 seconds",
-      "Lance le pillage — 60 secondes"
+      "Begin de overval — 60 seconden pushen",
+      "Start the raid — 60 seconds of pushing",
+      "Lance le pillage — 60 secondes de pompes"
     ],
     "ov_opgeven": [
       "Bestorm nu",
@@ -3047,9 +3047,9 @@
       "Soldat"
     ],
     "w_aanval_uit": [
-      "Vecht mee bij overvallen: +5 kracht per soldaat. Je hebt er {0}.",
-      "Joins your raids: +5 strength each. You have {0}.",
-      "Participe à tes pillages : +5 force chacun. Tu en as {0}."
+      "Gaat mee op rooftocht: +5 kracht per soldaat. Je hebt er {0} inzetbaar.",
+      "Joins your raids: +5 strength each. You have {0} fit to fight.",
+      "Participe à tes pillages : +5 force chacun. Tu en as {0} en état."
     ],
     "w_verdediging": [
       "Verdediger",
@@ -3057,9 +3057,9 @@
       "Défenseur"
     ],
     "w_verdediging_uit": [
-      "Bewaakt je dorp: +8 verdediging per stuk. Je hebt er {0}.",
-      "Guards your village: +8 defense each. You have {0}.",
-      "Garde ton village : +8 défense chacun. Tu en as {0}."
+      "Bewaakt je dorp: +8 verdediging per stuk. Je hebt er {0} inzetbaar.",
+      "Guards your village: +8 defense each. You have {0} fit to fight.",
+      "Garde ton village : +8 défense chacun. Tu en as {0} en état."
     ],
     "ov_soldaten": [
       "Je {0} soldaten vechten mee: +{1} kracht.",
@@ -3070,6 +3070,286 @@
       "De stad: elke push-up, waar je ook traint, is een goudstuk. Bouw een dorp met een mijn, huizen en soldaten — en beroof andere spelers.",
       "The city: every push-up, wherever you train, is a gold coin. Build a village with a mine, houses and soldiers — and raid other players.",
       "La cité : chaque pompe, où que tu t'entraînes, est une pièce d'or. Bâtis un village avec une mine, des maisons et des soldats — et pille les autres joueurs."
+    ],
+    "stad_verdediging_regel": [
+      "🛡️ Je dorp verdedigt zich met {0}",
+      "🛡️ Your village defends with {0}",
+      "🛡️ Ton village se défend avec {0}"
+    ],
+    "stad_log_gewonnen": [
+      "Je brak door bij {0} en nam {1} goud mee",
+      "You broke through at {0} and took {1} gold",
+      "Tu as percé chez {0} et pris {1} or"
+    ],
+    "stad_log_mis": [
+      "{0} hield je buiten de poort",
+      "{0} kept you outside the gate",
+      "{0} t'a tenu hors des portes"
+    ],
+    "ov_onbekend": [
+      "Een naamloze vesting",
+      "A nameless fortress",
+      "Une forteresse sans nom"
+    ],
+    "uitgelogd_schoon": [
+      "Uitgelogd. Je voortgang staat veilig op de server en komt terug zodra je weer inlogt.",
+      "Signed out. Your progress is safe on the server and returns when you sign in again.",
+      "Déconnecté. Ta progression est en sécurité sur le serveur et revient dès que tu te reconnectes."
+    ],
+    "testdorp_klaar": [
+      "Testdorp geladen: 10.000 push-ups, hout en goud. Dit blijft op dit apparaat — je bent niet ingelogd.",
+      "Test village loaded: 10,000 push-ups, wood and gold. This stays on this device — you are not signed in.",
+      "Village de test chargé : 10 000 pompes, bois et or. Cela reste sur cet appareil — tu n'es pas connecté."
+    ],
+    "testdorp_uitloggen": [
+      "Log eerst uit: een testdorp gaat niet in een echt account. Je voortgang komt terug zodra je weer inlogt.",
+      "Sign out first: a test village never goes into a real account. Your progress returns when you sign in again.",
+      "Déconnecte-toi d'abord : un village de test ne va jamais dans un vrai compte. Ta progression revient à la reconnexion."
+    ],
+    "w_medicijn": [
+      "Medicijn",
+      "Medicine",
+      "Remède"
+    ],
+    "w_medicijn_uit": [
+      "Maakt één gewonde soldaat weer beter. Je hebt er {0} in bed liggen.",
+      "Heals one wounded soldier. You have {0} in bed.",
+      "Soigne un soldat blessé. Tu en as {0} au lit."
+    ],
+    "ov_kies_kop": [
+      "Kies je doelwit",
+      "Choose your target",
+      "Choisis ta cible"
+    ],
+    "ov_kies_uitleg": [
+      "De sterkste dorpen staan bovenaan. Elke push-up is 1 kracht; je {0} soldaten leveren er {1} bij.",
+      "The strongest villages are on top. Every push-up is 1 strength; your {0} soldiers add {1}.",
+      "Les villages les plus forts en haut. Chaque pompe vaut 1 force ; tes {0} soldats en ajoutent {1}."
+    ],
+    "ov_kies_regel": [
+      "{0} soldaten · verdediging {1} · buit tot {2}",
+      "{0} soldiers · defense {1} · loot up to {2}",
+      "{0} soldats · défense {1} · butin jusqu'à {2}"
+    ],
+    "ov_gewond": [
+      "{0} van je soldaten kwam gewond thuis. Koop een medicijn om ze te verzorgen.",
+      "{0} of your soldiers came home wounded. Buy medicine to treat them.",
+      "{0} de tes soldats sont rentrés blessés. Achète un remède pour les soigner."
+    ],
+    "kazerne_kop": [
+      "Kazerne",
+      "Barracks",
+      "Caserne"
+    ],
+    "kaz_naarVerdediger": [
+      "Soldaat wordt verdediger",
+      "Soldier becomes defender",
+      "Soldat devient défenseur"
+    ],
+    "kaz_naarVerdediger_uit": [
+      "Zet er één op de muur. Je hebt {0} soldaten.",
+      "Puts one on the wall. You have {0} soldiers.",
+      "En met un sur le mur. Tu as {0} soldats."
+    ],
+    "kaz_naarSoldaat": [
+      "Verdediger wordt soldaat",
+      "Defender becomes soldier",
+      "Défenseur devient soldat"
+    ],
+    "kaz_naarSoldaat_uit": [
+      "Haalt er één van de muur. Je hebt {0} verdedigers.",
+      "Takes one off the wall. You have {0} defenders.",
+      "En retire un du mur. Tu as {0} défenseurs."
+    ],
+    "kaz_verkoopSoldaat": [
+      "Soldaat verkopen",
+      "Sell a soldier",
+      "Vendre un soldat"
+    ],
+    "kaz_verkoopSoldaat_uit": [
+      "Stuurt er één met pensioen. Je hebt {0} soldaten.",
+      "Sends one into retirement. You have {0} soldiers.",
+      "En met un à la retraite. Tu as {0} soldats."
+    ],
+    "kaz_verkoopVerdediger": [
+      "Verdediger verkopen",
+      "Sell a defender",
+      "Vendre un défenseur"
+    ],
+    "kaz_verkoopVerdediger_uit": [
+      "Stuurt er één met pensioen. Je hebt {0} verdedigers.",
+      "Sends one into retirement. You have {0} defenders.",
+      "En met un à la retraite. Tu as {0} défenseurs."
+    ],
+    "kaz_geen": [
+      "Je hebt er niemand voor: gewonden kunnen niet wisselen of vertrekken.",
+      "Nobody available: the wounded can't switch or leave.",
+      "Personne de disponible : les blessés ne peuvent ni changer ni partir."
+    ],
+    "kaz_gewisseld": [
+      "Hij heeft zijn nieuwe post ingenomen.",
+      "He has taken his new post.",
+      "Il a pris son nouveau poste."
+    ],
+    "kaz_verkocht": [
+      "Met pensioen — je krijgt er 20 goud voor.",
+      "Retired — you get 20 gold for him.",
+      "À la retraite — tu reçois 20 or."
+    ],
+    "ov_binnen": [
+      "Je bent binnen! Blijf pushen: buit nu {0} goud.",
+      "You're in! Keep pushing: loot now {0} gold.",
+      "Tu es entré ! Continue : butin {0} or."
+    ],
+    "les_stad1": [
+      "De stad is je eigen dorp. Tik erop om binnen te gaan.",
+      "The city is your own village. Tap it to go in.",
+      "La cité est ton propre village. Touche-la pour entrer."
+    ],
+    "les_stad2": [
+      "Dit zijn je voorraden: 💪 push-ups die je overal in het spel verdient, 🪵 hout uit je bos en 🪙 goud uit je mijn.",
+      "These are your stocks: 💪 push-ups you earn anywhere in the game, 🪵 wood from your forest and 🪙 gold from your mine.",
+      "Voici tes réserves : 💪 pompes gagnées partout dans le jeu, 🪵 bois de ta forêt et 🪙 or de ta mine."
+    ],
+    "les_stad3": [
+      "Elke push-up telt hier mee, in welke spelmodus je ook traint. De eerste 300 per dag leveren ook hout en goud op — daarna alleen nog push-ups.",
+      "Every push-up counts here, in whichever mode you train. The first 300 a day also yield wood and gold — after that only push-ups.",
+      "Chaque pompe compte ici, quel que soit le mode. Les 300 premières du jour donnent aussi bois et or — ensuite seulement des pompes."
+    ],
+    "les_stad4": [
+      "Bouwen doe je hier. Tik op Bouwen.",
+      "This is where you build. Tap Build.",
+      "C'est ici que tu construis. Touche Construire."
+    ],
+    "les_stad5": [
+      "Begin altijd met de houtvester: hij kost alleen push-ups en geeft je hout. Elk niveau levert een stuk hout per push-up en zijn zagerij wordt groter.",
+      "Always start with the forester: it costs only push-ups and gives you wood. Each level yields one wood per push-up and its sawmill grows.",
+      "Commence toujours par le bûcheron : il ne coûte que des pompes et donne du bois. Chaque niveau rapporte un bois par pompe et sa scierie s'agrandit."
+    ],
+    "les_stad6": [
+      "Dan de mijn. Die kost push-ups én hout, dus je bos moet eerst draaien. Elk niveau geeft een goudstuk per push-up en maakt de berg groter.",
+      "Then the mine. It costs push-ups and wood, so your forest must run first. Each level gives a gold per push-up and grows the mountain.",
+      "Puis la mine. Elle coûte pompes et bois, donc ta forêt d'abord. Chaque niveau donne un or par pompe et agrandit la montagne."
+    ],
+    "les_stad7": [
+      "Je huis groeit met elk niveau mee — van hutje naar villa — en geeft plek aan twee soldaten per niveau.",
+      "Your house grows with every level — from cottage to villa — and holds two soldiers per level.",
+      "Ta maison grandit à chaque niveau — de la cabane à la villa — et loge deux soldats par niveau."
+    ],
+    "les_stad8": [
+      "Soldaten gaan mee op rooftocht. Elke soldaat is vijf kracht extra bovenop je push-ups.",
+      "Soldiers join your raids. Each soldier is five extra strength on top of your push-ups.",
+      "Les soldats participent à tes pillages. Chaque soldat vaut cinq force en plus de tes pompes."
+    ],
+    "les_stad9": [
+      "Verdedigers blijven thuis en bewaken je dorp: acht verdediging per stuk.",
+      "Defenders stay home and guard your village: eight defense each.",
+      "Les défenseurs restent au village et le gardent : huit défense chacun."
+    ],
+    "les_stad10": [
+      "Verlies je een rooftocht, dan komen soldaten gewond thuis. Gewonden vechten niet mee — met een medicijn knapt er telkens één op.",
+      "Lose a raid and soldiers come home wounded. The wounded don't fight — medicine heals one at a time.",
+      "Si tu perds un pillage, des soldats rentrent blessés. Les blessés ne combattent pas — un remède en soigne un."
+    ],
+    "les_stad11": [
+      "In de kazerne wissel je soldaten en verdedigers om voor tien goud, of stuur je er één met pensioen voor twintig goud terug.",
+      "In the barracks you swap soldiers and defenders for ten gold, or retire one for twenty gold back.",
+      "À la caserne tu échanges soldats et défenseurs pour dix or, ou tu en retires un contre vingt or."
+    ],
+    "les_stad12": [
+      "Dit is je dorp. Sleep met je vinger om rond te kijken, knijp of gebruik de knoppen om in en uit te zoomen. Alles wat je bouwt zie je hier verschijnen.",
+      "This is your village. Drag to look around, pinch or use the buttons to zoom. Everything you build appears here.",
+      "Voici ton village. Fais glisser pour regarder, pince ou utilise les boutons pour zoomer. Tout ce que tu construis apparaît ici."
+    ],
+    "les_stad13": [
+      "Met Overvallen kies je zelf een tegenstander uit de lijst — de sterkste bovenaan. Dan krijg je zestig seconden: elke push-up is één kracht, elke soldaat vijf. Blijf pushen als je binnen bent, want hoe meer kracht, hoe groter de buit.",
+      "With Raid you pick an opponent from the list — strongest on top. Then you get sixty seconds: every push-up is one strength, every soldier five. Keep pushing once you're in, because more strength means more loot.",
+      "Avec Piller, tu choisis un adversaire dans la liste — le plus fort en haut. Tu as soixante secondes : chaque pompe vaut une force, chaque soldat cinq. Continue une fois entré : plus de force, plus de butin."
+    ],
+    "mode_vlieg": [
+      "Vliegen",
+      "Flying",
+      "Voler"
+    ],
+    "mode_vlieg_sub": [
+      "Stuur een vogel met je hoofd door de buizen.",
+      "Steer a bird through the pipes with your head.",
+      "Guide un oiseau entre les tuyaux avec ta tête."
+    ],
+    "vlieg_uitleg": [
+      "Je hoofd omhoog laat de vogel stijgen, je hoofd omlaag laat hem duiken. Zonder camera stuur je hem met je vinger.",
+      "Head up makes the bird rise, head down makes it dive. Without a camera you steer with your finger.",
+      "Tête en haut, l'oiseau monte ; tête en bas, il plonge. Sans caméra, guide-le au doigt."
+    ],
+    "vlieg_klaar": [
+      "Ga rechtop zitten of liggen zodat de camera je hoofd ziet. Omhoog is stijgen, omlaag is duiken.",
+      "Sit or lie so the camera sees your head. Up is rise, down is dive.",
+      "Place-toi pour que la caméra voie ta tête. En haut ça monte, en bas ça plonge."
+    ],
+    "vlieg_start": [
+      "Beginnen",
+      "Start",
+      "Commencer"
+    ],
+    "vlieg_opnieuw": [
+      "Nog een keer",
+      "Again",
+      "Encore"
+    ],
+    "vlieg_beste": [
+      "beste {0}",
+      "best {0}",
+      "record {0}"
+    ],
+    "vlieg_af": [
+      "Geraakt! Je kwam {0} buizen ver.",
+      "Hit! You got past {0} pipes.",
+      "Touché ! Tu as passé {0} tuyaux."
+    ],
+    "vlieg_record": [
+      "Nieuw record: {0} buizen!",
+      "New record: {0} pipes!",
+      "Nouveau record : {0} tuyaux !"
+    ],
+    "vlieg_pauze": [
+      "Even stilgezet omdat je wegklikte.",
+      "Paused because you switched away.",
+      "En pause : tu as quitté l'écran."
+    ],
+    "vlieg_verder": [
+      "Verder",
+      "Continue",
+      "Continuer"
+    ],
+    "lb_soort_duel": [
+      "Gevechten",
+      "Fights",
+      "Combats"
+    ],
+    "stad_rang_knop": [
+      "Ranglijst: meeste gewonnen gevechten",
+      "Ranking: most fights won",
+      "Classement : plus de combats gagnés"
+    ],
+    "lb_soort_reps": [
+      "Push-ups",
+      "Push-ups",
+      "Pompes"
+    ],
+    "lb_soort_vlieg": [
+      "Bird",
+      "Bird",
+      "Bird"
+    ],
+    "lb_eenheid_buizen": [
+      "buizen",
+      "pipes",
+      "tuyaux"
+    ],
+    "lb_vlieg_wacht": [
+      "De vliegscores staan nog op je eigen toestel; ze komen in het klassement zodra de server ze bijhoudt.",
+      "Flying scores are still on your own device; they join the leaderboard once the server tracks them.",
+      "Les scores de vol restent sur ton appareil ; ils rejoindront le classement dès que le serveur les enregistre."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

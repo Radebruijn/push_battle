@@ -488,6 +488,17 @@ MODE_ICONEN: dict[str, str] = {
         + circle(44, 50, 26, hole=True)
         + poly([(56, 40), (56, 94), (69, 81), (78, 98), (88, 93), (79, 76), (94, 74)])
     ),
+    # Vlieg: een vogeltje van opzij, met vleugel en snavel.
+    "vlieg": (
+        circle(46, 52, 26)
+        + poly([(70, 44), (92, 50), (70, 58)])
+        + poly([(20, 40), (52, 30), (44, 60), (16, 56)])
+        + circle(56, 44, 7, hole=True)
+        + circle(56, 44, 3)
+        + poly([(26, 70), (44, 66), (40, 84), (24, 80)])
+        + bar(30, 84, 26, 94, 5)
+        + bar(40, 84, 44, 94, 5)
+    ),
     # Stad: een vesting met kantelen, een middentoren en een poort.
     "stad": (
         poly([(38, 32), (38, 22), (44, 22), (44, 28), (48, 28), (48, 22),
