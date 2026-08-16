@@ -654,6 +654,23 @@
   .kansVak span { display: block; font-size: 9px; color: rgba(255,255,255,.5); margin-top: 4px; }
   .kansVoet { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.5; margin-top: 6px; }
 
+  .mStreak { display: block; margin: 8px auto 0; padding: 6px 14px; border-radius: 99px;
+             border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05);
+             color: rgba(255,255,255,.8); font: inherit; font-size: 12px; font-weight: 700;
+             cursor: pointer; }
+  #dagen { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
+           display: none; padding: 30px 22px; overflow-y: auto; }
+  #dagen.aan { display: block; }
+  #dagen h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+              color: rgba(255,255,255,.5); margin: 0 0 8px; padding: 8px 46px 0; }
+  .dagenStreak { text-align: center; font-size: 14px; font-weight: 800;
+                 margin-bottom: 18px; }
+  .dagenGrafiek { background: rgba(255,255,255,.04); border-radius: 16px; padding: 12px 8px 6px; }
+  .dagenGrafiek .dagLijn { stroke: rgba(255,255,255,.1); stroke-width: 1; }
+  .dagenGrafiek .dagCijfer { fill: rgba(255,255,255,.85); font-size: 9px; font-weight: 700; }
+  .dagenGrafiek .dagDag { fill: rgba(255,255,255,.4); font-size: 8px; }
+  .dagenVandaag { text-align: center; font-size: 13px; color: rgba(255,255,255,.6);
+                  margin-top: 14px; }
   #buit { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.8);
           display: none; place-items: center; }
   #buit.aan { display: grid; }
@@ -987,6 +1004,7 @@
       <div class="mXpBar"><div class="mXpVul" id="mXpVul"></div></div>
       <div class="mXpTekst" id="mXpTekst"></div>
     </div>
+    <button class="mStreak" id="mStreak"></button>
 
     <div class="mKaart">
       <div class="mPadTip" id="mPadTip" hidden>🎖️ <span id="mPadTipTal"></span></div>
@@ -1157,6 +1175,14 @@
 
 <div id="buit">
   <div class="buitKaart" id="buitKaart"></div>
+</div>
+
+<div id="dagen">
+  <button class="sluitKruis" id="dagenDicht" aria-label="sluiten">✕</button>
+  <h2 id="dagenKop"></h2>
+  <div class="dagenStreak" id="dagenStreak"></div>
+  <div class="dagenGrafiek" id="dagenGrafiek"></div>
+  <div class="dagenVandaag" id="dagenVandaag"></div>
 </div>
 
 <div id="rol">
@@ -1898,7 +1924,68 @@ function questRep() {
   repMomenten = repMomenten.filter(m => nu - m <= 60000);
   const q = questStaat();
   if (repMomenten.length > (q.dagTel.snel || 0)) q.dagTel.snel = repMomenten.length;
+  dagTellen();
   questTel('reps');
+}
+
+/// De dagteller: hoeveel echte herhalingen deed je vandaag, per wereld.
+/// Lokale datum, want een training om half twaalf 's avonds hoort bij vandaag.
+function dagSleutel(d = new Date()) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+         '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function dagTellen() {
+  P.dagen = P.dagen || {};
+  const sleutel = dagSleutel();
+  P.dagen[sleutel] = (P.dagen[sleutel] || 0) + 1;
+  // Vier maanden geschiedenis is genoeg; daarboven ruimen we de oudste op.
+  const sleutels = Object.keys(P.dagen);
+  if (sleutels.length > 130) {
+    sleutels.sort().slice(0, sleutels.length - 120).forEach(k => delete P.dagen[k]);
+  }
+}
+
+/// De grafiek achter het streakknopje: de laatste veertien dagen als lijn.
+/// Eén serie in de goudkleur van het spel; alleen vandaag en de beste dag
+/// krijgen een getal, de rest blijft rustig.
+function toonDagen() {
+  $('dagen').classList.add('aan');
+  $('dagenKop').textContent = t('dagen_titel').toUpperCase();
+  $('dagenStreak').textContent = '🔥 ' + effStreak() + ' ' + t('stat_streak');
+  $('dagenDicht').title = t('close');
+
+  const dagen = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 864e5);
+    dagen.push({ dag: d.getDate(), n: (P.dagen || {})[dagSleutel(d)] || 0 });
+  }
+  const max = Math.max(1, ...dagen.map(d => d.n));
+  const beste = dagen.reduce((b, d, i) => d.n > dagen[b].n ? i : b, 0);
+  const B = 340, H = 170, links = 10, rechts = 10, boven = 22, onder = 24;
+  const x = i => links + i * (B - links - rechts) / 13;
+  const y = n => boven + (H - boven - onder) * (1 - n / max);
+
+  let svg = `<svg viewBox="0 0 ${B} ${H}" style="width:100%;display:block">`;
+  svg += `<line x1="${links}" y1="${y(0)}" x2="${B - rechts}" y2="${y(0)}" class="dagLijn"/>`;
+  svg += `<line x1="${links}" y1="${y(max)}" x2="${B - rechts}" y2="${y(max)}" class="dagLijn"/>`;
+  svg += `<polyline fill="none" stroke="#ffc740" stroke-width="2" stroke-linejoin="round"` +
+         ` stroke-linecap="round" points="${dagen.map((d, i) => x(i) + ',' + y(d.n)).join(' ')}"/>`;
+  dagen.forEach((d, i) => {
+    const vandaag = i === 13;
+    svg += `<circle cx="${x(i)}" cy="${y(d.n)}" r="${vandaag ? 4 : 2.5}"` +
+           ` fill="${vandaag ? '#fff' : '#ffc740'}"/>`;
+    if ((vandaag || i === beste) && d.n) {
+      svg += `<text x="${x(i)}" y="${y(d.n) - 8}" text-anchor="middle" class="dagCijfer">${d.n}</text>`;
+    }
+    if (i % 2 === 1 || vandaag) {
+      svg += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" class="dagDag">${d.dag}</text>`;
+    }
+  });
+  svg += '</svg>';
+  $('dagenGrafiek').innerHTML = svg;
+  $('dagenVandaag').textContent = t('dagen_vandaag', dagen[13].n) +
+    ' · ' + t('dagen_veertien', dagen.reduce((s, d) => s + d.n, 0));
 }
 
 /// Welke opdrachten je gehaald hebt maar nog niet opgehaald.
@@ -2523,6 +2610,8 @@ function renderMenu() {
   $('mXpVul').style.width = (cur / need * 100) + '%';
   $('mXpVul').style.background = `linear-gradient(to right, ${rgbCss(c)}, #ffc740)`;
   $('mXpTekst').textContent = t('xp_of', cur, need);
+  $('mStreak').textContent = '🔥 ' + effStreak() + ' · ' +
+    t('dagen_vandaag', (P.dagen || {})[dagSleutel()] || 0);
 
   $('mArenaLabel').textContent = t('arena_n_race', idxNu(), tt(arena.race).toUpperCase());
   $('mArenaNaam').textContent = tt(arena.name);
@@ -3686,6 +3775,10 @@ $('kansenDicht').addEventListener('click', e => {
 });
 $('buit').addEventListener('click', e => {
   e.stopPropagation(); $('buit').classList.remove('aan');
+});
+$('mStreak').addEventListener('click', e => { e.stopPropagation(); toonDagen(); });
+$('dagenDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('dagen').classList.remove('aan');
 });
 $('lesKnop').addEventListener('click', e => { e.stopPropagation(); lesVolgende(); });
 $('lesSkip').addEventListener('click', e => { e.stopPropagation(); lesKlaar(); });

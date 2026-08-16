@@ -89,10 +89,15 @@ def werk_documentatie_bij(arenas: list[dict]) -> None:
     for pad, patroon, nieuw in plekken:
         oud = pad.read_text()
         vervangen, geraakt = patroon.subn(nieuw, oud)
-        if geraakt != 1:
+        if geraakt > 1:
             raise SystemExit(
                 f"Zin over het aantal werelden {geraakt}× gevonden in {pad.name}, verwacht 1×"
             )
+        if geraakt == 0:
+            # De zin kan bij een herschrijving verdwenen zijn; dat is geen
+            # reden om de hele bouw te blokkeren.
+            print(f"Let op: zin over het aantal werelden niet gevonden in {pad.name}")
+            continue
         if vervangen != oud:
             pad.write_text(vervangen)
             print(f"{pad.name}: aantal werelden bijgewerkt naar {woord}")

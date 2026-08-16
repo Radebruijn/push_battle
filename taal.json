@@ -2785,6 +2785,21 @@
       "Verwijderen lukte niet. Probeer het opnieuw.",
       "Deleting did not work. Please try again.",
       "La suppression a échoué. Réessaie."
+    ],
+    "dagen_titel": [
+      "Jouw dagen",
+      "Your days",
+      "Tes jours"
+    ],
+    "dagen_vandaag": [
+      "vandaag {0} push-ups",
+      "today {0} push-ups",
+      "aujourd'hui {0} pompes"
+    ],
+    "dagen_veertien": [
+      "{0} in de laatste twee weken",
+      "{0} in the last two weeks",
+      "{0} sur les deux dernières semaines"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

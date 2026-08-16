@@ -581,6 +581,9 @@ enum Tk: String {
     case acc_weg_uitleg
     case acc_weg_klaar
     case acc_weg_fout
+    case dagen_titel
+    case dagen_vandaag
+    case dagen_veertien
 }
 
 enum Strings {
@@ -1142,6 +1145,9 @@ enum Strings {
         "acc_weg_uitleg": ["Je account, je naam, je foto en je voortgang op de server worden verwijderd. Dit kan niet ongedaan gemaakt worden.", "Your account, name, photo and progress on the server are deleted. This cannot be undone.", "Ton compte, ton nom, ta photo et ta progression sur le serveur sont supprimés. C’est définitif."],
         "acc_weg_klaar": ["Je account is verwijderd.", "Your account has been deleted.", "Ton compte a été supprimé."],
         "acc_weg_fout": ["Verwijderen lukte niet. Probeer het opnieuw.", "Deleting did not work. Please try again.", "La suppression a échoué. Réessaie."],
+        "dagen_titel": ["Jouw dagen", "Your days", "Tes jours"],
+        "dagen_vandaag": ["vandaag {0} push-ups", "today {0} push-ups", "aujourd'hui {0} pompes"],
+        "dagen_veertien": ["{0} in de laatste twee weken", "{0} in the last two weeks", "{0} sur les deux dernières semaines"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.
