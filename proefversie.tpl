@@ -185,6 +185,14 @@
           padding: 0 20px; margin: 10px 0 8px; }
   /* Onderaan twee knoppen, even groot als het burgermenu: je opdrachten
      links en je kast rechts. Geen bijschrift — het plaatje zegt het al. */
+  /* Het vlammetje staat op een eigen regeltje, recht boven de opdrachten. */
+  .mStreakRij { display: flex; padding: 0 12px; margin-top: 6px; }
+  .mStreak { display: flex; align-items: center; gap: 6px; padding: 5px 12px;
+             border-radius: 99px; border: 1px solid rgba(255,255,255,.12);
+             background: rgba(255,255,255,.05); color: rgba(255,255,255,.85);
+             font: inherit; font-size: 15px; line-height: 1; cursor: pointer; }
+  .mStreak b { font-size: 13px; font-weight: 900; color: #ffc740; }
+  .mStreak b:empty { display: none; }
   .mOnder { display: flex; justify-content: space-between; padding: 0 12px; margin-top: 6px; }
   .mRond { position: relative; width: 50px; height: 46px; border-radius: 14px; cursor: pointer;
            border: 0; background: rgba(255,255,255,.07); color: inherit; font: inherit;
@@ -1019,8 +1027,10 @@
       <div class="mPips" id="mPips"></div>
     </div>
 
+    <div class="mStreakRij">
+      <button class="mStreak" id="streakKnop" aria-label="dagen">🔥<b id="streakBadge"></b></button>
+    </div>
     <div class="mOnder">
-      <button class="mRond" id="streakKnop" aria-label="dagen">🔥<i id="streakBadge"></i></button>
       <button class="mRond" id="questKnop" aria-label="opdrachten">📋<i id="questBadge"></i></button>
       <button class="mRond" id="invOpen" aria-label="inventaris">🎒</button>
     </div>
