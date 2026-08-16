@@ -621,6 +621,22 @@ enum Tk: String {
     case ov_kracht
     case ov_gewonnen
     case ov_verloren
+    case stad_bouw_knop
+    case stad_dag
+    case stad_dag_leeg
+    case stad_geen_plek
+    case stad_geen_plek_kort
+    case w_mijn
+    case w_mijn_uit
+    case w_houtvester
+    case w_houtvester_uit
+    case w_huis
+    case w_huis_uit
+    case w_aanval
+    case w_aanval_uit
+    case w_verdediging
+    case w_verdediging_uit
+    case ov_soldaten
 }
 
 enum Strings {
@@ -1188,7 +1204,7 @@ enum Strings {
         "dagen_vandaag_kop": ["Vandaag", "Today", "Aujourd'hui"],
         "dagen_aantal": ["{0} push-ups", "{0} push-ups", "{0} pompes"],
         "mode_stad": ["Stad", "City", "Cité"],
-        "mode_stad_sub": ["Bouw je vesting en beroof andere spelers.", "Build your fortress and raid other players.", "Bâtis ta forteresse et pille les autres joueurs."],
+        "mode_stad_sub": ["Bouw een dorp met push-ups en beroof andere spelers.", "Build a village with push-ups and raid other players.", "Bâtis un village avec des pompes et pille les autres joueurs."],
         "stad_goud": ["goud", "gold", "or"],
         "stad_uitleg": ["Elke push-up hier is een goudstuk. Bouw je verdediging op, en ga op rooftocht bij de rest.", "Every push-up here is a gold coin. Build your defenses, then go raiding.", "Chaque pompe ici est une pièce d'or. Renforce ta défense, puis pars en razzia."],
         "stad_schild": ["🛡️ schild nog {0}", "🛡️ shield for {0}", "🛡️ bouclier encore {0}"],
@@ -1222,6 +1238,22 @@ enum Strings {
         "ov_kracht": ["Kracht {0} van de {1} — pushen!", "Strength {0} of {1} — push!", "Force {0} sur {1} — pousse !"],
         "ov_gewonnen": ["Doorbraak! Je neemt {0} goud mee naar huis.", "Breakthrough! You take {0} gold home.", "Percée ! Tu ramènes {0} or."],
         "ov_verloren": ["De muren hielden stand: kracht {0} van de {1} nodig.", "The walls held: strength {0} of the {1} needed.", "Les murs ont tenu : force {0} sur les {1} requis."],
+        "stad_bouw_knop": ["Bouwen", "Build", "Construire"],
+        "stad_dag": ["Vandaag geven nog {0} push-ups grondstoffen (+{1} 🪵 en +{2} 🪙 per stuk).", "Today {0} more push-ups yield resources (+{1} 🪵 and +{2} 🪙 each).", "Aujourd'hui {0} pompes donnent encore des ressources (+{1} 🪵 et +{2} 🪙 chacune)."],
+        "stad_dag_leeg": ["Elke push-up, waar je ook traint, gaat in je pot. Koop eerst een mijn of een houtvester.", "Every push-up, wherever you train, goes into your pot. Buy a mine or a forester first.", "Chaque pompe, où que tu t'entraînes, remplit ta réserve. Achète d'abord une mine ou un bûcheron."],
+        "stad_geen_plek": ["Al je soldatenplekken zijn bezet. Bouw eerst een huis erbij.", "All your soldier spots are taken. Build another house first.", "Toutes tes places de soldats sont prises. Construis d'abord une maison."],
+        "stad_geen_plek_kort": ["geen plek", "no room", "complet"],
+        "w_mijn": ["Mijn", "Mine", "Mine"],
+        "w_mijn_uit": ["Elke productieve push-up geeft {0} goud. Volgend niveau: +1.", "Each productive push-up gives {0} gold. Next level: +1.", "Chaque pompe productive donne {0} or. Niveau suivant : +1."],
+        "w_houtvester": ["Houtvester", "Forester", "Bûcheron"],
+        "w_houtvester_uit": ["Elke productieve push-up geeft {0} hout. Volgend niveau: +1.", "Each productive push-up gives {0} wood. Next level: +1.", "Chaque pompe productive donne {0} bois. Niveau suivant : +1."],
+        "w_huis": ["Huis", "House", "Maison"],
+        "w_huis_uit": ["Elk huis geeft plek aan 2 soldaten. Nu {0} van de {1} plekken bezet.", "Each house holds 2 soldiers. Now {0} of {1} spots taken.", "Chaque maison loge 2 soldats. {0} places sur {1} occupées."],
+        "w_aanval": ["Soldaat", "Soldier", "Soldat"],
+        "w_aanval_uit": ["Vecht mee bij overvallen: +5 kracht per soldaat. Je hebt er {0}.", "Joins your raids: +5 strength each. You have {0}.", "Participe à tes pillages : +5 force chacun. Tu en as {0}."],
+        "w_verdediging": ["Verdediger", "Defender", "Défenseur"],
+        "w_verdediging_uit": ["Bewaakt je dorp: +8 verdediging per stuk. Je hebt er {0}.", "Guards your village: +8 defense each. You have {0}.", "Garde ton village : +8 défense chacun. Tu en as {0}."],
+        "ov_soldaten": ["Je {0} soldaten vechten mee: +{1} kracht.", "Your {0} soldiers join in: +{1} strength.", "Tes {0} soldats participent : +{1} force."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

@@ -683,26 +683,42 @@
                   margin-top: 16px; flex: none; }
   .dagenVandaag { text-align: center; font-size: 13px; color: rgba(255,255,255,.55);
                   margin-top: 6px; flex: none; }
-  /* De stad: goud bovenaan, gebouwen als kaarten, logboek onderaan. */
+  /* De stad: tellers bovenaan, daaronder de dorpskaart waar je doorheen
+     sleept en zoomt, en onderin de twee grote knoppen. */
   #stad { position: fixed; inset: 0; z-index: 12; background: rgba(0,0,0,.96);
-          display: none; padding: 30px 20px; overflow-y: auto; }
-  #stad.aan { display: block; }
+          display: none; padding: 28px 16px 18px; flex-direction: column; }
+  #stad.aan { display: flex; }
   #stad h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
-             color: rgba(255,255,255,.5); margin: 0 0 10px; padding: 8px 46px 0; }
-  .stadGoud { text-align: center; font-size: 34px; font-weight: 900; color: #ffc740; }
-  .stadGoud span { font-size: 14px; font-weight: 700; color: rgba(255,255,255,.55); }
+             color: rgba(255,255,255,.5); margin: 0 0 8px; padding: 8px 46px 0; flex: none; }
+  .stadTellers { display: flex; justify-content: center; gap: 18px; flex: none;
+                 font-size: 15px; }
+  .stadTellers b { font-weight: 900; color: #ffc740; font-variant-numeric: tabular-nums; }
   .stadSchild { text-align: center; font-size: 12px; color: #7dde7d; margin-top: 4px;
-                min-height: 16px; }
-  .stadUitleg { text-align: center; font-size: 12px; color: rgba(255,255,255,.5);
-                margin: 8px 0 14px; line-height: 1.5; }
-  #stadOvervalKnop { margin-bottom: 16px; }
-  .stadKaart { display: flex; align-items: center; gap: 14px; width: 100%;
+                min-height: 16px; flex: none; }
+  .stadKaartVak { position: relative; flex: 1; min-height: 240px; margin-top: 6px;
+                  border-radius: 18px; overflow: hidden; touch-action: none;
+                  background: linear-gradient(to bottom, #101622 0%, #182236 58%, #22331f 58%); }
+  #stadKaart { width: 100%; height: 100%; display: block; cursor: grab; }
+  .stadZoomKnoppen { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 8px; }
+  .stadZoomKnoppen button { width: 40px; height: 40px; border-radius: 12px; border: 0;
+                            background: rgba(0,0,0,.55); color: #fff; font: inherit;
+                            font-size: 22px; font-weight: 800; cursor: pointer; }
+  .stadDag { text-align: center; font-size: 11px; color: rgba(255,255,255,.45);
+             margin: 8px 0 6px; flex: none; }
+  .stadKnoppen { display: flex; gap: 10px; flex: none; }
+  .stadKnoppen .grotKnop { flex: 1; }
+  #stadWinkel { position: fixed; inset: 0; z-index: 14; background: rgba(0,0,0,.96);
+                display: none; padding: 30px 20px; overflow-y: auto; }
+  #stadWinkel.aan { display: block; }
+  #stadWinkel h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
+                   color: rgba(255,255,255,.5); margin: 0 0 14px; padding: 8px 46px 0; }
+  .stadKaartRij { display: flex; align-items: center; gap: 14px; width: 100%;
                background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
                border-radius: 16px; padding: 12px 14px; margin-bottom: 10px; }
-  .stadKaart .sEmoji { font-size: 30px; flex: none; }
-  .stadKaart .sTekst { flex: 1; min-width: 0; }
-  .stadKaart .sTekst b { display: block; font-size: 15px; font-weight: 800; }
-  .stadKaart .sTekst small { font-size: 11px; color: rgba(255,255,255,.5); }
+  .stadKaartRij .sEmoji { font-size: 30px; flex: none; }
+  .stadKaartRij .sTekst { flex: 1; min-width: 0; }
+  .stadKaartRij .sTekst b { display: block; font-size: 15px; font-weight: 800; }
+  .stadKaartRij .sTekst small { font-size: 11px; color: rgba(255,255,255,.5); }
   .stadKoop { flex: none; border: 0; border-radius: 12px; font: inherit; font-size: 13px;
               font-weight: 800; padding: 9px 14px; cursor: pointer;
               background: rgba(255,255,255,.1); color: rgba(255,255,255,.5); }
@@ -1201,10 +1217,29 @@
 <div id="stad">
   <button class="sluitKruis" id="stadDicht" aria-label="sluiten">✕</button>
   <h2 id="stadKop"></h2>
-  <div class="stadGoud"><b id="stadGoudTal">0</b> <span id="stadGoudWoord"></span></div>
+  <div class="stadTellers">
+    <span>💪 <b id="stadPush">0</b></span>
+    <span>🪵 <b id="stadHout">0</b></span>
+    <span>🪙 <b id="stadGoud">0</b></span>
+  </div>
   <div class="stadSchild" id="stadSchild"></div>
-  <div class="stadUitleg" id="stadUitleg"></div>
-  <button class="grotKnop" id="stadOvervalKnop"></button>
+  <div class="stadKaartVak" id="stadKaartVak">
+    <svg id="stadKaart"></svg>
+    <div class="stadZoomKnoppen">
+      <button id="stadZoomMin" aria-label="uitzoomen">−</button>
+      <button id="stadZoomPlus" aria-label="inzoomen">+</button>
+    </div>
+  </div>
+  <div class="stadDag" id="stadDag"></div>
+  <div class="stadKnoppen">
+    <button class="grotKnop" id="stadBouwKnop"></button>
+    <button class="grotKnop" id="stadOvervalKnop"></button>
+  </div>
+</div>
+
+<div id="stadWinkel">
+  <button class="sluitKruis" id="stadWinkelDicht" aria-label="sluiten">✕</button>
+  <h2 id="stadWinkelKop"></h2>
   <div id="stadGebouwen"></div>
   <div class="qKop" id="stadLogKop"></div>
   <div id="stadLog"></div>
@@ -2017,6 +2052,7 @@ function questRep() {
 function telRep() {
   P.totalReps++;
   questRep();
+  stadOogst();   // elke echte push-up, waar dan ook, telt ook voor je stad
 }
 
 /// De dagteller: hoeveel echte herhalingen deed je vandaag, per wereld.
@@ -5943,21 +5979,24 @@ $('modeKlik').addEventListener('click', e => { e.stopPropagation(); toonKlik(); 
 $('modeStad').addEventListener('click', e => { e.stopPropagation(); toonStad(); });
 
 /* ---------------- de stad ----------------
-   Jouw vesting, per oefening, en hij leeft op de server: goud verdien je met
-   echte herhalingen terwijl dit scherm openstaat, gebouwen bepalen je
-   verdediging, en met een overval breek je in zestig seconden door de muren
-   van een andere speler. Wint de aanvaller, dan verhuist een deel van het
-   onbeschermde goud en krijgt het slachtoffer twaalf uur een schild. Alles
-   wordt op de server gerekend (stad_*-functies), de browser toont het alleen. */
-const STAD_GEBOUWEN = [
-  { id: 'stadhuis',   emoji: '🏛️', basis: 100 },
-  { id: 'muur',       emoji: '🧱', basis: 30 },
-  { id: 'toren',      emoji: '🗼', basis: 45 },
-  { id: 'schatkamer', emoji: '🏦', basis: 40 },
-  { id: 'smederij',   emoji: '⚒️', basis: 50 },
+   Jouw dorp, per oefening, en het leeft op de server. Elke echte push-up —
+   waar in het spel ook — gaat in je pot. Daarmee koop je een mijn en een
+   houtvester; die geven per push-up goud en hout, met een daglimiet van
+   driehonderd zodat niemand in één avond de lucht in groeit. Huizen geven
+   plek aan soldaten: aanvallers vechten mee bij overvallen, verdedigers
+   bewaken je dorp. De kaart is een plat dorpje waar je doorheen sleept en
+   zoomt. Alle regels staan op de server (stad_*-functies); de browser
+   loopt hooguit even optimistisch vooruit. */
+const STAD_WINKEL = [
+  { id: 'mijn',        emoji: '⛏️', max: 5 },
+  { id: 'houtvester',  emoji: '🌲', max: 5 },
+  { id: 'huis',        emoji: '🏠', max: 6 },
+  { id: 'aanval',      emoji: '⚔️' },
+  { id: 'verdediging', emoji: '🛡️' },
 ];
-let stadNu = null, stadTeSturen = 0, stadStuurLus = null;
+let stadNu = null, stadPot = 0, stadStuurLus = null;
 let ovDoel = null, ovFase = 'uit', ovReps = 0, ovTot = 0, ovLus = null;
+let kaartX = 20, kaartY = 0, kaartZoom = 1;
 
 async function stadVraag(functie, lijf) {
   const a = await sbVraag('/rest/v1/rpc/' + functie, {
@@ -5968,16 +6007,25 @@ async function stadVraag(functie, lijf) {
   return a.json();
 }
 
+const stadTal = id => (stadNu && stadNu.spullen && +stadNu.spullen[id]) || 0;
+
+/// De prijzen spiegelen de server; alleen om ze te tonen en knoppen te kleuren.
+function stadPrijs(id) {
+  const n = stadTal(id);
+  if (id === 'mijn') return { p: 20 * 3 ** n, h: 30 * n, g: 0 };
+  if (id === 'houtvester') return { p: 20 * 3 ** n, h: 0, g: 0 };
+  if (id === 'huis') return { p: 20, h: 40, g: 0 };
+  return { p: 0, h: 0, g: 30 };
+}
+
 function toonStad() {
   if (!ingelogd()) { melding(t('stad_account'), 4000); toonAccount(); return; }
   $('modes').classList.remove('aan');
   $('stad').classList.add('aan');
   $('stadKop').textContent = t('mode_stad').toUpperCase();
-  $('stadUitleg').textContent = t('stad_uitleg');
-  $('stadLogKop').textContent = t('stad_log_kop');
+  $('stadBouwKnop').textContent = t('stad_bouw_knop');
   $('stadOvervalKnop').textContent = t('stad_overval_knop');
   $('stadDicht').title = t('close');
-  $('stadGebouwen').innerHTML = `<div class="lbMelding">${ontsmet(t('lb_loading'))}</div>`;
   startCameraIndienNodig();
   stadHaal();
 }
@@ -5987,86 +6035,235 @@ async function stadHaal() {
     stadNu = await stadVraag('stad_mijn', { p_sport: SPORT });
     tekenStad();
   } catch (e) {
-    $('stadGebouwen').innerHTML = `<div class="lbMelding">` +
-      `${ontsmet(t(e.message === 'stil' ? 'stad_stil' : 'lb_failed'))}</div>`;
+    melding(t(e.message === 'stil' ? 'stad_stil' : 'lb_failed'), 4000);
   }
 }
 
-function stadPrijs(g, niveau) { return g.basis * (niveau + 1) * (niveau + 1); }
-const stadNiveau = id => (stadNu && stadNu.gebouwen && +stadNu.gebouwen[id]) || 0;
-
 function tekenStad() {
   if (!stadNu) return;
-  $('stadGoudTal').textContent = getal(stadNu.goud);
-  $('stadGoudWoord').textContent = t('stad_goud');
+  $('stadPush').textContent = getal(stadNu.pushups);
+  $('stadHout').textContent = getal(stadNu.hout);
+  $('stadGoud').textContent = getal(stadNu.goud);
   const schild = stadNu.schild_tot && new Date(stadNu.schild_tot) > new Date();
   $('stadSchild').textContent = schild
     ? t('stad_schild', klokje((new Date(stadNu.schild_tot) - Date.now()) / 1000)) : '';
+  $('stadDag').textContent = stadTal('mijn') + stadTal('houtvester') > 0
+    ? t('stad_dag', stadNu.dag_over ?? 300, stadTal('houtvester'), stadTal('mijn'))
+    : t('stad_dag_leeg');
+  tekenKaart();
+  if ($('stadWinkel').classList.contains('aan')) tekenWinkel();
+}
 
+/* -- de dorpskaart: platte vormen, slepen en zoomen -- */
+
+/// Kleine bouwstenen voor de tekening. Alles is bewust plat en simpel:
+/// rechthoeken, driehoeken en cirkels in vrolijke kleuren op de donkere nacht.
+function kVlag(n) {
+  return n > 1 ? `<line x1="0" y1="0" x2="0" y2="-26" stroke="#caa" stroke-width="2"/>` +
+    `<polygon points="0,-26 24,-20 0,-14" fill="#ffc740"/>` +
+    `<text x="9" y="-17.5" text-anchor="middle" font-size="9" font-weight="900" fill="#000">${n}</text>` : '';
+}
+function kBoom(x, y, m = 1) {
+  return `<g transform="translate(${x},${y}) scale(${m})">` +
+    `<rect x="-3" y="-8" width="6" height="12" fill="#6b4423"/>` +
+    `<polygon points="-14,-6 14,-6 0,-34" fill="#2f7d32"/>` +
+    `<polygon points="-11,-18 11,-18 0,-42" fill="#3a9440"/></g>`;
+}
+function kHuis(x, y) {
+  return `<g transform="translate(${x},${y})">` +
+    `<rect x="0" y="-34" width="52" height="34" fill="#c88a4d"/>` +
+    `<polygon points="-6,-34 26,-58 58,-34" fill="#b03a3a"/>` +
+    `<rect x="20" y="-18" width="13" height="18" fill="#5a3413"/>` +
+    `<rect x="7" y="-28" width="10" height="9" fill="#ffe9a8"/></g>`;
+}
+function kMijn(x, y, n) {
+  return `<g transform="translate(${x},${y})">` +
+    `<path d="M-40,0 Q0,-64 40,0 Z" fill="#5c6470"/>` +
+    `<path d="M-16,0 v-14 a16,16 0 0 1 32,0 v14 z" fill="#15161a"/>` +
+    `<rect x="-24" y="-2" width="48" height="4" fill="#3a3f47"/>` +
+    `<circle cx="26" cy="-38" r="4" fill="#ffc740"/>` +
+    `<g transform="translate(-30,-46)">${kVlag(n)}</g></g>`;
+}
+function kHut(x, y, n) {
+  return `<g transform="translate(${x},${y})">` +
+    kBoom(-34, -2, 0.9) + kBoom(52, -4, 1.1) +
+    `<rect x="-14" y="-26" width="34" height="26" fill="#8a6034"/>` +
+    `<polygon points="-20,-26 3,-44 26,-26" fill="#4c7a3d"/>` +
+    `<rect x="-4" y="-13" width="10" height="13" fill="#43290e"/>` +
+    `<g transform="translate(14,-50)">${kVlag(n)}</g></g>`;
+}
+function kSoldaat(x, y, soort) {
+  const kleur = soort === 'aanval' ? '#d9534f' : '#4f86d9';
+  const ding = soort === 'aanval'
+    ? `<line x1="8" y1="-16" x2="16" y2="-30" stroke="#dfe4ea" stroke-width="3"/>`
+    : `<circle cx="10" cy="-12" r="7" fill="#dfe4ea" stroke="#8a92a0" stroke-width="2"/>`;
+  return `<g transform="translate(${x},${y})">` +
+    `<rect x="-5" y="-14" width="10" height="14" rx="3" fill="${kleur}"/>` +
+    `<circle cx="0" cy="-19" r="6" fill="#e8b98a"/>` + ding + `</g>`;
+}
+
+function tekenKaart() {
+  const grond = 210;
+  let stukken = '', x = 40;
+  stukken += kMijn(x + 40, grond, stadTal('mijn')); x += 140;
+  stukken += kHut(x + 20, grond, stadTal('houtvester')); x += 130;
+  for (let i = 0; i < stadTal('huis'); i++) { stukken += kHuis(x, grond); x += 86; }
+  if (!stadTal('huis')) { stukken += kBoom(x + 10, grond); x += 60; }
+  for (let i = 0; i < stadTal('verdediging'); i++) { stukken += kSoldaat(x + 8, grond, 'verdediging'); x += 30; }
+  for (let i = 0; i < stadTal('aanval'); i++) { stukken += kSoldaat(x + 8, grond, 'aanval'); x += 30; }
+  x += 40;
+  stukken += kBoom(x, grond, 0.8);
+  const breed = Math.max(560, x + 60);
+  $('stadKaart').setAttribute('viewBox', `0 0 ${breed} 280`);
+  $('stadKaart').innerHTML =
+    `<g id="stadScene" transform="translate(${kaartX},${kaartY}) scale(${kaartZoom})">` +
+    `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="600" fill="#22331f"/>` +
+    `<rect x="-2000" y="${grond}" width="${breed + 4000}" height="5" fill="#2e4429"/>` +
+    `<circle cx="${breed - 70}" cy="44" r="18" fill="#f4edd7" opacity=".9"/>` +
+    stukken + `</g>`;
+}
+
+function kaartBij() {
+  const scene = document.getElementById('stadScene');
+  if (scene) scene.setAttribute('transform',
+    `translate(${kaartX},${kaartY}) scale(${kaartZoom})`);
+}
+
+/// Slepen met één vinger of de muis, knijpen met twee vingers, en de twee
+/// knoppen rechtsonder. Zoomen blijft tussen de helft en drie keer.
+let kVingers = new Map(), kAfstand = 0;
+function kZoom(maal, midX, midY) {
+  const oud = kaartZoom;
+  kaartZoom = Math.min(3, Math.max(0.5, kaartZoom * maal));
+  const echt = kaartZoom / oud;
+  kaartX = midX - (midX - kaartX) * echt;
+  kaartY = midY - (midY - kaartY) * echt;
+  kaartBij();
+}
+$('stadKaartVak').addEventListener('pointerdown', e => {
+  kVingers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  $('stadKaartVak').setPointerCapture(e.pointerId);
+});
+$('stadKaartVak').addEventListener('pointermove', e => {
+  if (!kVingers.has(e.pointerId)) return;
+  const was = kVingers.get(e.pointerId);
+  kVingers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (kVingers.size === 1) {
+    kaartX += e.clientX - was.x;
+    kaartY += e.clientY - was.y;
+    kaartBij();
+  } else if (kVingers.size === 2) {
+    const [a, b] = [...kVingers.values()];
+    const nu = Math.hypot(a.x - b.x, a.y - b.y);
+    if (kAfstand) {
+      const vak = $('stadKaartVak').getBoundingClientRect();
+      kZoom(nu / kAfstand, (a.x + b.x) / 2 - vak.left, (a.y + b.y) / 2 - vak.top);
+    }
+    kAfstand = nu;
+  }
+});
+['pointerup', 'pointercancel'].forEach(soort =>
+  $('stadKaartVak').addEventListener(soort, e => {
+    kVingers.delete(e.pointerId);
+    kAfstand = 0;
+  }));
+$('stadKaartVak').addEventListener('wheel', e => {
+  e.preventDefault();
+  const vak = $('stadKaartVak').getBoundingClientRect();
+  kZoom(e.deltaY < 0 ? 1.15 : 0.87, e.clientX - vak.left, e.clientY - vak.top);
+}, { passive: false });
+$('stadZoomPlus').addEventListener('click', e => { e.stopPropagation(); kZoom(1.3, 180, 140); });
+$('stadZoomMin').addEventListener('click', e => { e.stopPropagation(); kZoom(0.77, 180, 140); });
+
+/* -- de winkel -- */
+
+function winkelUitleg(id) {
+  if (id === 'mijn') return t('w_mijn_uit', stadTal('mijn'));
+  if (id === 'houtvester') return t('w_houtvester_uit', stadTal('houtvester'));
+  if (id === 'huis') return t('w_huis_uit',
+    stadTal('aanval') + stadTal('verdediging'), stadTal('huis') * 2);
+  if (id === 'aanval') return t('w_aanval_uit', stadTal('aanval'));
+  return t('w_verdediging_uit', stadTal('verdediging'));
+}
+
+function tekenWinkel() {
+  $('stadWinkelKop').textContent = t('stad_bouw_knop').toUpperCase();
+  $('stadLogKop').textContent = t('stad_log_kop');
+  $('stadWinkelDicht').title = t('close');
   $('stadGebouwen').innerHTML = '';
-  STAD_GEBOUWEN.forEach(g => {
-    const niveau = stadNiveau(g.id);
-    const stadhuis = Math.max(1, stadNiveau('stadhuis'));
-    const vol = g.id === 'stadhuis' ? niveau >= 5 : niveau >= stadhuis;
-    const prijs = stadPrijs(g, niveau);
+  STAD_WINKEL.forEach(g => {
+    const n = stadTal(g.id);
+    const vol = g.max && n >= g.max;
+    const soldaat = g.id === 'aanval' || g.id === 'verdediging';
+    const plekVol = soldaat &&
+      stadTal('aanval') + stadTal('verdediging') >= stadTal('huis') * 2;
+    const prijs = stadPrijs(g.id);
+    const kan = !vol && !plekVol && stadNu.pushups >= prijs.p &&
+                stadNu.hout >= prijs.h && stadNu.goud >= prijs.g;
+    const prijsTekst = vol ? t('stad_vol') : plekVol ? t('stad_geen_plek_kort')
+      : [prijs.p && getal(prijs.p) + ' 💪', prijs.h && getal(prijs.h) + ' 🪵',
+         prijs.g && getal(prijs.g) + ' 🪙'].filter(Boolean).join(' · ');
     const rij = document.createElement('div');
-    rij.className = 'stadKaart';
+    rij.className = 'stadKaartRij';
     rij.innerHTML =
       `<span class="sEmoji">${g.emoji}</span>` +
-      `<span class="sTekst"><b>${ontsmet(t('gebouw_' + g.id))} · ${ontsmet(t('stad_niveau', niveau))}</b>` +
-      `<small>${ontsmet(gebouwUitleg(g.id, niveau))}</small></span>` +
-      `<button class="stadKoop${!vol && stadNu.goud >= prijs ? ' kan' : ''}">` +
-      `${vol ? ontsmet(t('stad_vol')) : getal(prijs)}</button>`;
+      `<span class="sTekst"><b>${ontsmet(t('w_' + g.id))}` +
+      `${g.max ? ' · ' + ontsmet(t('stad_niveau', n)) : n ? ' · ' + n : ''}</b>` +
+      `<small>${ontsmet(winkelUitleg(g.id))}</small></span>` +
+      `<button class="stadKoop${kan ? ' kan' : ''}">${ontsmet(prijsTekst)}</button>`;
     rij.querySelector('.stadKoop').onclick = async e => {
       e.stopPropagation();
-      if (vol) return;
-      if (stadNu.goud < prijs) { melding(t('klik_te_duur')); return; }
+      if (vol || plekVol) { if (plekVol) melding(t('stad_geen_plek'), 4000); return; }
+      if (!kan) { melding(t('klik_te_duur')); return; }
       try {
-        stadNu = await stadVraag('stad_bouw', { p_sport: SPORT, p_gebouw: g.id });
+        stadNu = await stadVraag('stad_koop', { p_sport: SPORT, p_wat: g.id });
         tekenStad();
-        melding(t('stad_gebouwd', t('gebouw_' + g.id)), 3000);
+        melding(t('stad_gebouwd', t('w_' + g.id)), 3000);
       } catch (fout) { melding(t('lb_failed'), 3000); }
     };
     $('stadGebouwen').appendChild(rij);
   });
-
   $('stadLog').innerHTML = (stadNu.log && stadNu.log.length)
     ? stadNu.log.map(r => `<div class="stadLogRij">${ontsmet(
         t(r.gewonnen ? 'stad_log_verloren' : 'stad_log_gehouden', r.wie, getal(r.buit || 0)))}</div>`).join('')
     : `<div class="stadLogRij">${ontsmet(t('stad_log_leeg'))}</div>`;
 }
 
-function gebouwUitleg(id, niveau) {
-  if (id === 'stadhuis') return t('gebouw_stadhuis_uit', Math.max(1, niveau));
-  if (id === 'muur') return t('gebouw_muur_uit', niveau * 10);
-  if (id === 'toren') return t('gebouw_toren_uit', niveau * 15);
-  if (id === 'schatkamer') return t('gebouw_schatkamer_uit', Math.round(Math.min(70, 20 + niveau * 10)));
-  return t('gebouw_smederij_uit', niveau * 10);
-}
+/* -- de oogst: elke echte push-up, waar dan ook -- */
 
-/// Elke echte herhaling in de stad is een goudstuk. We sturen ze gebundeld
-/// op, en de teller op het scherm loopt alvast vooruit.
-function stadRep() {
-  telRep();
-  if (ovFase === 'bezig') {
-    ovReps++;
-    ovTeken();
-    return;
+/// Aangeroepen vanuit telRep(): elke echte herhaling gaat in de pot, en de
+/// browser loopt alvast optimistisch vooruit als de stad in beeld is. De
+/// bundel gaat om de paar seconden naar de server, die de daglimiet bewaakt.
+function stadOogst() {
+  if (!ingelogd()) return;
+  stadPot++;
+  if (stadNu && ovFase !== 'bezig') {
+    stadNu.pushups++;
+    if ((stadNu.dag_over ?? 0) > 0) {
+      stadNu.dag_over--;
+      stadNu.hout += stadTal('houtvester');
+      stadNu.goud += stadTal('mijn');
+    }
+    if ($('stad').classList.contains('aan')) tekenStad();
   }
-  if (!stadNu) return;
-  stadNu.goud++;
-  stadTeSturen++;
-  $('stadGoudTal').textContent = getal(stadNu.goud);
   clearTimeout(stadStuurLus);
   stadStuurLus = setTimeout(stadStuur, 3000);
 }
 
 async function stadStuur() {
-  if (!stadTeSturen) return;
-  const stuur = Math.min(stadTeSturen, 60);
-  stadTeSturen -= stuur;
-  try { await stadVraag('stad_goud_erbij', { p_sport: SPORT, p_aantal: stuur }); }
-  catch (e) { /* volgende bundel probeert het opnieuw */ }
+  while (stadPot > 0) {
+    const stuur = Math.min(stadPot, 60);
+    stadPot -= stuur;
+    try { await stadVraag('stad_reps', { p_sport: SPORT, p_aantal: stuur }); }
+    catch (e) { return; }   // stil of offline: de pot blijft staan voor later
+  }
+}
+
+/// In de stad zelf tellen herhalingen gewoon mee (via telRep → stadOogst);
+/// alleen tijdens een overval tellen ze als bestorming.
+function stadRep() {
+  telRep();
+  if (ovFase === 'bezig') { ovReps++; ovTeken(); }
 }
 
 /* -- de overval -- */
@@ -6081,7 +6278,8 @@ async function ovZoek() {
   $('ovTegen').textContent = t('ov_tegen', ovDoel.naam);
   $('ovCijfers').innerHTML =
     ontsmet(t('ov_verdediging', ovDoel.verdediging)) + '<br>' +
-    ontsmet(t('ov_buit', getal(ovDoel.buit_tot)));
+    ontsmet(t('ov_buit', getal(ovDoel.buit_tot))) +
+    (stadTal('aanval') ? '<br>' + ontsmet(t('ov_soldaten', stadTal('aanval'), stadTal('aanval') * 5)) : '');
   $('ovTijd').textContent = '';
   $('ovStart').style.display = 'block';
   $('ovStart').textContent = t('ov_start');
@@ -6100,15 +6298,12 @@ function ovBegin() {
   ovTeken();
 }
 
-function ovKracht() {
-  return Math.floor(ovReps * (1 + stadNiveau('smederij') * 0.1));
-}
+function ovKracht() { return ovReps + stadTal('aanval') * 5; }
 
 function ovTeken() {
   const over = Math.max(0, (ovTot - Date.now()) / 1000);
   $('ovTijd').textContent = klokje(over);
-  $('ovCijfers').innerHTML =
-    ontsmet(t('ov_kracht', ovKracht(), ovDoel.verdediging));
+  $('ovCijfers').innerHTML = ontsmet(t('ov_kracht', ovKracht(), ovDoel.verdediging));
   if (over <= 0 || ovKracht() >= ovDoel.verdediging) ovKlaar();
 }
 
@@ -6139,6 +6334,12 @@ $('stadDicht').addEventListener('click', e => {
   stadStuur();
   $('stad').classList.remove('aan');
   toonMenu();
+});
+$('stadBouwKnop').addEventListener('click', e => {
+  e.stopPropagation(); $('stadWinkel').classList.add('aan'); tekenWinkel();
+});
+$('stadWinkelDicht').addEventListener('click', e => {
+  e.stopPropagation(); $('stadWinkel').classList.remove('aan');
 });
 $('stadOvervalKnop').addEventListener('click', e => { e.stopPropagation(); ovZoek(); });
 $('ovStart').addEventListener('click', e => { e.stopPropagation(); ovBegin(); });
