@@ -222,3 +222,6 @@ grant execute on function public.stad_reps(text, integer) to authenticated;
 grant execute on function public.stad_koop(text, text) to authenticated;
 grant execute on function public.stad_doelwit(text) to authenticated;
 grant execute on function public.stad_overval(text, uuid, integer) to authenticated;
+
+-- Vertel de API-laag meteen dat er nieuwe functies zijn.
+notify pgrst, 'reload schema';
