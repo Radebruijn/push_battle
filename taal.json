@@ -2800,6 +2800,16 @@
       "{0} in de laatste twee weken",
       "{0} in the last two weeks",
       "{0} sur les deux dernières semaines"
+    ],
+    "dagen_vandaag_kop": [
+      "Vandaag",
+      "Today",
+      "Aujourd'hui"
+    ],
+    "dagen_aantal": [
+      "{0} push-ups",
+      "{0} push-ups",
+      "{0} pompes"
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",

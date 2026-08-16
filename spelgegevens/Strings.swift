@@ -584,6 +584,8 @@ enum Tk: String {
     case dagen_titel
     case dagen_vandaag
     case dagen_veertien
+    case dagen_vandaag_kop
+    case dagen_aantal
 }
 
 enum Strings {
@@ -1148,6 +1150,8 @@ enum Strings {
         "dagen_titel": ["Jouw dagen", "Your days", "Tes jours"],
         "dagen_vandaag": ["vandaag {0} push-ups", "today {0} push-ups", "aujourd'hui {0} pompes"],
         "dagen_veertien": ["{0} in de laatste twee weken", "{0} in the last two weeks", "{0} sur les deux dernières semaines"],
+        "dagen_vandaag_kop": ["Vandaag", "Today", "Aujourd'hui"],
+        "dagen_aantal": ["{0} push-ups", "{0} push-ups", "{0} pompes"],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

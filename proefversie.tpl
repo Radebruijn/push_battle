@@ -654,23 +654,27 @@
   .kansVak span { display: block; font-size: 9px; color: rgba(255,255,255,.5); margin-top: 4px; }
   .kansVoet { font-size: 12px; color: rgba(255,255,255,.45); line-height: 1.5; margin-top: 6px; }
 
-  .mStreak { display: block; margin: 8px auto 0; padding: 6px 14px; border-radius: 99px;
-             border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05);
-             color: rgba(255,255,255,.8); font: inherit; font-size: 12px; font-weight: 700;
-             cursor: pointer; }
+  /* De dagen vullen het hele scherm: kop bovenaan, grafiek zo groot als
+     er ruimte is, en de gekozen dag eronder. */
   #dagen { position: fixed; inset: 0; z-index: 13; background: rgba(0,0,0,.96);
-           display: none; padding: 30px 22px; overflow-y: auto; }
-  #dagen.aan { display: block; }
+           display: none; padding: 30px 18px 22px; flex-direction: column; }
+  #dagen.aan { display: flex; }
   #dagen h2 { font-size: 12px; font-weight: 900; letter-spacing: 3px; text-align: center;
-              color: rgba(255,255,255,.5); margin: 0 0 8px; padding: 8px 46px 0; }
+              color: rgba(255,255,255,.5); margin: 0 0 6px; padding: 8px 46px 0; flex: none; }
   .dagenStreak { text-align: center; font-size: 14px; font-weight: 800;
-                 margin-bottom: 18px; }
-  .dagenGrafiek { background: rgba(255,255,255,.04); border-radius: 16px; padding: 12px 8px 6px; }
+                 margin-bottom: 14px; flex: none; }
+  .dagenGrafiek { flex: 1; min-height: 220px; background: rgba(255,255,255,.04);
+                  border-radius: 18px; overflow: hidden; }
+  .dagenGrafiek svg { width: 100%; height: 100%; }
   .dagenGrafiek .dagLijn { stroke: rgba(255,255,255,.1); stroke-width: 1; }
-  .dagenGrafiek .dagCijfer { fill: rgba(255,255,255,.85); font-size: 9px; font-weight: 700; }
-  .dagenGrafiek .dagDag { fill: rgba(255,255,255,.4); font-size: 8px; }
-  .dagenVandaag { text-align: center; font-size: 13px; color: rgba(255,255,255,.6);
-                  margin-top: 14px; }
+  .dagenGrafiek .dagCijfer { fill: #fff; font-size: 15px; font-weight: 900; }
+  .dagenGrafiek .dagDag { fill: rgba(255,255,255,.4); font-size: 11px; }
+  .dagenGrafiek .dagAs { fill: rgba(255,255,255,.35); font-size: 11px; }
+  .dagenGrafiek [data-dag] { cursor: pointer; }
+  .dagenGekozen { text-align: center; font-size: 15px; font-weight: 700;
+                  margin-top: 16px; flex: none; }
+  .dagenVandaag { text-align: center; font-size: 13px; color: rgba(255,255,255,.55);
+                  margin-top: 6px; flex: none; }
   #buit { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.8);
           display: none; place-items: center; }
   #buit.aan { display: grid; }
@@ -1004,7 +1008,6 @@
       <div class="mXpBar"><div class="mXpVul" id="mXpVul"></div></div>
       <div class="mXpTekst" id="mXpTekst"></div>
     </div>
-    <button class="mStreak" id="mStreak"></button>
 
     <div class="mKaart">
       <div class="mPadTip" id="mPadTip" hidden>🎖️ <span id="mPadTipTal"></span></div>
@@ -1017,6 +1020,7 @@
     </div>
 
     <div class="mOnder">
+      <button class="mRond" id="streakKnop" aria-label="dagen">🔥<i id="streakBadge"></i></button>
       <button class="mRond" id="questKnop" aria-label="opdrachten">📋<i id="questBadge"></i></button>
       <button class="mRond" id="invOpen" aria-label="inventaris">🎒</button>
     </div>
@@ -1182,6 +1186,7 @@
   <h2 id="dagenKop"></h2>
   <div class="dagenStreak" id="dagenStreak"></div>
   <div class="dagenGrafiek" id="dagenGrafiek"></div>
+  <div class="dagenGekozen" id="dagenGekozen"></div>
   <div class="dagenVandaag" id="dagenVandaag"></div>
 </div>
 
@@ -1928,6 +1933,15 @@ function questRep() {
   questTel('reps');
 }
 
+/// Eén echte herhaling, uit welke modus hij ook komt. Dit is de enige plek
+/// die je totaal ophoogt, en meteen ook je dag en je opdrachten bijwerkt.
+/// Elke modus roept dit aan; zo kan er nooit meer een modus zijn die wel
+/// telt maar niet meetelt (de muziekmodus en de wereldboss deden dat wel).
+function telRep() {
+  P.totalReps++;
+  questRep();
+}
+
 /// De dagteller: hoeveel echte herhalingen deed je vandaag, per wereld.
 /// Lokale datum, want een training om half twaalf 's avonds hoort bij vandaag.
 function dagSleutel(d = new Date()) {
@@ -1946,46 +1960,83 @@ function dagTellen() {
   }
 }
 
-/// De grafiek achter het streakknopje: de laatste veertien dagen als lijn.
-/// Eén serie in de goudkleur van het spel; alleen vandaag en de beste dag
-/// krijgen een getal, de rest blijft rustig.
+/// De grafiek achter het vlammetje: de laatste veertien dagen als lijn, op
+/// het hele scherm. Eén serie in de goudkleur van het spel. Tik op een
+/// bolletje en je ziet die dag precies: de datum en het aantal herhalingen.
+const DAGEN_TERUG = 14;
+let dagenGekozen = DAGEN_TERUG - 1;
+
+function dagenLijst() {
+  const lijst = [];
+  for (let i = DAGEN_TERUG - 1; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 864e5);
+    lijst.push({ datum: d, n: (P.dagen || {})[dagSleutel(d)] || 0 });
+  }
+  return lijst;
+}
+
 function toonDagen() {
   $('dagen').classList.add('aan');
+  dagenGekozen = DAGEN_TERUG - 1;   // vandaag staat standaard geselecteerd
+  tekenDagen();
+}
+
+function tekenDagen() {
+  const dagen = dagenLijst();
+  const max = Math.max(1, ...dagen.map(d => d.n));
+  const totaal = dagen.reduce((s, d) => s + d.n, 0);
   $('dagenKop').textContent = t('dagen_titel').toUpperCase();
   $('dagenStreak').textContent = '🔥 ' + effStreak() + ' ' + t('stat_streak');
   $('dagenDicht').title = t('close');
 
-  const dagen = [];
-  for (let i = 13; i >= 0; i--) {
-    const d = new Date(Date.now() - i * 864e5);
-    dagen.push({ dag: d.getDate(), n: (P.dagen || {})[dagSleutel(d)] || 0 });
-  }
-  const max = Math.max(1, ...dagen.map(d => d.n));
-  const beste = dagen.reduce((b, d, i) => d.n > dagen[b].n ? i : b, 0);
-  const B = 340, H = 170, links = 10, rechts = 10, boven = 22, onder = 24;
-  const x = i => links + i * (B - links - rechts) / 13;
+  // De tekening krijgt precies de maat van het vak, zodat niets uitrekt.
+  const vak = $('dagenGrafiek');
+  const B = Math.max(260, vak.clientWidth);
+  const H = Math.max(220, vak.clientHeight);
+  const links = 38, rechts = 18, boven = 34, onder = 34;
+  const x = i => links + i * (B - links - rechts) / (DAGEN_TERUG - 1);
   const y = n => boven + (H - boven - onder) * (1 - n / max);
 
-  let svg = `<svg viewBox="0 0 ${B} ${H}" style="width:100%;display:block">`;
-  svg += `<line x1="${links}" y1="${y(0)}" x2="${B - rechts}" y2="${y(0)}" class="dagLijn"/>`;
-  svg += `<line x1="${links}" y1="${y(max)}" x2="${B - rechts}" y2="${y(max)}" class="dagLijn"/>`;
+  let svg = `<svg viewBox="0 0 ${B} ${H}" width="${B}" height="${H}" style="display:block">`;
+  // Drie rustige hulplijnen met hun waarde ernaast: nul, midden, hoogste.
+  [0, Math.round(max / 2), max].forEach(waarde => {
+    svg += `<line x1="${links}" y1="${y(waarde)}" x2="${B - rechts}" y2="${y(waarde)}" class="dagLijn"/>` +
+           `<text x="${links - 8}" y="${y(waarde) + 4}" text-anchor="end" class="dagAs">${waarde}</text>`;
+  });
   svg += `<polyline fill="none" stroke="#ffc740" stroke-width="2" stroke-linejoin="round"` +
          ` stroke-linecap="round" points="${dagen.map((d, i) => x(i) + ',' + y(d.n)).join(' ')}"/>`;
   dagen.forEach((d, i) => {
-    const vandaag = i === 13;
-    svg += `<circle cx="${x(i)}" cy="${y(d.n)}" r="${vandaag ? 4 : 2.5}"` +
-           ` fill="${vandaag ? '#fff' : '#ffc740'}"/>`;
-    if ((vandaag || i === beste) && d.n) {
-      svg += `<text x="${x(i)}" y="${y(d.n) - 8}" text-anchor="middle" class="dagCijfer">${d.n}</text>`;
+    const gekozen = i === dagenGekozen;
+    svg += `<circle cx="${x(i)}" cy="${y(d.n)}" r="${gekozen ? 7 : 4.5}"` +
+           ` fill="${gekozen ? '#fff' : '#ffc740'}" stroke="#000" stroke-width="2"/>`;
+    if (gekozen) {
+      svg += `<text x="${x(i)}" y="${y(d.n) - 16}" text-anchor="middle" class="dagCijfer">${d.n}</text>`;
     }
-    if (i % 2 === 1 || vandaag) {
-      svg += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle" class="dagDag">${d.dag}</text>`;
+    // Elke tweede dag een datumcijfer, zodat de as niet volloopt.
+    if (i % 2 === 1 || i === DAGEN_TERUG - 1) {
+      svg += `<text x="${x(i)}" y="${H - 10}" text-anchor="middle" class="dagDag">${d.datum.getDate()}</text>`;
     }
+    // Een ruim, onzichtbaar tikvlak: op een telefoon mik je nooit precies.
+    svg += `<circle cx="${x(i)}" cy="${y(d.n)}" r="22" fill="transparent" data-dag="${i}"/>`;
   });
   svg += '</svg>';
-  $('dagenGrafiek').innerHTML = svg;
-  $('dagenVandaag').textContent = t('dagen_vandaag', dagen[13].n) +
-    ' · ' + t('dagen_veertien', dagen.reduce((s, d) => s + d.n, 0));
+  vak.innerHTML = svg;
+  vak.querySelectorAll('[data-dag]').forEach(c => c.onclick = e => {
+    e.stopPropagation();
+    dagenGekozen = +c.dataset.dag;
+    tekenDagen();
+  });
+
+  const gekozenDag = dagen[dagenGekozen];
+  let datum;
+  try {
+    datum = gekozenDag.datum.toLocaleDateString(TAAL,
+      { weekday: 'long', day: 'numeric', month: 'long' });
+  } catch (e) { datum = dagSleutel(gekozenDag.datum); }
+  $('dagenGekozen').textContent =
+    (dagenGekozen === DAGEN_TERUG - 1 ? t('dagen_vandaag_kop') : datum) + ' · ' +
+    t('dagen_aantal', gekozenDag.n);
+  $('dagenVandaag').textContent = t('dagen_veertien', totaal);
 }
 
 /// Welke opdrachten je gehaald hebt maar nog niet opgehaald.
@@ -2208,7 +2259,7 @@ function rep() {
   if (combo === CRIT_COMBO) questTel('combo');
   if (lesStap === 2) lesVolgende();
 
-  P.totalReps++; sessionReps++;
+  telRep(); sessionReps++;
   klikRepBonus();
   enemy.hp = Math.max(0, enemy.hp - dmg);
 
@@ -2284,13 +2335,13 @@ function pushup(echt = false) {
   if ($('wb').classList.contains('aan')) { bossRep(); return; }
   if ($('mz').classList.contains('aan')) { muziekRep(); return; }
   if ($('klik').classList.contains('aan')) {
-    if (echt) { P.totalReps++; questRep(); klikRepBonus(); save(); }
+    if (echt) { telRep(); klikRepBonus(); save(); }
     return;
   }
-  if (olFase === 'bezig') { questRep(); olRep(); return; }
+  if (olFase === 'bezig') { olRep(); return; }
   if (olFase !== 'uit') return;          // lobby, wachten of uitslag: niet tellen
-  if (duelFase === 'bezig') { questRep(); duelRep(); return; }
-  if ($('menu').classList.contains('uit') && !$('duelSetup').classList.contains('aan')) { questRep(); rep(); }
+  if (duelFase === 'bezig') { duelRep(); return; }
+  if ($('menu').classList.contains('uit') && !$('duelSetup').classList.contains('aan')) rep();
 }
 
 /// Tikken op het scherm telt bewust NIET als push-up: alleen de camera telt.
@@ -2610,8 +2661,8 @@ function renderMenu() {
   $('mXpVul').style.width = (cur / need * 100) + '%';
   $('mXpVul').style.background = `linear-gradient(to right, ${rgbCss(c)}, #ffc740)`;
   $('mXpTekst').textContent = t('xp_of', cur, need);
-  $('mStreak').textContent = '🔥 ' + effStreak() + ' · ' +
-    t('dagen_vandaag', (P.dagen || {})[dagSleutel()] || 0);
+  $('streakKnop').title = t('dagen_titel');
+  $('streakBadge').textContent = effStreak() || '';
 
   $('mArenaLabel').textContent = t('arena_n_race', idxNu(), tt(arena.race).toUpperCase());
   $('mArenaNaam').textContent = tt(arena.name);
@@ -3320,7 +3371,7 @@ function duelTik() {
 
 function duelRep() {
   duelJij++;
-  P.totalReps++;
+  telRep();
   klikRepBonus();
   if (navigator.vibrate) navigator.vibrate(10);
   animateNose();
@@ -3776,7 +3827,10 @@ $('kansenDicht').addEventListener('click', e => {
 $('buit').addEventListener('click', e => {
   e.stopPropagation(); $('buit').classList.remove('aan');
 });
-$('mStreak').addEventListener('click', e => { e.stopPropagation(); toonDagen(); });
+$('streakKnop').addEventListener('click', e => { e.stopPropagation(); toonDagen(); });
+addEventListener('resize', () => {
+  if ($('dagen').classList.contains('aan')) tekenDagen();
+});
 $('dagenDicht').addEventListener('click', e => {
   e.stopPropagation(); $('dagen').classList.remove('aan');
 });
@@ -5162,7 +5216,7 @@ async function olAfronden() {
 
 function olRep() {
   olJij++;
-  P.totalReps++;
+  telRep();
   klikRepBonus();
   if (navigator.vibrate) navigator.vibrate(10);
   animateNose();
@@ -6639,7 +6693,7 @@ function muziekRep() {
   const afstand = Math.abs(mzVolgende - Date.now());
   const scheef = Math.min(afstand, stap - afstand);
   mzGedaan++;
-  P.totalReps++;
+  telRep();
   if (scheef < stap * 0.12) { mzRaak++; mzPunten += 3; mzOordeel('mz_perfect', '#4ade80'); toon(920, 0.1, 'triangle', 0.9); }
   else if (scheef < stap * 0.28) { mzRaak++; mzPunten += 2; mzOordeel('mz_goed', '#ffc740'); }
   else { mzOordeel('mz_mis', '#f2263a'); }
@@ -6824,7 +6878,7 @@ function tekenBoss() {
 /// push-up een eigen verzoek zijn.
 function bossRep() {
   if (!wbNu || !ingelogd()) return;
-  P.totalReps++;
+  telRep();
   wbTeSturen++;
   wbNu.hp = Math.max(0, wbNu.hp - 1);
   wbNu.jij++; wbNu.samen++;
