@@ -694,6 +694,7 @@ enum Tk: String {
     case lb_soort_vlieg
     case lb_eenheid_buizen
     case lb_vlieg_wacht
+    case vlieg_zoekt
 }
 
 enum Strings {
@@ -1353,7 +1354,7 @@ enum Strings {
         "les_stad13": ["Met Overvallen kies je zelf een tegenstander uit de lijst — de sterkste bovenaan. Dan krijg je zestig seconden: elke push-up is één kracht, elke soldaat vijf. Blijf pushen als je binnen bent, want hoe meer kracht, hoe groter de buit.", "With Raid you pick an opponent from the list — strongest on top. Then you get sixty seconds: every push-up is one strength, every soldier five. Keep pushing once you're in, because more strength means more loot.", "Avec Piller, tu choisis un adversaire dans la liste — le plus fort en haut. Tu as soixante secondes : chaque pompe vaut une force, chaque soldat cinq. Continue une fois entré : plus de force, plus de butin."],
         "mode_vlieg": ["Vliegen", "Flying", "Voler"],
         "mode_vlieg_sub": ["Stuur een vogel met je hoofd door de buizen.", "Steer a bird through the pipes with your head.", "Guide un oiseau entre les tuyaux avec ta tête."],
-        "vlieg_uitleg": ["Je hoofd omhoog laat de vogel stijgen, je hoofd omlaag laat hem duiken. Zonder camera stuur je hem met je vinger.", "Head up makes the bird rise, head down makes it dive. Without a camera you steer with your finger.", "Tête en haut, l'oiseau monte ; tête en bas, il plonge. Sans caméra, guide-le au doigt."],
+        "vlieg_uitleg": ["De vogel zit precies waar de camera je hoofd ziet: ga omhoog en hij stijgt, zak en hij duikt. Zonder camera stuur je hem met je vinger.", "The bird sits exactly where the camera sees your head: move up and it rises, drop and it dives. Without a camera you steer with your finger.", "L'oiseau se place là où la caméra voit ta tête : monte et il s'élève, descends et il plonge. Sans caméra, guide-le au doigt."],
         "vlieg_klaar": ["Ga rechtop zitten of liggen zodat de camera je hoofd ziet. Omhoog is stijgen, omlaag is duiken.", "Sit or lie so the camera sees your head. Up is rise, down is dive.", "Place-toi pour que la caméra voie ta tête. En haut ça monte, en bas ça plonge."],
         "vlieg_start": ["Beginnen", "Start", "Commencer"],
         "vlieg_opnieuw": ["Nog een keer", "Again", "Encore"],
@@ -1368,6 +1369,7 @@ enum Strings {
         "lb_soort_vlieg": ["Bird", "Bird", "Bird"],
         "lb_eenheid_buizen": ["buizen", "pipes", "tuyaux"],
         "lb_vlieg_wacht": ["De vliegscores staan nog op je eigen toestel; ze komen in het klassement zodra de server ze bijhoudt.", "Flying scores are still on your own device; they join the leaderboard once the server tracks them.", "Les scores de vol restent sur ton appareil ; ils rejoindront le classement dès que le serveur les enregistre."],
+        "vlieg_zoekt": ["De camera ziet je hoofd even niet — de vogel blijft hangen.", "The camera can't see your head — the bird holds still.", "La caméra ne voit pas ta tête — l'oiseau reste en place."],
     ]
 
     /// Haalt een tekst op en vult {0}, {1}, … met de meegegeven waarden.

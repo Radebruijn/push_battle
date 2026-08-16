@@ -702,8 +702,10 @@
   .vliegOver.weg { display: none; }
   #vliegOverTekst { font-size: 15px; line-height: 1.5; margin-bottom: 14px;
                     color: rgba(255,255,255,.85); }
+  .vliegZoek { text-align: center; font-size: 12px; color: #ffc740; min-height: 16px;
+               margin-top: 6px; flex: none; }
   .vliegUit { text-align: center; font-size: 11px; color: rgba(255,255,255,.45);
-              margin-top: 8px; flex: none; }
+              margin-top: 4px; flex: none; }
 
   /* De stad: tellers bovenaan, daaronder de dorpskaart waar je doorheen
      sleept en zoomt, en onderin de twee grote knoppen. */
@@ -1285,6 +1287,7 @@
       <button class="grotKnop" id="vliegStart"></button>
     </div>
   </div>
+  <div class="vliegZoek" id="vliegZoek"></div>
   <div class="vliegUit" id="vliegUit"></div>
 </div>
 
@@ -6104,7 +6107,7 @@ $('modeVlieg').addEventListener('click', e => { e.stopPropagation(); toonVlieg()
    zak je, dan duikt hij. Geen camera bij de hand? Dan stuur je hem met je
    vinger, zodat je toch kunt spelen. */
 let vlFase = 'uit', vlLus = null, vlVogel = 0.5, vlSnelheid = 0, vlScore = 0;
-let vlBuizen = [], vlVorig = 0, vlAfstand = 0, vlVinger = null;
+let vlBuizen = [], vlVorig = 0, vlAfstand = 0, vlVinger = null, vlB = 300, vlH = 400;
 
 function vliegStaat() {
   if (!P.vlieg || typeof P.vlieg !== 'object') P.vlieg = { beste: 0 };
@@ -6138,14 +6141,28 @@ function vliegOverlay(tekst, knop) {
   $('vliegOver').classList.remove('weg');
 }
 
-/// Het doek even groot maken als het vak, ook op een scherm met dubbele pixels.
+/// Het doek even groot maken als het vak, ook op een scherm met dubbele
+/// pixels. Op een telefoon staat de maat er soms nog niet als het scherm net
+/// opengaat; dan meten we volgend beeldje opnieuw. Alles wat getekend wordt
+/// gebruikt vlB en vlH, zodat het speelveld nooit uit de pas loopt met het doek.
 function vliegPas() {
   const doek = $('vliegDoek'), vak = $('vliegVak');
+  const B = vak.clientWidth, H = vak.clientHeight;
+  if (B < 40 || H < 40) { requestAnimationFrame(vliegPas); return; }
+  vlB = B; vlH = H;
   const d = Math.min(2, window.devicePixelRatio || 1);
-  doek.width = Math.max(200, vak.clientWidth) * d;
-  doek.height = Math.max(200, vak.clientHeight) * d;
+  doek.width = Math.round(B * d);
+  doek.height = Math.round(H * d);
   doek.getContext('2d').setTransform(d, 0, 0, d, 0, 0);
   if (vlFase !== 'bezig') vliegTeken();
+}
+
+// Verandert het vak van maat (draaien, toetsenbord, adresbalk), dan meten we
+// meteen opnieuw — dat is precies waar het op de telefoon misging.
+if (window.ResizeObserver) {
+  new ResizeObserver(() => {
+    if ($('vlieg').classList.contains('aan')) vliegPas();
+  }).observe($('vliegVak'));
 }
 
 function vliegBegin() {
@@ -6162,27 +6179,30 @@ function vliegBegin() {
   vlLus = requestAnimationFrame(vliegStap);
 }
 
-/// Waar de vogel heen wil: recht uit je hoofdhoogte, of uit je vinger als de
-/// camera uit staat. De ijking bepaalt wat 'helemaal boven' en 'onder' is.
+/// Waar de vogel heen wil. Bewust géén ijking ertussen: de vogel gaat precies
+/// staan waar de camera je hoofd ziet. De tracker geeft 1 voor bovenin het
+/// beeld en 0 voor onderin, dus dat is één op één de plek op het scherm — de
+/// vogel zit dus op de lijn die je in het camerabeeldje ziet. Met de ijking
+/// ertussen schoot hij op een telefoon meteen naar de rand.
 function vliegDoel() {
   if (vlVinger !== null) return vlVinger;
-  const boven = Math.max(CAL.top, CAL.bottom + 0.05);
-  const onder = Math.min(CAL.bottom, boven - 0.05);
-  const deel = (hoogteNu - onder) / (boven - onder);
-  return Math.min(1, Math.max(0, 1 - deel));   // hoofd hoog = vogel hoog
+  return Math.min(1, Math.max(0, 1 - hoogteNu));
 }
 
 function vliegStap(nu) {
   if (vlFase !== 'bezig') return;
   const dt = Math.min(0.05, (nu - vlVorig) / 1000);
   vlVorig = nu;
-  const vak = $('vliegVak');
-  const B = vak.clientWidth, H = vak.clientHeight;
+  // Ziet de camera je even niet, dan blijft de vogel hangen waar hij is in
+  // plaats van naar de rand te duiken.
+  const zoek = cameraOn && !seesFace && vlVinger === null;
+  $('vliegZoek').textContent = zoek ? t('vlieg_zoekt') : '';
+  const B = vlB, H = vlH;
 
-  // De vogel volgt je hoofd, maar met een beetje traagheid zodat hij zweeft
-  // in plaats van springt.
-  const doel = vliegDoel();
-  vlVogel += (doel - vlVogel) * Math.min(1, dt * 9);
+  // De vogel volgt je hoofd op de voet; net genoeg demping om het trillen van
+  // de herkenning weg te halen, niet zoveel dat hij achterloopt.
+  const doel = zoek ? vlVogel : vliegDoel();
+  vlVogel += (doel - vlVogel) * Math.min(1, dt * 20);
   vlSnelheid = (doel - vlVogel);
 
   const snel = 150 + Math.min(120, vlScore * 6);
@@ -6219,8 +6239,7 @@ function vliegStap(nu) {
 
 function vliegTeken() {
   const doek = $('vliegDoek'), g = doek.getContext('2d');
-  const vak = $('vliegVak');
-  const B = vak.clientWidth, H = vak.clientHeight;
+  const B = vlB, H = vlH;
   g.clearRect(0, 0, B, H);
   // Lucht met een paar sterren en heuvels, in de stijl van het dorp.
   const lucht = g.createLinearGradient(0, 0, 0, H);

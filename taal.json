@@ -3277,9 +3277,9 @@
       "Guide un oiseau entre les tuyaux avec ta tête."
     ],
     "vlieg_uitleg": [
-      "Je hoofd omhoog laat de vogel stijgen, je hoofd omlaag laat hem duiken. Zonder camera stuur je hem met je vinger.",
-      "Head up makes the bird rise, head down makes it dive. Without a camera you steer with your finger.",
-      "Tête en haut, l'oiseau monte ; tête en bas, il plonge. Sans caméra, guide-le au doigt."
+      "De vogel zit precies waar de camera je hoofd ziet: ga omhoog en hij stijgt, zak en hij duikt. Zonder camera stuur je hem met je vinger.",
+      "The bird sits exactly where the camera sees your head: move up and it rises, drop and it dives. Without a camera you steer with your finger.",
+      "L'oiseau se place là où la caméra voit ta tête : monte et il s'élève, descends et il plonge. Sans caméra, guide-le au doigt."
     ],
     "vlieg_klaar": [
       "Ga rechtop zitten of liggen zodat de camera je hoofd ziet. Omhoog is stijgen, omlaag is duiken.",
@@ -3350,6 +3350,11 @@
       "De vliegscores staan nog op je eigen toestel; ze komen in het klassement zodra de server ze bijhoudt.",
       "Flying scores are still on your own device; they join the leaderboard once the server tracks them.",
       "Les scores de vol restent sur ton appareil ; ils rejoindront le classement dès que le serveur les enregistre."
+    ],
+    "vlieg_zoekt": [
+      "De camera ziet je hoofd even niet — de vogel blijft hangen.",
+      "The camera can't see your head — the bird holds still.",
+      "La caméra ne voit pas ta tête — l'oiseau reste en place."
     ]
   },
   "_promo_uitleg": "Teksten van de promopagina (website-voorpagina). Staat los van 'teksten' zodat ze niet in Strings.swift van de app belanden. Zelfde volgorde: NL, EN, FR.",
